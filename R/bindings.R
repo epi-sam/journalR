@@ -14,7 +14,7 @@
 #' }
 lock_some_bindings <- function(objs, env = globalenv()){
    # checkmate::assert_character(objs)
-   stopifnot(is.character(obs), is.vector(objs))
+   stopifnot(is.character(objs), is.vector(objs))
    for(x in objs){
       try({if(exists(x, envir = env) && !bindingIsLocked(x, env)) lockBinding(x, env)})
    }
