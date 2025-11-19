@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(journalTools)
+library(journalR)
 
-test_check("journalTools")
+test_check("journalR")

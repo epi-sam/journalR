@@ -1,18 +1,18 @@
 
-# journalTools
+# journalR
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-The journalTools packaged provides R users with tools to ease scientific journal publication.
+The journalR packaged provides R users with tools to ease scientific journal publication.
 
 ## Installation
 
-You can install the development version of journalTools like so:
+You can install the development version of journalR like so:
 
 ``` r
 # fill in your favorite version number
-devtools::install_github("epi-sam/journalTools@v0.0.0")
+devtools::install_github("epi-sam/journalR@v0.0.0")
 ```
 
 ## Example
@@ -20,6 +20,6 @@ devtools::install_github("epi-sam/journalTools@v0.0.0")
 This is a basic example which shows you how to solve a common problem:
 
 ``` r
-library(journalTools)
+library(journalR)
 ```
 

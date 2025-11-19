@@ -1,4 +1,4 @@
-Package: journalTools
+Package: journalR
 Type: Package
 Title: Formatting Tools for Scientific Journal Writing
 Version: 0.1.0
@@ -13,6 +13,7 @@ Description: Tools for scientific journal publication.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+Depends: R (>= 4.2.0)
 Imports:
     checkmate,
     data.table,
@@ -24,5 +25,5 @@ Suggests:
 Config/testthat/edition: 3
 RoxygenNote: 7.3.2
 Acknowledgments:
-URL: https://github.com/epi-sam/journalTools
-BugReports: https://github.com/epi-sam/journalTools/issues
+URL: https://github.com/epi-sam/journalR
+BugReports: https://github.com/epi-sam/journalR/issues
