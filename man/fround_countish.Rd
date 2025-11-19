@@ -48,3 +48,13 @@ fround_countish(
 )
 }
 }
+\seealso{
+Other vector_formats: 
+\code{\link{fmt_magnitude}()},
+\code{\link{format_oxford_comma}()},
+\code{\link{fround}()},
+\code{\link{fround_dtype}()},
+\code{\link{fround_dtype_lancet}()},
+\code{\link{fround_propish}()}
+}
+\concept{vector_formats}

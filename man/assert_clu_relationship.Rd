@@ -26,3 +26,13 @@ are consistent with CLU (Central, Lower, Upper) conventions:
 \examples{
 assert_clu_relationship(c(5, 10, 15), c(3, 8, 12), c(7, 12, 18))
 }
+\seealso{
+Other assertions: 
+\code{\link{assert_data_type}()},
+\code{\link{assert_set_choice}()},
+\code{\link{assert_style_schema}()},
+\code{\link{assert_x_gte_y}()},
+\code{\link{assert_x_in_y}()},
+\code{\link{assert_x_not_in_y}()}
+}
+\concept{assertions}

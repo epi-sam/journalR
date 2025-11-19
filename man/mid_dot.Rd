@@ -10,7 +10,7 @@ mid_dot()
 [chr] mid-dot character
 }
 \description{
-Lancet numeric decimal standard
+Lancet numeric decimal standard: "\eqn{\cdot}" ("\\U00B7")
 }
 \examples{
 mid_dot()

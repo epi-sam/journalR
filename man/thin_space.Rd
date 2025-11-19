@@ -10,8 +10,8 @@ thin_space()
 [chr] thin space character
 }
 \description{
-Lancet thin space standard for thousands separator (instead of comma
-",")
+Lancet thin space separator for counts 10,000 -- 999,9999 instead of comma
+",": ("\\U2009")
 }
 \examples{
 thin_space()

@@ -6,6 +6,7 @@
 #' @return [none] stop if any elements of x are not in y
 #' @export
 #' @family assertions
+#' @encoding UTF-8
 #'
 #' @examples
 #' assert_x_in_y(c("a", "b"), c("a", "b", "c"))
@@ -28,6 +29,7 @@ assert_x_in_y <- function(x, y){
 #' @returns [none] stop if any elements of x are in y
 #' @export
 #' @family assertions
+#' @encoding UTF-8
 #'
 #' @examples
 #' assert_x_not_in_y(c("a", "b"), c("c", "d", "e"))
@@ -50,6 +52,7 @@ assert_x_not_in_y <- function(x, y){
 #' @returns [scalar] invisible validated x
 #' @export
 #' @family assertions
+#' @encoding UTF-8
 #'
 #' @examples
 #' assert_set_choice("a", letters)
@@ -79,6 +82,7 @@ assert_set_choice <- function(x, choices){
 #' @returns [chr] invisible validated d_type
 #' @export
 #' @family assertions
+#' @encoding UTF-8
 #'
 #' @examples
 #' assert_data_type("prop")
@@ -98,6 +102,7 @@ assert_data_type <- function(d_type){
 #' @returns [list] invisible validated style_entry
 #' @export
 #' @family assertions
+#' @encoding UTF-8
 #'
 #' @examples
 #' assert_style_schema(
@@ -172,6 +177,8 @@ assert_style_schema <- function(style_entry){
 #'
 #' @returns [none] stop if any elements of x are greater than y
 #' @export
+#' @family assertions
+#' @encoding UTF-8
 #'
 #' @examples
 #' lower = c(1, 2, 3)
@@ -205,6 +212,7 @@ assert_x_gte_y <- function(x, y){
 #'
 #' @returns [none] stop if any of the CLU relationships are violated
 #' @export
+#' @family assertions
 #'
 #' @examples
 #' assert_clu_relationship(c(5, 10, 15), c(3, 8, 12), c(7, 12, 18))

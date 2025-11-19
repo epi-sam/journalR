@@ -1,6 +1,6 @@
 #' Mid-dot
 #'
-#' Lancet numeric decimal standard
+#' Lancet numeric decimal standard: "\eqn{\cdot}" ("\\U00B7")
 #'
 #' @returns [chr] mid-dot character
 #' @export
@@ -14,7 +14,7 @@ mid_dot <- function() {
 
 #' En-dash
 #'
-#' Lancet negative/hyphen sign standard
+#' Standard for "x -- y" and Lancet negative: ("\\U2013")
 #'
 #' @returns [chr] en-dash character
 #' @export
@@ -29,8 +29,9 @@ en_dash <- function() {
 
 #' Thin space
 #'
-#' Lancet thin space standard for thousands separator (instead of comma
-#' ",")
+#' Lancet thin space separator for counts 10,000 -- 999,9999 instead of comma
+#' ",": ("\\U2009")
+#'
 #'
 #' @returns [chr] thin space character
 #' @export
@@ -41,3 +42,4 @@ en_dash <- function() {
 thin_space <- function() {
    return("\U2009")
 }
+

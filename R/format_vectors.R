@@ -13,6 +13,7 @@
 #' @param decimal.mark [chr] passed to `format()`
 #'
 #' @returns [chr] formatted string
+#' @family vector_formats
 #'
 #' @examples
 #' \dontrun{
@@ -44,6 +45,7 @@ fround_propish <- function(
 #' @param is_lancet [lgl] if TRUE, apply Lancet-specific formatting rules
 #'
 #' @returns [chr] formatted string vector
+#' @family vector_formats
 #'
 #' @examples
 #' \dontrun{

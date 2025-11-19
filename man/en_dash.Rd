@@ -10,7 +10,7 @@ en_dash()
 [chr] en-dash character
 }
 \description{
-Lancet negative/hyphen sign standard
+Standard for "x -- y" and Lancet negative: ("\\U2013")
 }
 \examples{
 en_dash()

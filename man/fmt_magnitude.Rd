@@ -46,8 +46,10 @@ fmt_magnitude(123456789)
 Other vector_formats: 
 \code{\link{format_oxford_comma}()},
 \code{\link{fround}()},
+\code{\link{fround_countish}()},
 \code{\link{fround_dtype}()},
-\code{\link{fround_dtype_lancet}()}
+\code{\link{fround_dtype_lancet}()},
+\code{\link{fround_propish}()}
 
 Other magnitudes: 
 \code{\link{set_magnitude}()}

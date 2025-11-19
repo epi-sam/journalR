@@ -30,7 +30,9 @@ fround(0.123456789, digits = 3, nsmall = 4)
 Other vector_formats: 
 \code{\link{fmt_magnitude}()},
 \code{\link{format_oxford_comma}()},
+\code{\link{fround_countish}()},
 \code{\link{fround_dtype}()},
-\code{\link{fround_dtype_lancet}()}
+\code{\link{fround_dtype_lancet}()},
+\code{\link{fround_propish}()}
 }
 \concept{vector_formats}
