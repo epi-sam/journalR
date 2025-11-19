@@ -7,10 +7,10 @@
 format_lancet_df(
   df,
   d_type,
+  new_var = "clu_fmt",
   central_var = "mean",
   lower_var = "lower",
   upper_var = "upper",
-  new_var = "clu_fmt",
   remove_clu_columns = TRUE
 )
 }
@@ -20,14 +20,14 @@ format_lancet_df(
 \item{d_type}{[chr c(prop', 'pp', 'count')] data type - proportion, percentage
 point or count}
 
+\item{new_var}{[chr: default 'clu_fmt'] name of new formatted column}
+
 \item{central_var}{[chr: default 'mean'] name of central tendency e.g.
 'point_estimate'}
 
 \item{lower_var}{[chr: default 'lower']}
 
 \item{upper_var}{[chr: default 'upper']}
-
-\item{new_var}{[chr: default 'clu_fmt'] name of new formatted column}
 
 \item{remove_clu_columns}{[lgl: default TRUE] remove central, lower, upper columns?}
 }

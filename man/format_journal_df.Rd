@@ -7,11 +7,11 @@
 format_journal_df(
   df,
   d_type,
+  new_var = "clu_fmt",
   style_name = "nature",
   central_var = "mean",
   lower_var = "lower",
   upper_var = "upper",
-  new_var = "clu_fmt",
   remove_clu_columns = TRUE
 )
 }
@@ -19,6 +19,8 @@ format_journal_df(
 \item{df}{[data.frame, data.table]}
 
 \item{d_type}{[chr c('prop', 'pp', or 'count')] a single data type}
+
+\item{new_var}{[chr: default 'clu_fmt'] name of new formatted column}
 
 \item{style_name}{[chr: default 'nature'] style name - controls rounding and
 formatting.}
@@ -28,8 +30,6 @@ formatting.}
 \item{lower_var}{[chr: default 'lower'] name of lower bound variable}
 
 \item{upper_var}{[chr: default 'upper'] name of upper bound variable}
-
-\item{new_var}{[chr: default 'clu_fmt'] name of new formatted column}
 
 \item{remove_clu_columns}{[lgl: default TRUE] remove central, lower, upper variables after
 formatting?}

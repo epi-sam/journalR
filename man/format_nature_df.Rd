@@ -7,10 +7,10 @@
 format_nature_df(
   df,
   d_type,
+  new_var = "clu_fmt",
   central_var = "mean",
   lower_var = "lower",
   upper_var = "upper",
-  new_var = "clu_fmt",
   remove_clu_columns = TRUE
 )
 }

@@ -292,11 +292,11 @@ format_journal_clu <- function(
 format_journal_df <- function(
       df
       , d_type
+      , new_var            = "clu_fmt"
       , style_name         = "nature"
       , central_var        = "mean"
       , lower_var          = "lower"
       , upper_var          = "upper"
-      , new_var            = "clu_fmt"
       , remove_clu_columns = TRUE
 ){
 
@@ -505,10 +505,10 @@ format_lancet_clu <- function(
 format_lancet_df <- function(
       df
       , d_type
+      , new_var            = "clu_fmt"
       , central_var        = "mean"
       , lower_var          = "lower"
       , upper_var          = "upper"
-      , new_var            = "clu_fmt"
       , remove_clu_columns = TRUE
 ){
    format_journal_df(
@@ -613,10 +613,10 @@ format_nature_clu <- function(
 format_nature_df <- function(
       df
       , d_type
+      , new_var            = "clu_fmt"
       , central_var        = "mean"
       , lower_var          = "lower"
       , upper_var          = "upper"
-      , new_var            = "clu_fmt"
       , remove_clu_columns = TRUE
 ){
    format_journal_df(
