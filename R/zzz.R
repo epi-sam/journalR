@@ -6,16 +6,20 @@
 # - accessor functions can modify it, but it is not directly accessible to users
 # - the user might create a _shadow_ copy in their .GlobalEnv, but the package
 #   version is still safe
-.dict_formats <- new.env(parent = emptyenv())
+# .dict_formats <- new.env(parent = emptyenv())
 
 # Initialize dictionaries when package loads
 .onLoad <- function(libname, pkgname) {
-   requireNamespace("checkmate", quietly = TRUE)
+
+   # requireNamespace("checkmate", quietly = TRUE)
    # Initialize preset dictionaries
+   ns <- asNamespace(pkgname)
+   .dict_formats <- new.env(parent = emptyenv())
    .dict_formats[['lancet']] <- style_lancet()
    .dict_formats[['nature']] <- style_nature()
    presets <- ls(envir = .dict_formats)
    lock_some_bindings(objs  = presets, env = .dict_formats)
+   assign(".dict_formats", .dict_formats, envir = ns)
 
    # CANNOT do this, or the user won't be able to update
    # - even if bindings = FALSE, the environment itself is locked to new entries
