@@ -388,7 +388,7 @@ format_means_df <- function(
    )
 
    for (varname in mean_varnames){
-      add_column(
+      df <- add_column(
          x        = df
          , varname = varname
          , vec     = paste0(
