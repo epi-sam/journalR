@@ -13,7 +13,8 @@
 #' lock_some_bindings(c("my_var1", "my_var2"))
 #' }
 lock_some_bindings <- function(objs, env = globalenv()){
-   checkmate::assert_character(objs)
+   # checkmate::assert_character(objs)
+   stopifnot(is.character(obs), is.vector(objs))
    for(x in objs){
       try({if(exists(x, envir = env) && !bindingIsLocked(x, env)) lockBinding(x, env)})
    }
