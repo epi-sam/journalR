@@ -518,6 +518,7 @@ format_lancet_df <- function(
       , central_var        = central_var
       , lower_var          = lower_var
       , upper_var          = upper_var
+      , new_var            = new_var
       , remove_clu_columns = remove_clu_columns
    )
 }
@@ -615,6 +616,7 @@ format_nature_df <- function(
       , central_var        = "mean"
       , lower_var          = "lower"
       , upper_var          = "upper"
+      , new_var            = "clu_fmt"
       , remove_clu_columns = TRUE
 ){
    format_journal_df(
@@ -624,6 +626,7 @@ format_nature_df <- function(
       , central_var        = central_var
       , lower_var          = lower_var
       , upper_var          = upper_var
+      , new_var            = new_var
       , remove_clu_columns = remove_clu_columns
    )
 }
