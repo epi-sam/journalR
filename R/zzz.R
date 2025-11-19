@@ -10,6 +10,7 @@
 
 # Initialize dictionaries when package loads
 .onLoad <- function(libname, pkgname) {
+   requireNamespace("checkmate", quietly = TRUE)
    # Initialize preset dictionaries
    .dict_formats[['lancet']] <- style_lancet()
    .dict_formats[['nature']] <- style_nature()
