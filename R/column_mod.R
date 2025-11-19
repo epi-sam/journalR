@@ -65,6 +65,7 @@ drop_column <- function(x, varname){
    checkmate::assert_string(varname)
    assert_set_choice(varname, colnames(x))
    if(inherits(x, "data.table")){
+      x <- data.table::copy(x) # avoid in-place modification
       x[, (varname) := NULL]
    } else {
       x[[varname]] <- NULL
