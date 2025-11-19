@@ -33,6 +33,7 @@ add_column <- function(x, varname, vec, overwrite = FALSE){
    checkmate::assert_logical(overwrite, len = 1)
    if(!isTRUE(overwrite)) assert_x_not_in_y(varname, colnames(x))
    if(inherits(x, "data.table")){
+      x <- data.table::copy(x) # avoid in-place modification
       x[, (varname) := vec]
    } else {
       x[[varname]] <- vec
