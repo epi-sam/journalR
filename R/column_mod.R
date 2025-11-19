@@ -2,9 +2,6 @@
 # purpose: Suite of functions to handle columns from data.frames or
 # data.tables, preserving class and modifying in place if data.table.
 
-#' @importFrom data.table :=
-NULL
-
 #' Add/overwrite a column in a data.frame or data.table, preserving class and
 #' modifying in place if data.table.
 #'

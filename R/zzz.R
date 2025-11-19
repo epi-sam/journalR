@@ -1,5 +1,11 @@
 # ---- Init -----------------------------------------------------------------
 
+#' @importFrom data.table :=
+NULL
+
+#' @import checkmate
+NULL
+
 # Create a package-level environment
 # This is created when the package is loaded and persists for the session
 # CRAN compliant: no global assignment, scoped to package namespace
