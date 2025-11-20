@@ -200,7 +200,7 @@ journalR::new_style(
 ```
 
 
-Perhaps the user prefers standard thousands separators for counts.
+<!-- Perhaps the user prefers standard thousands separators for counts. -->
 
 ```{r apply_new_style_counts}
 journalR::format_journal_df(
@@ -214,9 +214,9 @@ journalR::format_journal_df(
 )
 ```
 
-Or perhaps thousands should be treated like millions with high precision.
+<!-- Or perhaps thousands should be treated like millions with high precision. -->
 
-```{r new_style_2}
+```{r new_style_2, include=F}
 journalR::new_style(
    style_name                 = 'my_style2'
    , digits_round_prop        = 3
@@ -244,9 +244,7 @@ journalR::format_journal_df(
 ```
 
 
-Perhaps the user's values have higher precision - you can allow for that with your custom style.
-
-```{r apply_new_style_prop}
+```{r apply_new_style_prop, include=F}
 journalR::format_journal_df(
    data.table::data.table(
                   data_space    = c("all_positive", "mixed_negative", "all_negative")

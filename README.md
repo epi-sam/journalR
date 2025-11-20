@@ -229,7 +229,7 @@ journalR::new_style(
 )
 ```
 
-Perhaps the user prefers standard thousands separators for counts.
+<!-- Perhaps the user prefers standard thousands separators for counts. -->
 
 ``` r
 journalR::format_journal_df(
@@ -246,58 +246,6 @@ journalR::format_journal_df(
 #> 2 54.700 million (95%UI 48.600–59.600)
 ```
 
-Or perhaps thousands should be treated like millions with high
-precision.
-
-``` r
-journalR::new_style(
-   style_name                 = 'my_style2'
-   , digits_round_prop        = 3
-   , digits_sigfig_count      = 5
-   , nsmall                   = 3
-   , decimal.mark             = "."
-   , negative_sign            = "-"
-   , big.mark_count           = ","
-   , mean_neg_text            = "Negative "
-   , UI_only                  = FALSE
-   , UI_text                  = "95%UI "
-   , assert_clu_relationships = TRUE
-   , is_lancet                = FALSE
-   , allow_thousands          = TRUE
-)
-journalR::format_journal_df(
-   data.frame(
-        mean          = c(55832, 54.7e6)
-      , lower         = c(50797, 48.6e6)
-      , upper         = c(60754, 59.6e6)
-   )
-   , d_type = "count"
-   , style  = "my_style2"
-)
-#>                                clu_fmt
-#> 1         55,832 (95%UI 50,797–60,754)
-#> 2 54.700 million (95%UI 48.600–59.600)
-```
-
-Perhaps the user’s values have higher precision - you can allow for that
-with your custom style.
-
-``` r
-journalR::format_journal_df(
-   data.table::data.table(
-                  data_space    = c("all_positive", "mixed_negative", "all_negative")
-                , mean          = c(.5584654, -0.15665, -0.1321684)
-                , lower         = c(.5076231, -0.25321, -0.235321)
-                , upper         = c(.6076589, 1.365432, -0.056549)
-             )
-   , d_type = "prop"
-   , style = "my_style2"
-)
-#>        data_space                                     clu_fmt
-#>            <char>                                      <char>
-#> 1:   all_positive               55.847% (95%UI 50.762–60.766)
-#> 2: mixed_negative Negative 15.665% (95%UI -25.321 to 136.543)
-#> 3:   all_negative       Negative 13.217% (95%UI 5.655–23.532)
-```
+<!-- Or perhaps thousands should be treated like millions with high precision. -->
 
 Done.
