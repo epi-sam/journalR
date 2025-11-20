@@ -190,7 +190,7 @@ journalR::new_style(
    , decimal.mark             = "."
    , negative_sign            = "-"
    , big.mark_count           = ","
-   , mean_neg_text            = "Negative"
+   , mean_neg_text            = "Negative "
    , UI_only                  = FALSE
    , UI_text                  = "95%UI "
    , assert_clu_relationships = TRUE
@@ -225,7 +225,7 @@ journalR::new_style(
    , decimal.mark             = "."
    , negative_sign            = "-"
    , big.mark_count           = ","
-   , mean_neg_text            = "Negative"
+   , mean_neg_text            = "Negative "
    , UI_only                  = FALSE
    , UI_text                  = "95%UI "
    , assert_clu_relationships = TRUE
@@ -255,7 +255,7 @@ journalR::format_journal_df(
                 , upper         = c(.6076589, 1.365432, -0.056549)
              )
    , d_type = "prop"
-   , style = "my_style"
+   , style = "my_style2"
 )
 ```
 
