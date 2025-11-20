@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of journalR is to ...
+The goal of journalR is to ease real-world scientific publication writing. 
 
 ## Installation
 
@@ -29,27 +29,56 @@ You can install the development version of journalR from [GitHub](https://github
 pak::pak("epi-sam/journalR")
 ```
 
-## Example
+## Basics
 
-This is a basic example which shows you how to solve a common problem:
+In the Platonic ideal world, a journal is written in pure LaTeX, Rmarkdown, or
+the like.
+
+In the real world, journals are written collaboratively in Word, with messy 
+versioning, multiple copies of the same file, broken citations, and enjoy 
+constant updates and handoffs between team members.
+
+Sometimes, you just need to copy and paste some numbers.
+
+Enter journalR.
 
 ```{r example}
 library(journalR)
-## basic example code
+
+# data.table is not required, but the author finds it helpful.
+library(data.table)
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
+Let's say you have done some statistical analysis.
 
-```{r cars}
-summary(cars)
+```{r mtcars}
+DT <- as.data.table(mtcars)
+
+# calculate mean/lower/upper 95% UI for mpg by cyl
+DT_mpg <- DT[
+   , .(
+      mean  = mean(mpg),
+      lower = quantile(mpg, 0.025),
+      upper = quantile(mpg, 0.975)
+   )
+   , by = cyl]
+
+print(DT_mpg)
 ```
 
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this.
+If you want to continue your analysis, best to leave numbers in their raw form.
 
-You can also embed plots, for example:
+However, if they're ready for presenation, you'll want to format them.
 
-```{r pressure, echo = FALSE}
-plot(pressure)
+- The `format_journal_df()` function formats numbers in a data.table or data.frame for easy copy/paste into Word or similar.
+- The user must provide a data type (`d_type`), which tells the function how to format the numbers.
+- Checks are performed to ensure mean/lower/upper relationships are sound (lower < mean < upper) before formatting.
+
+```{r format}
+DT_mpg |>
+   journalR::format_journal_df(
+      d_type = "count"
+   )
 ```
 
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
+
