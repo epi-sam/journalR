@@ -27,7 +27,7 @@ Rmarkdown, or the like.
 
 In the real world, journals are written collaboratively in Word, with
 messy versioning, multiple copies of the same file, broken citations,
-and enjoy constant updates and handoffs between team members.
+and enjoy constant updates and hand offs between team members.
 
 Sometimes, you just need to copy and paste some numbers.
 
@@ -62,7 +62,7 @@ print(DT_mpg)
 #> 3:     8 15.10000 10.400 19.0375
 ```
 
-Once they’re ready for presenation, you’ll want to format them.
+Once they’re ready for presentation, you’ll want to format them.
 
 Enter `format_journal_df()`:
 
@@ -94,7 +94,7 @@ above, with different data types.
 - Things get messy in the real world!
 
 ``` r
-# build a mean/lower/uppper summary table with some percentage from DT
+# build a mean/lower/upper summary table with some percentage from DT
 DT_summary <- DT[
    , .(
         n            = .N
@@ -138,7 +138,7 @@ DT_summary |>
 Two formatting styles are built into journalR, and the user may extend
 this.
 
-- Nature (defautl)
+- Nature (default)
 - Lancet (particular)
 
 Styles are a key/value list of metadata controlling rounding and
@@ -183,7 +183,7 @@ journalR::format_journal_df(
 #> 2 54·7 million (48·6–59·6)
 ```
 
-Netagives are handled gracefully.
+Negatives are handled gracefully.
 
 - Lancet decimals are `mid_dot()` characters
 
