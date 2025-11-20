@@ -9,7 +9,11 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
-  out.width = "100%"
+  out.width = "100%",
+  # print 15 lines of table output
+  tidy.opts = list(width.cutoff = 60
+               , max.print = 15
+  )
 )
 ```
 
@@ -44,7 +48,6 @@ Enter journalR.
 
 ```{r example}
 library(journalR)
-
 # data.table is not required, but the author finds it helpful.
 library(data.table)
 ```
@@ -52,27 +55,29 @@ library(data.table)
 Let's say you have done some statistical analysis.
 
 ```{r mtcars}
-DT <- as.data.table(mtcars)
+DT <- data.table::as.data.table(mtcars)
 
 # calculate mean/lower/upper 95% UI for mpg by cyl
 DT_mpg <- DT[
    , .(
-      mean  = mean(mpg),
-      lower = quantile(mpg, 0.025),
-      upper = quantile(mpg, 0.975)
+        mean  = mean(mpg)
+      , lower = quantile(mpg, 0.025)
+      , upper = quantile(mpg, 0.975)
    )
-   , by = cyl]
+   , by = cyl
+]
 
 print(DT_mpg)
 ```
 
-If you want to continue your analysis, best to leave numbers in their raw form.
+Once they're ready for presenation, you'll want to format them.
 
-However, if they're ready for presenation, you'll want to format them.
+Enter `format_journal_df()`:
 
-- The `format_journal_df()` function formats numbers in a data.table or data.frame for easy copy/paste into Word or similar.
+- Format a mean/lower/upper set of three columns into a `mean (lower -- upper)` string.
+   - Ready for easy copy/paste into Word or similar.
 - The user must provide a data type (`d_type`), which tells the function how to format the numbers.
-- Checks are performed to ensure mean/lower/upper relationships are sound (lower < mean < upper) before formatting.
+   - mean/lower/upper relationships are asserted (lower < mean < upper) before formatting.
 
 ```{r format}
 DT_mpg |>
@@ -81,4 +86,177 @@ DT_mpg |>
    )
 ```
 
+## Options 
 
+The user's data.frame may be formatted differently than the simple case above, with different data types.
+
+- Things get messy in the real world!
+
+```{r options}
+# build a mean/lower/uppper summary table with some percentage from DT
+DT_summary <- DT[
+   , .(
+        n            = .N
+      , mean_mpg     = mean(mpg)
+      , lower_mpg    = quantile(mpg, 0.025)
+      , upper_mpg    = quantile(mpg, 0.975)
+      , pct_vshape   = mean(vs) 
+      , lower_vshape = quantile(vs, 0.025) 
+      , upper_vshape = quantile(vs, 0.975) 
+   )
+   , by = cyl
+]
+
+```
+
+As long as your table is tidy, it can be formatted.
+
+```{r options_formatted}
+DT_summary |>
+   journalR::format_journal_df(
+      d_type               = c("prop")
+      , new_var            = "pct_vshape_fmt" # specify output colname (must be a new one)
+      , central_var        = "pct_vshape" 
+      , lower_var          = "lower_vshape"
+      , upper_var          = "upper_vshape"
+      , remove_clu_columns = FALSE # retain the original columns if desired
+   )
+```
+
+## Styles
+
+Two formatting styles are built into journalR, and the user may extend this.
+
+- Nature (defautl)
+- Lancet (particular)
+
+```{r style_lancet, include=FALSE}
+lancet <- data.table::as.data.table(stack(style_lancet()))
+data.table::setcolorder(lancet, "ind")
+data.table::setnames(lancet, c("ind", "values"), c("key", "value"))
+```
+
+Styles are a key/value list of metadata controlling rounding and formatting.
+
+Here is an example of a very particular style, and how these values affect presentation tables. 
+
+```{r style_lancet_show}
+# print(style_lancet()) # as a list
+print(lancet) # formatted a little nicer
+```
+
+Counts receive a non-standard thousands separator.
+
+```{r lancet_format_counts}
+journalR::format_journal_df(
+   data.frame(
+        mean          = c(55.8e3, 54.7e6)
+      , lower         = c(50.7e3, 48.6e6)
+      , upper         = c(60.7e3, 59.6e6)
+   )
+   , d_type = "count"
+   , style = "lancet"
+)
+```
+
+Netagives are handled gracefully.
+
+- Lancet decimals are `mid_dot()` characters
+
+```{r lancet_format_prop}
+journalR::format_journal_df(
+   data.table::data.table(
+                  data_space    = c("all_positive", "mixed_negative", "all_negative")
+                , mean          = c(.5584654, -0.15665, -0.1321684)
+                , lower         = c(.5076231, -0.25321, -0.235321)
+                , upper         = c(.6076589, 1.365432, -0.056549)
+             )
+   , d_type = "prop"
+   , style = "lancet"
+)
+```
+
+## Extending styles
+
+Users may define their own styles by creating a named list with the same keys as the built-in styles.
+
+```{r new_style}
+
+journalR::new_style(
+   style_name                 = 'my_style'
+   , digits_round_prop        = 3
+   , digits_sigfig_count      = 5
+   , nsmall                   = 3
+   , decimal.mark             = "."
+   , negative_sign            = "-"
+   , big.mark_count           = ","
+   , mean_neg_text            = "Negative"
+   , UI_only                  = FALSE
+   , UI_text                  = "95%UI "
+   , assert_clu_relationships = TRUE
+   , is_lancet                = FALSE
+   , allow_thousands          = FALSE
+)
+```
+
+
+Perhaps the user prefers standard thousands separators for counts.
+
+```{r apply_new_style_counts}
+journalR::format_journal_df(
+   data.frame(
+        mean          = c(55.8e3, 54.7e6)
+      , lower         = c(50.7e3, 48.6e6)
+      , upper         = c(60.7e3, 59.6e6)
+   )
+   , d_type = "count"
+   , style  = "my_style"
+)
+```
+
+Or perhaps thousands should be treated like millions with high precision.
+
+```{r new_style_2}
+journalR::new_style(
+   style_name                 = 'my_style2'
+   , digits_round_prop        = 3
+   , digits_sigfig_count      = 5
+   , nsmall                   = 3
+   , decimal.mark             = "."
+   , negative_sign            = "-"
+   , big.mark_count           = ","
+   , mean_neg_text            = "Negative"
+   , UI_only                  = FALSE
+   , UI_text                  = "95%UI "
+   , assert_clu_relationships = TRUE
+   , is_lancet                = FALSE
+   , allow_thousands          = TRUE
+)
+journalR::format_journal_df(
+   data.frame(
+        mean          = c(55832, 54.7e6)
+      , lower         = c(50797, 48.6e6)
+      , upper         = c(60754, 59.6e6)
+   )
+   , d_type = "count"
+   , style  = "my_style2"
+)
+```
+
+
+Perhaps the user's values have higher precision - you can allow for that with your custom style.
+
+```{r apply_new_style_prop}
+journalR::format_journal_df(
+   data.table::data.table(
+                  data_space    = c("all_positive", "mixed_negative", "all_negative")
+                , mean          = c(.5584654, -0.15665, -0.1321684)
+                , lower         = c(.5076231, -0.25321, -0.235321)
+                , upper         = c(.6076589, 1.365432, -0.056549)
+             )
+   , d_type = "prop"
+   , style = "my_style"
+)
+```
+
+Done. 
