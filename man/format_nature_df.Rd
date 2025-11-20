@@ -19,6 +19,8 @@ format_nature_df(
 
 \item{d_type}{[chr c('prop', 'pp', or 'count')] a single data type}
 
+\item{new_var}{[chr: default 'clu_fmt'] name of new formatted column}
+
 \item{central_var}{[chr: default 'mean'] name of central tendency variable}
 
 \item{lower_var}{[chr: default 'lower'] name of lower bound variable}

@@ -591,6 +591,7 @@ format_nature_clu <- function(
 #'
 #' @param df [data.table]
 #' @param d_type [chr c('prop', 'pp', or 'count')] a single data type
+#' @param new_var [chr: default 'clu_fmt'] name of new formatted column
 #' @param central_var [chr: default 'mean'] name of central tendency variable
 #' @param lower_var [chr: default 'lower'] name of lower bound variable
 #' @param upper_var [chr: default 'upper'] name of upper bound variable
