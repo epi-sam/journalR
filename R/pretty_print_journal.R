@@ -133,6 +133,7 @@ format_journal_clu <- function(
    UI_text                  <- style[["UI_text"]]
    assert_clu_relationships <- style[["assert_clu_relationships"]]
    is_lancet                <- style[["is_lancet"]]
+   allow_thousands          <- style[["allow_thousands"]]
 
    checkmate::assert_numeric(central, min.len = 1)
    checkmate::assert_numeric(lower)
@@ -212,7 +213,12 @@ format_journal_clu <- function(
       assert_x_gte_y(x = upper,   y = lower) # probably redundant
    }
 
-   mag_list  <- set_magnitude(central)
+   mag_list  <- set_magnitude(
+      x                 = central
+      , mag             = NULL
+      , allow_thousands = allow_thousands
+      , verbose         = FALSE
+   )
    mag_label <- mag_list$mag_label
    mag_table <- data.table::as.data.table(mag_list) # easier to use this format here
 

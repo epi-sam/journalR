@@ -113,6 +113,15 @@ fround_countish <- function(
             nsmall <- 0
          }
 
+         # Edge case - thousands with high digit precision keep correct nsmall
+         if(
+            mag_list$mag == "t"
+            & nchar(format(x_i_rnd, scientific = FALSE)) >= digits_sigfig_count
+            & nsmall == 0
+         ){
+            nsmall <- digits_sigfig_count - (nchar(x_i_div) - nchar(decimal.mark)) + nchar(decimal.mark)
+         }
+
          x_i_chr <- format(
             x              = x_i_div
             , decimal.mark = decimal.mark
@@ -142,7 +151,7 @@ fround_countish <- function(
          ) {
             # pad   <- required nchar                             - current nchar
             n_zeros <- (digits_sigfig_count + nchar(decimal.mark)) - nchar(x_i_chr)
-            zeros   <- rep.int("0", n_zeros)
+            zeros   <- paste0(rep.int("0", n_zeros), collapse = '')
             x_i_chr <- sprintf("%s%s", x_i_chr, zeros)
          }
 
