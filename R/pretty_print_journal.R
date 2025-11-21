@@ -13,7 +13,7 @@
 #'   order.
 #' @param d_type [chr c('prop', 'pp', or 'count')] data type - proportion,
 #'   percentage point or count
-#' @param mag_list [named list] output from `set_magnitude()` - must be based on
+#' @param df_mag [named list] output from `set_magnitude()` - must be based on
 #'   central value of a central/lower/upper set - central and all UI values
 #'   inherit the same scale as the central tendency.
 #' @param style_name [chr: default 'nature'] style name - controls rounding and
@@ -32,7 +32,7 @@ fround_mag_clu <- function(
       clu
       , d_type
       , style_name = "nature"
-      , mag_list   = set_magnitude(clu[1]) # assuming central is in first position
+      , df_mag     = set_magnitude(clu[1]) # assuming central is in first position
 ) {
 
    style                    <- get_style(style_name)
@@ -51,8 +51,7 @@ fround_mag_clu <- function(
    if(assert_clu_relationships == TRUE){
       assert_clu_relationship(clu[1], clu[2], clu[3])
    }
-   checkmate::assert_list(mag_list, names = "named")
-   checkmate::assert_names(names(mag_list), must.include = c("denom"))
+   checkmate::assert_data_frame(df_mag)
 
    clu_fmt <- switch_strict(
       d_type
@@ -60,7 +59,7 @@ fround_mag_clu <- function(
       , "pp"    = fround_propish(x = clu, digits = digits_round_prop, nsmall = nsmall, decimal.mark = decimal.mark)
       , "count" = fround_countish(
          clu                   = clu
-         , mag_list            = mag_list
+         , df_mag              = df_mag
          , digits_sigfig_count = digits_sigfig_count
          , decimal.mark        = decimal.mark
          , big.mark_count      = big.mark_count
@@ -143,114 +142,93 @@ format_journal_clu <- function(
    checkmate::assert_vector(upper)
 
    # lists with two shapes for assertions and processing
-   # 1. three vectors of equal length (central, lower, upper)
-   # 2. list of sets of central, lower, upper triplet values
-   clu <- list(
+   # 1. input  - three vectors of equal length (central, lower, upper)
+   # 2. output - triplet sets of (central, lower, upper) values for presentation
+
+   clu <- df_strict( # handles equal length assertion
       central = central
       , lower = lower
       , upper = upper
    )
-   # assert dimensions
-   clu_lengths <- unique(unlist(Map(length, clu)))
-   checkmate::assert_true(length(clu_lengths) == 1)
+
    if(assert_clu_relationships == TRUE){
-      assert_clu_relationship(clu$central, clu$lower, clu$upper)
+      assert_clu_relationship(
+         central = clu$central
+         , lower = clu$lower
+         , upper = clu$upper
+      )
    }
 
-   triplets <- lapply(seq_along(central), function(i) {
-      c(central = central[i], lower = lower[i], upper = upper[i])
-   })
-   # assert dimensions
-   triplet_lengths <- unique(unlist(Map(length, triplets)))
-   checkmate::assert_true(length(triplet_lengths) == 1)
-   checkmate::assert_true(triplet_lengths == 3)
+   triplets <- t(clu) # transpose for easier processing
 
-   # Capture numeric info before character conversion
-   # Does UI cross zero? Decide which UI separator to use.
-   UI_crosses_zero_vec <- unlist(lapply(triplets, function(triplet) {
-      (triplet["lower"] < 0) & (triplet["upper"] > 0)
-   })) |> unname()
-   # Is the central value negative?
-   decrease_stub <- unlist(lapply(
-      central < 0
-      , dplyr::if_else, true = mean_neg_text, false = ""
-   ))
-   # Is the whole set negative?
-   all_neg_vec <- unlist(lapply(triplets, function(triplet) all(triplet <= 0)))
-   sep_vec     <- dplyr::if_else(
-      (UI_crosses_zero_vec == TRUE & all_neg_vec == FALSE)
-      , " to ", en_dash()
-   )
-
-   # process triplets
-   triplets <- lapply(triplets, function(triplet){
-
-      # proportion to percentage
-      if(d_type %in% c("prop", "pp")) triplet <- triplet * 100
-
-      all_neg     <- all(triplet <= 0)
-      central_neg <- (triplet["central"] < 0) & !all_neg
-
-      # If just the mean is negative, invert just the mean
-      if(central_neg) triplet["central"] <- triplet["central"] * -1
-
-      # If the triplet is all negative, invert and flip upper, lower values
-      if(all_neg) {
-         triplet <- triplet * -1
-         l_temp  <- triplet[["lower"]]
-         u_temp  <- triplet[["upper"]]
-         triplet[["lower"]] <- u_temp
-         triplet[["upper"]] <- l_temp
-      }
-      return(triplet)
-   })
-   triplets <- lapply(triplets, function(x) {names(x) <- c("central", "lower", "upper"); x})
-
-   # assert any negative inversions left things in good shape
-   if(assert_clu_relationships == TRUE){
-      assert_x_gte_y(x = upper,   y = central)
-      assert_x_gte_y(x = central, y = lower)
-      assert_x_gte_y(x = upper,   y = lower) # probably redundant
-   }
-
-   mag_list  <- set_magnitude(
-      x                 = central
+   # Magnitude of triplets use raw central value
+   # lower and upper inherit central value magnitude scaling
+   df_mag  <- set_magnitude(
+      # x                 = clu$central
+      x                 = triplets["central", ]
       , mag             = NULL
       , allow_thousands = allow_thousands
       , verbose         = FALSE
    )
-   mag_label <- mag_list$mag_label
-   mag_table <- data.table::as.data.table(mag_list) # easier to use this format here
+   mag_label_vec <- df_mag$mag_label
+
+   # Capture numeric info before character conversion
+   # Does UI cross zero? Decide which UI separator to use.
+   UI_crosses_zero_vec <- unlist(apply(triplets, 2, function(triplet) {
+      (triplet["lower"] < 0) & (triplet["upper"] > 0)
+   })) |> unname()
+
+   # Is the central value negative?
+   decrease_stub_vec <- unlist(lapply(triplets["central", ], function(c_i){
+      if(c_i < 0) {
+         mean_neg_text
+      } else {
+         ""
+      }
+   }))
+
+   # Is the whole triplet set negative?
+   all_neg_vec <- unlist(apply(triplets, 2, function(triplet) all(triplet <= 0)))
+
+   # Which `(x to/- y)` separator based on triplet set pos/neg relationships
+   sep_vec <- data.table::fifelse(
+      (UI_crosses_zero_vec == TRUE & all_neg_vec == FALSE)
+      , " to ", en_dash()
+   )
+
+   # Handle central negatives and full-negative triplet sets
+   # - allows style$mean_neg_text to be assigned
+   triplets_neg_processed <- process_clu_triplet_negatives(
+      triplets = triplets
+      , assert_clu_relationships = assert_clu_relationships
+   )
+
 
    # Where the magic happens
-   triplets_fmt <- lapply(seq_along(triplets), function(idx){
+   triplets_fmt <- lapply(seq_len(ncol(triplets_neg_processed)), function(idx){
       triplet_fmt <- fround_mag_clu(
-         clu                   = triplets[[idx]]
-         , d_type              = d_type
-         , style_name          = style_name
-         , mag_list            = as.list(mag_table[idx, ])
+         clu          = triplets_neg_processed[, idx]
+         , d_type     = d_type
+         , style_name = style_name
+         , df_mag     = df_mag[idx, ]
       )
+      # These should be retained, but let's use belt and suspenders
       names(triplet_fmt) <- c("central", "lower", "upper")
       triplet_fmt
    })
 
-   n_sets <- length(triplets_fmt)
-
-   d_type_label <- switch_strict(
-      d_type
-      , "prop"  = rep.int("%",   n_sets)
-      , "pp"    = rep.int(" pp", n_sets)
-      , "count" = rep.int("",    n_sets)
-   )
+   d_type_label <- get_data_type_labels()[[d_type]]
 
    str_vec <- unlist(lapply(seq_along(triplets_fmt), function(i){
       .cen <- triplets_fmt[[i]]['central']
       .upp <- triplets_fmt[[i]]['upper']
       .low <- triplets_fmt[[i]]['lower']
-      str <- glue::glue("{decrease_stub[i]}{.cen}{d_type_label[i]} {mag_label[i]}({UI_text}{.low}{sep_vec[i]}{.upp})")
+
+      # Building blocks for final string
+      str <- glue::glue("{decrease_stub_vec[i]}{.cen}{d_type_label} {mag_label_vec[i]}({UI_text}{.low}{sep_vec[i]}{.upp})")
 
       if (UI_only) {
-         str <- glue::glue("{UI_text}{.low}{sep_vec[i]}{.upp}{mag_label[i]}")
+         str <- glue::glue("{UI_text}{.low}{sep_vec[i]}{.upp}{mag_label_vec[i]}")
       }
 
       return(str)
@@ -259,6 +237,7 @@ format_journal_clu <- function(
 
    return(str_vec)
 }
+
 
 #' Return a table with formatted central, lower, upper
 #'
@@ -423,7 +402,7 @@ format_means_df <- function(
 #' @param clu [num] a numeric vector of three values in central, lower, upper order.
 #' @param d_type [chr c('prop', 'pp', or 'count')] data type - proportion,
 #'  percentage point or count.
-#' @param mag_list [named list] output from `set_magnitude()` - must be based on
+#' @param df_mag [named list] output from `set_magnitude()` - must be based on
 #'  central value of a central, lower, upper set - central and all UI values
 #'  inherit the same scale as the central tendency.
 #'
@@ -435,13 +414,13 @@ format_means_df <- function(
 fround_mag_clu_lancet <- function(
       clu
       , d_type
-      , mag_list   = set_magnitude(clu[1]) # assuming central is in first position
+      , df_mag = set_magnitude(clu[1]) # assuming central is in first position
 ) {
    fround_mag_clu(
       clu          = clu
       , d_type     = d_type
       , style_name = "lancet"
-      , mag_list   = mag_list
+      , df_mag     = df_mag
    )
 }
 
@@ -538,7 +517,7 @@ format_lancet_df <- function(
 #' @param clu [num] a numeric vector of three values in central, lower, upper order.
 #' @param d_type [chr c('prop', 'pp', or 'count')] data type - proportion,
 #'  percentage point or count.
-#' @param mag_list [named list] output from `set_magnitude()` - must be based on
+#' @param df_mag [data.frame] output from `set_magnitude()` - must be based on
 #'  central value of a central, lower, upper set - central and all UI values
 #'  inherit the same scale as the central tendency.
 #'
@@ -550,13 +529,13 @@ format_lancet_df <- function(
 fround_mag_clu_nature <- function(
       clu
       , d_type
-      , mag_list   = set_magnitude(clu[1]) # assuming central is in first position
+      , df_mag = set_magnitude(clu[1]) # assuming central is in first position
 ) {
    fround_mag_clu(
       clu          = clu
       , d_type     = d_type
       , style_name = "nature"
-      , mag_list   = mag_list
+      , df_mag     = df_mag
    )
 }
 

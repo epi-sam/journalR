@@ -6,7 +6,7 @@
 \usage{
 fround_countish(
   clu,
-  mag_list,
+  df_mag,
   digits_sigfig_count = 3L,
   nsmall = 1L,
   decimal.mark = ".",
@@ -17,7 +17,7 @@ fround_countish(
 \arguments{
 \item{clu}{[num] numeric triplet of counts (central, lower, upper)}
 
-\item{mag_list}{[list] magnitude list as returned by `set_magnitude()`}
+\item{df_mag}{[data.frame] magnitude df as returned by `set_magnitude()`}
 
 \item{digits_sigfig_count}{[integer] significant figures for counts}
 
@@ -39,7 +39,7 @@ non-exported helper
 \dontrun{
 fround_countish(
    clu                   = c(12345, 67890, 6e6)
-   , mag_list            = set_magnitude(12345)
+   , df_mag              = set_magnitude(12345)
    , digits_sigfig_count = 3L
    , nsmall              = 1L
    , decimal.mark        = "."

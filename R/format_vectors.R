@@ -3,6 +3,98 @@
 
 # ---- Private -----------------------------------------------------------------
 
+#' Prepare central, lower, upper value triplets for journal presentation
+#'
+#' Vectorized preparation of central, lower, upper values.
+#' Handles negatives, and swaps ordering where necessary.
+#' Casting some negatives as positives allows user control to set
+#' `style$mean_neg_text` appropriately.
+#'
+#' non-exported helper
+#'
+#' @param triplets [matrix]  with rownames 'central', 'lower', 'upper'
+#' @param assert_clu_relationships [lgl: default TRUE] assert that central, lower, upper relationships are valid
+#'
+#' @returns [num matrix] matrix with rows 'central', 'lower', 'upper' and columns for each triplet set
+#'
+#' @examples
+#' \dontrun{
+#' process_clu_triplet_negatives(
+#'    central  = c(0.5, -0.2, -0.5, -2)
+#'    , lower  = c(0.3, -0.5, -1.0, -3)
+#'    , upper  = c(0.7, 0.1, -0.2, -1)
+#' )
+#' }
+process_clu_triplet_negatives <- function(
+      triplets
+      , assert_clu_relationships = TRUE
+){
+
+   # lists with two shapes for assertions and processing
+   # 1. input  - three vectors of equal length (central, lower, upper)
+   # 2. output - triplet sets of (central, lower, upper) values for presentation
+
+   assert_x_in_y(x = c("central", "lower", "upper"), y = rownames(triplets))
+
+   if(assert_clu_relationships == TRUE){
+      assert_clu_relationship(
+         central = triplets["central", ]
+         , lower = triplets["lower", ]
+         , upper = triplets["upper", ]
+      )
+   }
+
+   # process negatives
+   triplets <- apply(triplets, 2, function(triplet){
+
+      # FIXME SB - 2025 Nov 21 - moved to fround_propish where it belongs
+      # # proportion to percentage
+      # if(d_type %in% c("prop", "pp")) triplet <- triplet * 100
+
+
+      all_neg     <- all(triplet <= 0)
+      central_neg <- (triplet["central"] < 0) & !all_neg
+
+      # If just the mean is negative, invert just the mean
+      # - style$mean_neg_text handles the text prefixing
+      if(central_neg) triplet["central"] <- triplet["central"] * -1
+
+      # If the triplet is all negative, invert and flip upper, lower values
+      if(all_neg) {
+
+         triplet <- triplet * -1
+         l_temp  <- triplet[["lower"]]
+         u_temp  <- triplet[["upper"]]
+         triplet[["lower"]] <- u_temp
+         triplet[["upper"]] <- l_temp
+
+         if(assert_clu_relationships == TRUE){
+            assert_clu_relationship(
+               central = triplet["central"]
+               , lower = triplet["lower"]
+               , upper = triplet["upper"]
+            )
+         }
+
+      }
+
+      return(triplet)
+   })
+
+   # assert any negative inversions left things in good shape
+   # FIXME SB - 2025 Nov 21 - this doesn't work with central negative inversion
+   # if(assert_clu_relationships == TRUE){
+   #    assert_clu_relationship(
+   #       central = triplets['central',]
+   #       , lower = triplets['lower',]
+   #       , upper = triplets['upper',]
+   #    )
+   # }
+
+   return(triplets)
+
+}
+
 #' Format and round proportion-ish number
 #'
 #' non-exported helper
@@ -27,7 +119,7 @@ fround_propish <- function(
 ){
    # hack for floating point rounding issues
    epsilon <- 1e-9
-   round(x = x + epsilon, digits = digits) |>
+   round(x = x * 100 + epsilon, digits = digits) |>
       format(nsmall = nsmall, decimal.mark = decimal.mark) |>
       trimws()
 }
@@ -37,7 +129,7 @@ fround_propish <- function(
 #' non-exported helper
 #'
 #' @param clu [num] numeric triplet of counts (central, lower, upper)
-#' @param mag_list [list] magnitude list as returned by `set_magnitude()`
+#' @param df_mag [data.frame] magnitude df as returned by `set_magnitude()`
 #' @param digits_sigfig_count [integer] significant figures for counts
 #' @param nsmall [integer] minimum number of digits to the right of the decimal point
 #' @param decimal.mark [chr] passed to `format()`
@@ -51,7 +143,7 @@ fround_propish <- function(
 #' \dontrun{
 #' fround_countish(
 #'    clu                   = c(12345, 67890, 6e6)
-#'    , mag_list            = set_magnitude(12345)
+#'    , df_mag              = set_magnitude(12345)
 #'    , digits_sigfig_count = 3L
 #'    , nsmall              = 1L
 #'    , decimal.mark        = "."
@@ -61,7 +153,7 @@ fround_propish <- function(
 #' }
 fround_countish <- function(
       clu
-      , mag_list
+      , df_mag
       , digits_sigfig_count = 3L
       , nsmall              = 1L
       , decimal.mark        = "."
@@ -99,7 +191,7 @@ fround_countish <- function(
 
          # x divided
          x_i_div <- signif(
-            x        = (x_i / mag_list$denom)
+            x        = (x_i / df_mag$denom)
             , digits = digits_sigfig_count
          )
          checkmate::assert_numeric(x_i, len = 1)
@@ -115,7 +207,7 @@ fround_countish <- function(
 
          # Edge case - thousands with high digit precision keep correct nsmall
          if(
-            mag_list$mag == "t"
+            df_mag$mag == "t"
             & nchar(format(x_i_rnd, scientific = FALSE)) >= digits_sigfig_count
             & nsmall == 0
          ){
@@ -299,7 +391,7 @@ fmt_magnitude <- function(
    checkmate::assert_integerish(digits, len = 1, lower = 0)
    checkmate::assert_integerish(nsmall, len = 1, lower = 0)
 
-   mag_list <- set_magnitude(
+   df_mag <- set_magnitude(
       x
       , mag             = mag
       , allow_thousands = allow_thousands
@@ -311,10 +403,10 @@ fmt_magnitude <- function(
    x <- x + epsilon
 
    x_fmt <-
-      round(x / mag_list$denom, digits = digits) |>
+      round(x / df_mag$denom, digits = digits) |>
       format(nsmall = nsmall, decimal.mark = decimal.mark) |>
       trimws()|>
-      sprintf("%s %s", ... = _, mag_list$mag_label) |>
+      sprintf("%s %s", ... = _, df_mag$mag_label) |>
       trimws()
 
    return(x_fmt)

@@ -8,7 +8,7 @@ fround_mag_clu(
   clu,
   d_type,
   style_name = "nature",
-  mag_list = set_magnitude(clu[1])
+  df_mag = set_magnitude(clu[1])
 )
 }
 \arguments{
@@ -21,7 +21,7 @@ percentage point or count}
 \item{style_name}{[chr: default 'nature'] style name - controls rounding and
 formatting.}
 
-\item{mag_list}{[named list] output from `set_magnitude()` - must be based on
+\item{df_mag}{[named list] output from `set_magnitude()` - must be based on
 central value of a central/lower/upper set - central and all UI values
 inherit the same scale as the central tendency.}
 }

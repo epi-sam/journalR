@@ -95,3 +95,20 @@ drop_columns <- function(x, varnames){
    }
    return(x)
 }
+
+#' Strict data.frame constructor
+#'
+#' Forbids vector length 1 recycling
+#'
+#' @param ...
+#'
+#' @returns [data.frame]
+df_strict <- function(...) {
+   x <- list(...)
+   lens <- lengths(x)
+
+   if (length(unique(lens)) != 1)
+      stop("Column length mismatch: ", paste(lens, collapse = ", "))
+
+   data.frame(...)
+}

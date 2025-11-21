@@ -15,7 +15,7 @@
 #'   Lancet-valid.
 #' @param verbose [lgl: default TRUE] warn if allow_thousands is TRUE
 #'
-#' @return [list] with vector elements: mag, mag_label, and denom Each vector
+#' @return [data.frame] with vector elements: mag, mag_label, and denom Each vector
 #'   element has one item per length(x)
 #' @seealso [fround_mag_clu()]
 #' @export
@@ -59,9 +59,9 @@ set_magnitude <- function(
    mag_label <- unlist(lapply(mag, function(mag_i){
       switch_strict(
          mag_i
-         , "b" = "billion "
-         , "m" = "million "
-         , "t" = "thousand " # not Lancet-valid
+         , "b"    = "billion "
+         , "m"    = "million "
+         , "t"    = "thousand " # not Lancet-valid
          , .empty = ""
       )
    }))
@@ -69,18 +69,16 @@ set_magnitude <- function(
    denom <- unlist(lapply(mag, function(mag_i){
       switch_strict(
          mag_i
-         , "b" = 1e9
-         , "m" = 1e6
-         , "t" = 1e3 # not Lancet-valid
+         , "b"    = 1e9
+         , "m"    = 1e6
+         , "t"    = 1e3 # not Lancet-valid
          , .empty = 1
       )
    }))
 
-   mag_list <- list(mag = mag, mag_label = mag_label, denom = denom)
-   unique_element_lengths <- unique(unlist(Map(length, mag_list)))
-   checkmate::assert_true(length(unique_element_lengths) == 1)
+   df_mag <- data.frame(mag = mag, mag_label = mag_label, denom = denom)
 
-   return(mag_list)
+   return(df_mag)
 }
 
 

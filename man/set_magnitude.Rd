@@ -20,7 +20,7 @@ Lancet-valid.}
 \item{verbose}{[lgl: default TRUE] warn if allow_thousands is TRUE}
 }
 \value{
-[list] with vector elements: mag, mag_label, and denom Each vector
+[data.frame] with vector elements: mag, mag_label, and denom Each vector
   element has one item per length(x)
 }
 \description{

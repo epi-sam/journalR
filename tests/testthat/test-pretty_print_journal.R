@@ -30,7 +30,7 @@ test_that("set_magnitude works",
           {
              expect_equal(
                 set_magnitude(c(1, 1e3, 1e6, 1e9, 1e12, -1e6))
-                , list(
+                , data.frame(
                    mag         = c("", "", "m", "b", "b", "m")
                    , mag_label = c("", "", "million ", "billion ", "billion ", "million ")
                    , denom     = c(1, 1, 1e+06, 1e+09, 1e+09, 1e+06)
@@ -121,7 +121,7 @@ test_that("format_nature_clu works",
 test_that("format_lancet_clu errors correctly", {
    expect_error(
       format_lancet_clu(central = c(0.994, 0.994), lower = c(0.984, 0.984), upper = c(0.998), d_type = "prop")
-      , "Assertion on 'length\\(clu_lengths\\) == 1' failed: Must be TRUE."
+      , "Column length mismatch:"
    )
    expect_error(
       format_lancet_clu(central = c(0.994, 0.999), lower = c(0.984, 0.984), upper = c(0.998, 0.998), d_type = "prop")
@@ -184,12 +184,12 @@ test_that("format_lancet_df and format_nature_df work",
              )
 
              DT_prop <- data.table::data.table(
-                location_did    = rep(1, 3)
-                , location_name = rep("Global", 3)
-                , data_space    = c("all_positive", "mixed_negative", "all_negative")
-                , mean          = c(.558, -0.1, -0.1)
-                , lower         = c(.507, -0.25, -0.2)
-                , upper         = c(.607, 1.3, -0.05)
+                location_did    = rep(1, 4)
+                , location_name = rep("Global", 4)
+                , data_space    = c("all_positive", "mixed_negative", "all_negative", "lower_negative")
+                , mean          = c(.558, -0.1, -0.1, 0.05)
+                , lower         = c(.507, -0.25, -0.2, -0.02)
+                , upper         = c(.607, 1.3, -0.05, 0.12)
              )
 
              expect_equal(
@@ -201,13 +201,13 @@ test_that("format_lancet_df and format_nature_df work",
                 ,
                 structure(
                    list(
-                      location_did = c(1, 1, 1),
-                      location_name = c("Global", "Global", "Global"),
-                      data_space = c("all_positive", "mixed_negative", "all_negative"),
-                      clu_fmt = c("55·8% (50·7–60·7)", "a decrease of 10·0% (–25·0 to 130·0)", "a decrease of 10·0% (5·0–20·0)"
+                      location_did = c(1, 1, 1, 1),
+                      location_name = c("Global", "Global", "Global", "Global"),
+                      data_space = c("all_positive", "mixed_negative", "all_negative", "lower_negative"),
+                      clu_fmt = c("55·8% (50·7–60·7)", "a decrease of 10·0% (–25·0 to 130·0)", "a decrease of 10·0% (5·0–20·0)", "5·0% (–2·0 to 12·0)"
                       )
                    ),
-                   row.names = c(NA, -3L
+                   row.names = c(NA, -4L
                    )
                    , class = c("data.table", "data.frame")
                 )

@@ -17,7 +17,6 @@ Depends: R (>= 4.2.0)
 Imports:
     checkmate,
     data.table,
-    dplyr,
     glue
 Suggests: 
     devtools (>= 2.4.5),

@@ -5,7 +5,7 @@
 \title{Format and round central, lower, upper value sets by magnitude without units
 for Nature journal presentation.}
 \usage{
-fround_mag_clu_nature(clu, d_type, mag_list = set_magnitude(clu[1]))
+fround_mag_clu_nature(clu, d_type, df_mag = set_magnitude(clu[1]))
 }
 \arguments{
 \item{clu}{[num] a numeric vector of three values in central, lower, upper order.}
@@ -13,7 +13,7 @@ fround_mag_clu_nature(clu, d_type, mag_list = set_magnitude(clu[1]))
 \item{d_type}{[chr c('prop', 'pp', or 'count')] data type - proportion,
 percentage point or count.}
 
-\item{mag_list}{[named list] output from `set_magnitude()` - must be based on
+\item{df_mag}{[data.frame] output from `set_magnitude()` - must be based on
 central value of a central, lower, upper set - central and all UI values
 inherit the same scale as the central tendency.}
 }
