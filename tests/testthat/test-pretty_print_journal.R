@@ -70,8 +70,8 @@ test_that("format_mean_df works",
 
 test_that("fround_mag_clu works",
           {
-             expect_equal(fround_mag_clu_lancet(clu = c(central = 0.2, lower = 0.1, upper = 0.3), d_type = "prop"), c(central = "0·2", lower = "0·1", upper = "0·3"))
-             expect_equal(fround_mag_clu_lancet(clu = c(central = 0.2, lower = -0.1, upper = 0.3), d_type = "pp"), c(central = "0·2", lower = "–0·1", upper = "0·3"))
+             expect_equal(fround_mag_clu_lancet(clu = c(central = 0.2, lower = 0.1, upper = 0.3), d_type = "prop"), c(central = "20·0", lower = "10·0", upper = "30·0"))
+             expect_equal(fround_mag_clu_lancet(clu = c(central = -0.02, lower = -0.1, upper = 0.3), d_type = "pp"), c(central = "–2·0", lower = "–10·0", upper = "30·0"))
              expect_equal(fround_mag_clu_lancet(clu = c(central = 9.5e6, lower = 8.9e6, upper = 101e6), d_type = "count"), c(central = "9·50", lower = "8·90", upper = "101"))
              expect_equal(fround_mag_clu_lancet(clu = c(central = 95e6, lower = 94e6, upper = 97e6), d_type = "count"), c(central = "95·0", lower = "94·0", upper = "97·0"))
              # trickier cases - need sig figs even for small numbers
