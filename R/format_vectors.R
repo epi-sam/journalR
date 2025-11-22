@@ -91,6 +91,8 @@ process_clu_triplet_negatives <- function(
 #'
 #' non-exported helper
 #'
+#' "well that was easy, how hard could counts be?"
+#'
 #' @param style_name [chr] style name - controls rounding and
 #'   formatting.
 #' @param clu [num] numeric vector
@@ -107,10 +109,13 @@ fround_props <- function(
       , style_name
 ){
    style <- get_style(style_name)
-   # hack for floating point rounding issues
-   epsilon <- 1e-9
-   clu <- clu + epsilon
+
+   if (style$round5up) {
+      clu <- clu + 1e-9
+   }
+
    clu <- clu * 100
+
    round(x = clu, digits = style$digits_round_prop) |>
       format(nsmall = style$nsmall_prop, decimal.mark = style$decimal.mark) |>
       trimws()
@@ -130,7 +135,8 @@ fround_props <- function(
 #'
 #' @examples
 #' \dontrun{
-#' fround_countish(clu = c(12345, 67890, 6.6666e6), df_mag = set_magnitude(12345), style_name = 'nature')
+#' fround_countish(clu = c(12345, 67890, 6.6666e6),
+#' df_mag = set_magnitude(12345), style_name = 'nature')
 #' }
 fround_count <- function(
       clu,
@@ -147,11 +153,10 @@ fround_count <- function(
 
    method        <- style[["method_count"]]
    sigfig        <- style[["digits_sigfig_count"]]
-   nsmall_base   <- style[["nsmall_count"]]
-   # round_digits  <- style[["round"]]
-   decimal.mark  <- style[["decimal.mark"]]
+   nsmall        <- style[["nsmall_count"]]
    big.mark_base <- style[["big.mark_count"]]
    force_trail   <- style[["pad_count_sigfigs"]]
+   decimal.mark  <- style[["decimal.mark"]]
    round5up      <- style[["round5up"]]
    is_lancet     <- style[["is_lancet"]]
 
@@ -172,11 +177,9 @@ fround_count <- function(
 
       # --- 3 apply Lancet rule (per value)
       big.mark <- big.mark_base
-      nsmall   <- nsmall_base
 
       if (is_lancet && abs(round(x, 0)) <= 9999) {
          big.mark <- ""
-         nsmall   <- 0
       }
 
       # --- 4 formatting
@@ -234,7 +237,6 @@ fround_count <- function(
             }
          }
 
-
          # Institute prefers e.g. c(2, 0.5, 3) rounded to 2.00 (0.500-3.00)
          # - Build logic to revert to 2.00 (0.50-3.00) here if desired
          # if(grepl(decimal.mark, x_chr)){
@@ -275,110 +277,8 @@ fround_count <- function(
 
    unname(vapply(clu, format_one, FUN.VALUE = character(1)))
 }
-# fround_count <- function(
-      #       clu
-#       , style_name
-#       , df_mag
-# ) {
-#
-#    if(any(clu < 0)) stop("Formatting counts under 0 not yet supported: ", toString(clu))
-#    checkmate::assert_data_frame(df_mag, nrows = 1)
-#
-#    style <- get_style(style_name)
-#    digits_sigfig_count <- style[["digits_sigfig_count"]]
-#    nsmall              <- style[["nsmall_count"]]
-#    decimal.mark        <- style[["decimal.mark"]]
-#    big.mark_count      <- style[["big.mark_count"]]
-#    is_lancet           <- style[["is_lancet"]]
-#
-#    unlist(
-#       lapply(clu, function(x_i){
-#
-#          # hack for floating point rounding issues
-#          epsilon <- 1e-9
-#          x_i <- x_i + epsilon
-#
-#          big.mark_count_og <- data.table::copy(big.mark_count)
-#
-#          # lancet spec for counts under 10,000
-#          if(is_lancet && abs(round(x_i, 0)) <= 9999) {
-#             big.mark_count <- ""
-#             nsmall <- 0
-#          }
-#
-#          # Need accurate sig figs for numbers <= digits_sigfig_count e.g.
-#          # c(10.5, 0.2, 20.3) should become c("10.5", "0.200", "20.3") if
-#          # digits_sigfig_count = 3. Ensure number of digits are not counted as
-#          # scientific notation e.g. '6e+06' should count as 7 digits, not 5
-#          # characters.
-#          x_i_rnd <- round(x_i)
-#          digits_x_i_whole <- nchar(format(x_i_rnd, scientific = FALSE)) - ifelse(x_i_rnd == 0, 1, 0) # account for zero
-#          if(abs(x_i) > 0 & digits_x_i_whole <= digits_sigfig_count) {
-#             nsmall <- digits_sigfig_count - digits_x_i_whole
-#          }
-#
-#          # x divided
-#          x_i_div <- signif(
-#             x        = (x_i / df_mag$denom)
-#             , digits = digits_sigfig_count
-#          )
-#          checkmate::assert_numeric(x_i, len = 1)
-#
-#          # Ensure e.g. 95.0 million (89.0-101) retains same sigfigs across set of values
-#          if(
-#             nchar(format(x_i_div, scientific = FALSE)) >= digits_sigfig_count
-#             & nsmall > 0
-#             & !grepl("\\.", x_i_div)
-#          ){
-#             nsmall <- 0
-#          }
-#
-#          # Edge case - thousands with high digit precision keep correct nsmall
-#          if(
-#             df_mag$mag == "t"
-#             & nchar(format(x_i_rnd, scientific = FALSE)) >= digits_sigfig_count
-#             & nsmall == 0
-#          ){
-#             nsmall <- digits_sigfig_count - (nchar(x_i_div) - nchar(decimal.mark)) + nchar(decimal.mark)
-#          }
-#
-#          x_i_chr <- format(
-#             x              = x_i_div
-#             , decimal.mark = decimal.mark
-#             , big.mark     = big.mark_count
-#             , nsmall       = nsmall
-#             , scientific   = FALSE
-#          ) |>
-#             trimws()
-#
-#          # catch cases where counts e.g. 9999 would round up to 10000 and we lose the big.mark
-#          if(nchar(format(x_i_div, scientific = FALSE)) > digits_x_i_whole){
-#             x_i_chr <- format(
-#                x              = x_i_div
-#                , decimal.mark = decimal.mark
-#                , big.mark     = big.mark_count_og
-#                , nsmall       = nsmall
-#                , scientific   = FALSE
-#             ) |>
-#                trimws()
-#          }
-#          checkmate::assert_character(x_i_chr, len = 1)
-#
-#          # zero pad formatted string to correct sig figs if too short
-#          if(
-#             nchar(x_i_chr) < (digits_sigfig_count + nchar(decimal.mark))
-#             & nsmall > 0
-#          ) {
-#             # pad   <- required nchar                             - current nchar
-#             n_zeros <- (digits_sigfig_count + nchar(decimal.mark)) - nchar(x_i_chr)
-#             zeros   <- paste0(rep.int("0", n_zeros), collapse = '')
-#             x_i_chr <- sprintf("%s%s", x_i_chr, zeros)
-#          }
-#
-#          return(unname(x_i_chr)) # not sure how extra naming snuck in
-#       })
-#    )
-# }
+
+
 
 #' Format and round central/lower/upper value sets by magnitude without units.
 #'

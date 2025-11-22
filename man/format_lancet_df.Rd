@@ -58,6 +58,7 @@ Other styled_formats:
 \code{\link{format_means_df}()},
 \code{\link{format_nature_clu}()},
 \code{\link{format_nature_df}()},
-\code{\link{fround_clu_triplet}()}
+\code{\link{fround_clu_triplet}()},
+\code{\link{new_style}()}
 }
 \concept{styled_formats}

@@ -72,60 +72,48 @@ set_style <- function(style_name, style_entry){
 #' Wrapper function to create and set a new style in one step.
 #'
 #' @param style_name [chr] name of the style to set
-#' @param digits_round_prop [int] number of digits to round proportions to
-#' @param digits_sigfig_count [int] number of significant figures for counts
-#' @param nsmall_prop [int] minimum number of digits to the right of the decimal point - proportions
-#' @param decimal.mark [chr] decimal mark
-#' @param neg_str_UI [chr] character to use for negative sign
-#' @param big.mark_count [chr] character to use for counts thousand, million, billion separator
-#' @param neg_str_mean [chr] text to use when describing negative mean differences
-#' @param UI_only [lgl] whether to format for UI only
-#' @param UI_text [chr] text to use for UI formatting
-#' @param assert_clu_order [lgl] whether to assert CLU relationships (ensure lower < central < upper)
-#' @param is_lancet [lgl] whether the style is for Lancet formatting - controls specific edge-case behaviors
-#' @param label_thousands [lgl] whether format counts as e.g. 10,000 as '10 thousand'
+#' @param digits_round_prop [int: default 1] number of digits to round proportions to
+#' @param nsmall_prop [int: default 1] minimum number of digits to the right of the decimal point - proportions
+#' @param method_count [chr: c("sigfig", "decimal", "int")] choose how to report counts - prioritize sigfigs across mean/lower/upper, hard-set decimals, or leave numbers in integer space.
+#' @param digits_sigfig_count [int: default 3] number of significant figures for counts
+#' @param nsmall_count [int: default 1] passed to `format()` if `method_count` == 'decimal'
+#' @param pad_count_sigfigs [lgl: default TRUE] signif(5.00, 3) is "5" - do you want to pad the trailing 0s back on - usually TRUE?
+#' @param decimal.mark [chr: default "."] decimal mark e.g. "." or `mid_dot()` for Lancet.
+#' @param neg_str_mean [chr: default "-"] string to describe central value negatives - e.g. "-1 (-2 to 4)" could become "Negtive 1 (-2 to 4)"
+#' @param neg_str_UI [chr: default "-"] string to describe negative sign in UI brackets e.g. "1 (-2 to 4)" could become "1 (--2 to 4)" (en-dash)
+#' @param big.mark_count [chr: default ","] character to use for counts thousand, million, billion separator e.g. ","
+#' @param UI_only [lgl: default FALSE] Return only UI from `format_journal_df()` family functions?
+#' @param UI_text [chr: default ""] Text to appear inside UI brackets before numbers e.g. "2 (1 -- 4)" could become "2 (95\%UI 1 -- 4)"
+#' @param assert_clu_order [lgl: default TRUE] whether to assert CLU relationships (ensure lower < central < upper)
+#' @param is_lancet [lgl: default FALSE] TRUE to handle edge-case Lancet count formatting policies
+#' @param label_thousands [lgl: default FALSE] whether format counts as e.g. 10,000 as '10 thousand'
+#' @param round5up [lgl: default TRUE] In R, `round(1245, 3)` is "1240".  Do you want to round to "1250" instead? Default TRUE to conform with common expectations.
 #'
-#' @returns [chr] invisible vector of input objects, to allow easier un-locking
+#' @returns [chr] invisible vector of input objects
 #' @export
 #' @family styles
+#' @family styled_formats
 #'
 #' @examples
-#' new_style(
-#'   style_name            = "my_style"
-#'   , digits_round_prop   = 1
-#'   , digits_sigfig_count = 1
-#'   , pad_count_sigfigs   = TRUE
-#'   , nsmall_prop         = 1
-#'   , nsmall_count        = 1
-#'   , decimal.mark        = "."
-#'   , neg_str_UI          = "-"
-#'   , big.mark_count      = ","
-#'   , neg_str_mean        = "a decrease of"
-#'   , UI_only             = FALSE
-#'   , UI_text             = ""
-#'   , assert_clu_order    = TRUE
-#'   , is_lancet           = FALSE
-#'   , label_thousands     = FALSE
-#'   , round5up            = TRUE
-#' )
+#' new_style(style_name = "my_style")
 new_style <- function(
       style_name
-      , digits_round_prop
-      , nsmall_prop
-      , method_count
-      , digits_sigfig_count
-      , pad_count_sigfigs
-      , nsmall_count
-      , decimal.mark
-      , neg_str_UI
-      , big.mark_count
-      , neg_str_mean
-      , UI_only
-      , UI_text
-      , assert_clu_order
-      , is_lancet
-      , label_thousands
-      , round5up
+      , digits_round_prop   = 1
+      , nsmall_prop         = 1
+      , method_count        = "sigfig"
+      , digits_sigfig_count = 3
+      , pad_count_sigfigs   = TRUE
+      , nsmall_count        = 1
+      , big.mark_count      = ","
+      , decimal.mark        = "."
+      , neg_str_mean        = "-"
+      , neg_str_UI          = "-"
+      , UI_only             = FALSE
+      , UI_text             = ""
+      , assert_clu_order    = TRUE
+      , is_lancet           = FALSE
+      , label_thousands     = FALSE
+      , round5up            = TRUE
 ){
    set_style(
       style_name    = style_name

@@ -17,6 +17,6 @@ get_data_types()
 }
 \seealso{
 Other data_types: 
-\code{\link{return_data_type_labels}()}
+\code{\link{get_data_type_labels}()}
 }
 \concept{data_types}

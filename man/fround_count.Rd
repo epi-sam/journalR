@@ -22,7 +22,8 @@ non-exported helper
 }
 \examples{
 \dontrun{
-fround_countish(clu = c(12345, 67890, 6.6666e6), df_mag = set_magnitude(12345), style_name = 'nature')
+fround_countish(clu = c(12345, 67890, 6.6666e6),
+df_mag = set_magnitude(12345), style_name = 'nature')
 }
 }
 \seealso{

@@ -122,26 +122,13 @@ DT_count|>
    )
 ```
 
-```{r thou_style_set, include=FALSE}
-set_style(
+```{r thou_style_new}
+new_style(
    style_name = "thousands_labeled"
-   , style_entry            = list(
-      digits_round_prop     = 1
-      , nsmall_prop         = 1
-      , nsmall_count        = 1
-      , digits_sigfig_count = 3
-      , decimal.mark        = "."
-      , neg_str_UI          = "-"
-      , big.mark_count      = ","
-      , neg_str_mean        = "-"
-      , UI_only             = FALSE
-      , UI_text             = ""
-      , assert_clu_order    = TRUE
-      , is_lancet           = FALSE
-      , label_thousands     = TRUE
-   )
+   , label_thousands     = TRUE
 )
 ```
+
 
 ```{r thou_style_show}
 DT_count|>

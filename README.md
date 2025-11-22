@@ -125,20 +125,23 @@ DT_count|>
 ```
 
 ``` r
+new_style(
+   style_name = "thousands_labeled"
+   , label_thousands     = TRUE
+)
+```
+
+``` r
 DT_count|>
    journalR::format_journal_df(
       d_type               = "count"
       , style_name         = "thousands_labeled"
       , remove_clu_columns = FALSE
    )
-#>   data_space        mean      lower      upper
-#> 1  thousands 9.99999e+05 8.0000e+05 2.0000e+06
-#> 2   millions 5.58310e+07 5.0724e+07 6.0797e+07
-#> 3   billions 5.47170e+12 4.8266e+12 5.9786e+12
-#>                             clu_fmt
-#> 1 1,000.0 thousand (800.00–2,000.0)
-#> 2          55.8 million (50.7–60.8)
-#> 3       5,470 billion (4,830–5,980)
+#>   data_space        mean      lower      upper                     clu_fmt
+#> 1  thousands 9.99999e+05 8.0000e+05 2.0000e+06  1,000 thousand (800–2,000)
+#> 2   millions 5.58310e+07 5.0724e+07 6.0797e+07    55.8 million (50.7–60.8)
+#> 3   billions 5.47170e+12 4.8266e+12 5.9786e+12 5,470 billion (4,830–5,980)
 ```
 
 **Proportions:**
@@ -237,17 +240,20 @@ print(lancet) # formatted a little nicer
 #>                  <fctr>         <char>
 #>  1:   digits_round_prop              1
 #>  2:         nsmall_prop              1
-#>  3: digits_sigfig_count              3
-#>  4:        nsmall_count              1
-#>  5:        decimal.mark              ·
-#>  6:          neg_str_UI              –
-#>  7:      big.mark_count               
-#>  8:        neg_str_mean a decrease of 
-#>  9:             UI_only          FALSE
-#> 10:             UI_text               
-#> 11:    assert_clu_order           TRUE
-#> 12:           is_lancet           TRUE
-#> 13:     label_thousands          FALSE
+#>  3:        method_count         sigfig
+#>  4:   pad_count_sigfigs           TRUE
+#>  5: digits_sigfig_count              3
+#>  6:        nsmall_count              1
+#>  7:        decimal.mark              ·
+#>  8:      big.mark_count               
+#>  9:        neg_str_mean a decrease of 
+#> 10:          neg_str_UI              –
+#> 11:             UI_text               
+#> 12:             UI_only          FALSE
+#> 13:    assert_clu_order           TRUE
+#> 14:     label_thousands          FALSE
+#> 15:           is_lancet           TRUE
+#> 16:            round5up           TRUE
 ```
 
 Counts receive a non-standard thousands separator.

@@ -1,3 +1,13 @@
+require_args <- function(...) {
+   args <- as.list(match.call())[-1]
+   for (arg in args) {
+      arg_name <- deparse(arg)
+      val <- tryCatch(eval(arg, parent.frame()), error = function(e) NULL)
+      if (is.null(val))
+         stop(sprintf("'%s' is required with no default", arg_name), call. = FALSE)
+   }
+}
+
 #' Assert all elements of x are in y
 #'
 #' @param x [vector] some vector
@@ -69,6 +79,7 @@ assert_set_choice <- function(x, choices){
 #' @returns [chr] invisible validated d_type
 #' @family assertions
 assert_data_type <- function(d_type){
+   require_args(d_type)
    assert_set_choice(x = d_type, choices = get_data_types())
    invisible(d_type)
 }
@@ -84,6 +95,7 @@ assert_data_type <- function(d_type){
 #' @returns [list] invisible validated style_entry
 #' @family assertions
 assert_style_schema <- function(style_entry){
+   require_args(style_entry)
 
    checkmate::assert_list(style_entry, names = "named")
    style_schema <- get_style_schema()

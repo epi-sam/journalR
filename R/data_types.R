@@ -16,16 +16,6 @@ get_data_types <- function(){
    )
 }
 
-#' Get data type labels
-#'
-#' Centrally managed definition for all data type labels.
-#'
-#' @returns [list] named list of data type labels
-#' @export
-#' @family data_types
-#'
-#' @examples
-#' get_data_type_labels()
 return_data_type_labels <- function(){
    dtype_labels <- list(
       prop    = "%"
@@ -36,7 +26,20 @@ return_data_type_labels <- function(){
    return(dtype_labels)
 }
 
+#' Get data type labels
+#'
+#' Centrally managed definition for all data type labels.
+#'
+#' @param d_type [chr]
+#'
+#' @returns [list] named list of data type labels
+#' @export
+#' @family data_types
+#'
+#' @examples
+#' get_data_type_labels('prop')
 get_data_type_labels <- function(d_type){
+   assert_data_type(d_type)
    return_data_type_labels()[[d_type]]
 }
 

@@ -47,12 +47,12 @@ format_journal_clu <- function(
 
    d_type <- assert_data_type(d_type)
 
-   style                    <- get_style(style_name)
-   neg_str_mean            <- style[["neg_str_mean"]]
-   UI_only                  <- style[["UI_only"]]
-   UI_text                  <- style[["UI_text"]]
+   style            <- get_style(style_name)
+   neg_str_mean     <- style[["neg_str_mean"]]
+   UI_only          <- style[["UI_only"]]
+   UI_text          <- style[["UI_text"]]
    assert_clu_order <- style[["assert_clu_order"]]
-   label_thousands          <- style[["label_thousands"]]
+   label_thousands  <- style[["label_thousands"]]
 
    checkmate::assert_numeric(central, min.len = 1)
    checkmate::assert_numeric(lower)

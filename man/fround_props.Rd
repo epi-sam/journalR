@@ -18,6 +18,9 @@ formatting.}
 \description{
 non-exported helper
 }
+\details{
+"well that was easy, how hard could counts be?"
+}
 \examples{
 \dontrun{
 fround_propish(0.123456789, 'nature')

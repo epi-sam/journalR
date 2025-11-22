@@ -53,6 +53,7 @@ Other styled_formats:
 \code{\link{format_lancet_df}()},
 \code{\link{format_means_df}()},
 \code{\link{format_nature_clu}()},
-\code{\link{format_nature_df}()}
+\code{\link{format_nature_df}()},
+\code{\link{new_style}()}
 }
 \concept{styled_formats}

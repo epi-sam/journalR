@@ -103,7 +103,7 @@ drop_columns <- function(x, varnames){
 #'
 #' Forbids vector length 1 recycling
 #'
-#' @param ...
+#' @param ... [any] passed to `data.frame()`
 #'
 #' @returns [data.frame]
 df_strict <- function(...) {

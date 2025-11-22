@@ -7,7 +7,7 @@
 df_strict(...)
 }
 \arguments{
-\item{...}{}
+\item{...}{[any] passed to `data.frame()`}
 }
 \value{
 [data.frame]
