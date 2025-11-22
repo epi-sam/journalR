@@ -21,19 +21,19 @@ Set a new style schema
 set_style(
    style_name    = "my_style"
    , style_entry = list(
-      digits_round_prop          = 2
-      , digits_sigfig_count      = 3
-      , nsmall_prop                   = 1
-      , nsmall_count = 1
-      , decimal.mark             = "."
-      , neg_str_UI            = "-"
-      , big.mark_count           = ","
-      , neg_str_mean            = "a decrease of"
-      , UI_only                  = FALSE
-      , UI_text                  = ""
-      , assert_clu_order = TRUE
-      , is_lancet                = FALSE
-      , label_thousands          = FALSE
+      digits_round_prop     = 2
+      , digits_sigfig_count = 3
+      , nsmall_prop         = 1
+      , nsmall_count        = 1
+      , decimal.mark        = "."
+      , neg_str_UI          = "-"
+      , big.mark_count      = ","
+      , neg_str_mean        = "a decrease of"
+      , UI_only             = FALSE
+      , UI_text             = ""
+      , assert_clu_order    = TRUE
+      , is_lancet           = FALSE
+      , label_thousands     = FALSE
    )
 )
 }

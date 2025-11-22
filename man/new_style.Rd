@@ -56,20 +56,20 @@ Wrapper function to create and set a new style in one step.
 }
 \examples{
 new_style(
-  style_name    = "my_style"
-  , digits_round_prop        = 1
-  , digits_sigfig_count      = 1
-  , nsmall_prop                   = 1
-  , nsmall_count = 1
-  , decimal.mark             = "."
-  , neg_str_UI            = "-"
-  , big.mark_count           = ","
-  , neg_str_mean            = "a decrease of"
-  , UI_only                  = FALSE
-  , UI_text                  = ""
-  , assert_clu_order = TRUE
-  , is_lancet                = FALSE
-  , label_thousands          = FALSE
+  style_name            = "my_style"
+  , digits_round_prop   = 1
+  , digits_sigfig_count = 1
+  , nsmall_prop         = 1
+  , nsmall_count        = 1
+  , decimal.mark        = "."
+  , neg_str_UI          = "-"
+  , big.mark_count      = ","
+  , neg_str_mean        = "a decrease of"
+  , UI_only             = FALSE
+  , UI_text             = ""
+  , assert_clu_order    = TRUE
+  , is_lancet           = FALSE
+  , label_thousands     = FALSE
 )
 }
 \seealso{

@@ -1,21 +1,3 @@
-#' Get a style from the styles dictionary
-#'
-#' Accessor function to retrieve a style from the package's
-#' styles dictionary.
-#'
-#' @param style_name [chr] name of the style to retrieve
-#'
-#' @returns [list] the requested style as a named list
-#' @export
-#' @family styles
-#'
-#' @examples
-#' get_style("lancet")
-get_style <- function(style_name) {
-   get_dict_format(dict_name = style_name) |>
-      assert_style_schema()
-}
-
 #' Get style schema
 #'
 #' Centrally managed definition for all required journal format styles.
@@ -28,54 +10,20 @@ get_style <- function(style_name) {
 #' get_style_schema()
 get_style_schema <- function(){
    list(
-      digits_round_prop          = "integer"
-      , nsmall_prop                   = "integer"
-      , digits_sigfig_count      = "integer"
-      , nsmall_count                   = "integer"
-      , decimal.mark             = "character"
-      , neg_str_UI            = "character"
-      , big.mark_count           = "character"
-      , neg_str_mean            = "character"
-      , UI_only                  = "logical"
-      , UI_text                  = "character"
-      , assert_clu_order = "logical"
-      , is_lancet                = "logical"
-      , label_thousands          = "logical"
+      digits_round_prop     = "integer"
+      , nsmall_prop         = "integer"
+      , digits_sigfig_count = "integer"
+      , nsmall_count        = "integer"
+      , big.mark_count      = "character"
+      , decimal.mark        = "character"
+      , neg_str_mean        = "character"
+      , neg_str_UI          = "character"
+      , UI_text             = "character"
+      , UI_only             = "logical"
+      , assert_clu_order    = "logical"
+      , label_thousands     = "logical"
+      , is_lancet           = "logical"
    )
-}
-
-#' Set a new style schema
-#'
-#' @param style_name [chr] name of the style to set
-#' @param style_entry [list] named list representing the style entry
-#'
-#' @returns [chr] invisible vector of input objects, to allow easier un-locking
-#' @export
-#' @family styles
-#'
-#' @examples
-#' set_style(
-#'    style_name    = "my_style"
-#'    , style_entry = list(
-#'       digits_round_prop          = 2
-#'       , digits_sigfig_count      = 3
-#'       , nsmall_prop                   = 1
-#'       , nsmall_count = 1
-#'       , decimal.mark             = "."
-#'       , neg_str_UI            = "-"
-#'       , big.mark_count           = ","
-#'       , neg_str_mean            = "a decrease of"
-#'       , UI_only                  = FALSE
-#'       , UI_text                  = ""
-#'       , assert_clu_order = TRUE
-#'       , is_lancet                = FALSE
-#'       , label_thousands          = FALSE
-#'    )
-#' )
-set_style <- function(style_name, style_entry){
-   # checkmate::assert_string(style_name) # done within set_dict_format()
-   assert_style_schema(style_entry)
-   set_dict_format(dict_name = style_name, dict_entry = style_entry)
 }
 
 #' Create a new style
@@ -102,20 +50,20 @@ set_style <- function(style_name, style_entry){
 #'
 #' @examples
 #' new_style(
-#'   style_name    = "my_style"
-#'   , digits_round_prop        = 1
-#'   , digits_sigfig_count      = 1
-#'   , nsmall_prop                   = 1
-#'   , nsmall_count = 1
-#'   , decimal.mark             = "."
-#'   , neg_str_UI            = "-"
-#'   , big.mark_count           = ","
-#'   , neg_str_mean            = "a decrease of"
-#'   , UI_only                  = FALSE
-#'   , UI_text                  = ""
-#'   , assert_clu_order = TRUE
-#'   , is_lancet                = FALSE
-#'   , label_thousands          = FALSE
+#'   style_name            = "my_style"
+#'   , digits_round_prop   = 1
+#'   , digits_sigfig_count = 1
+#'   , nsmall_prop         = 1
+#'   , nsmall_count        = 1
+#'   , decimal.mark        = "."
+#'   , neg_str_UI          = "-"
+#'   , big.mark_count      = ","
+#'   , neg_str_mean        = "a decrease of"
+#'   , UI_only             = FALSE
+#'   , UI_text             = ""
+#'   , assert_clu_order    = TRUE
+#'   , is_lancet           = FALSE
+#'   , label_thousands     = FALSE
 #' )
 new_style <- function(
       style_name
@@ -136,21 +84,73 @@ new_style <- function(
    set_style(
       style_name    = style_name
       , style_entry = list(
-         digits_round_prop          = digits_round_prop
-         , digits_sigfig_count      = digits_sigfig_count
-         , nsmall_prop                   = nsmall_prop
-         , nsmall_count = nsmall_count
-         , decimal.mark             = decimal.mark
-         , neg_str_UI            = neg_str_UI
-         , big.mark_count           = big.mark_count
-         , neg_str_mean            = neg_str_mean
-         , UI_only                  = UI_only
-         , UI_text                  = UI_text
-         , assert_clu_order = assert_clu_order
-         , is_lancet                = is_lancet
-         , label_thousands          = label_thousands
+         digits_round_prop     = digits_round_prop
+         , nsmall_prop         = nsmall_prop
+         , digits_sigfig_count = digits_sigfig_count
+         , nsmall_count        = nsmall_count
+         , big.mark_count      = big.mark_count
+         , decimal.mark        = decimal.mark
+         , neg_str_mean        = neg_str_mean
+         , neg_str_UI          = neg_str_UI
+         , UI_only             = UI_only
+         , UI_text             = UI_text
+         , assert_clu_order    = assert_clu_order
+         , is_lancet           = is_lancet
+         , label_thousands     = label_thousands
       )
    )
+}
+
+#' Set a new style schema
+#'
+#' @param style_name [chr] name of the style to set
+#' @param style_entry [list] named list representing the style entry
+#'
+#' @returns [chr] invisible vector of input objects, to allow easier un-locking
+#' @export
+#' @family styles
+#'
+#' @examples
+#' set_style(
+#'    style_name    = "my_style"
+#'    , style_entry = list(
+#'       digits_round_prop     = 2
+#'       , digits_sigfig_count = 3
+#'       , nsmall_prop         = 1
+#'       , nsmall_count        = 1
+#'       , decimal.mark        = "."
+#'       , neg_str_UI          = "-"
+#'       , big.mark_count      = ","
+#'       , neg_str_mean        = "a decrease of"
+#'       , UI_only             = FALSE
+#'       , UI_text             = ""
+#'       , assert_clu_order    = TRUE
+#'       , is_lancet           = FALSE
+#'       , label_thousands     = FALSE
+#'    )
+#' )
+set_style <- function(style_name, style_entry){
+   # checkmate::assert_string(style_name) # done within set_dict_format()
+   assert_style_schema(style_entry)
+   set_dict_format(dict_name = style_name, dict_entry = style_entry)
+}
+
+#' Get a style from the styles dictionary
+#'
+#' Accessor function to retrieve a style from the package's
+#' styles dictionary.
+#'
+#' @param style_name [chr] name of the style to retrieve
+#'
+#' @returns [list] the requested style as a named list
+#' @export
+#' @family styles
+#'
+#' @examples
+#' get_style("lancet")
+get_style <- function(style_name) {
+   get_dict_format(dict_name = style_name) |>
+      assert_style_schema()
 }
 
 
@@ -171,19 +171,19 @@ new_style <- function(
 style_nature <- function(){
    assert_style_schema(
       list(
-         digits_round_prop          = 1
-         , nsmall_prop                   = 1
-         , nsmall_count = 1
-         , digits_sigfig_count      = 3
-         , decimal.mark             = "."
-         , neg_str_UI            = "-"
-         , big.mark_count           = ","
-         , neg_str_mean            = "-"
-         , UI_only                  = FALSE
-         , UI_text                  = ""
-         , assert_clu_order = TRUE
-         , is_lancet                = FALSE
-         , label_thousands          = FALSE
+         digits_round_prop     = 1
+         , nsmall_prop         = 1
+         , digits_sigfig_count = 3
+         , nsmall_count        = 1
+         , decimal.mark        = "."
+         , big.mark_count      = ","
+         , neg_str_mean        = "-"
+         , neg_str_UI          = "-"
+         , UI_text             = ""
+         , UI_only             = FALSE
+         , assert_clu_order    = TRUE
+         , label_thousands     = FALSE
+         , is_lancet           = FALSE
       )
    )
 }
@@ -201,19 +201,19 @@ style_nature <- function(){
 style_lancet <- function(){
    assert_style_schema(
       list(
-         digits_round_prop          = 1
-         , nsmall_prop                   = 1
-         , digits_sigfig_count      = 3
-         , nsmall_count = 1
-         , decimal.mark             = mid_dot()
-         , neg_str_UI            = en_dash()
-         , big.mark_count           = thin_space()
-         , neg_str_mean            = "a decrease of "
-         , UI_only                  = FALSE
-         , UI_text                  = ""
-         , assert_clu_order = TRUE
-         , is_lancet                = TRUE
-         , label_thousands          = FALSE
+         digits_round_prop     = 1
+         , nsmall_prop         = 1
+         , digits_sigfig_count = 3
+         , nsmall_count        = 1
+         , decimal.mark        = mid_dot()
+         , big.mark_count      = thin_space()
+         , neg_str_mean        = "a decrease of "
+         , neg_str_UI          = en_dash()
+         , UI_text             = ""
+         , UI_only             = FALSE
+         , assert_clu_order    = TRUE
+         , label_thousands     = FALSE
+         , is_lancet           = TRUE
       )
    )
 }

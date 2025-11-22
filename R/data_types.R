@@ -40,11 +40,20 @@ get_data_type_labels <- function(d_type){
    return_data_type_labels()[[d_type]]
 }
 
+#' Helper for `format_means_df()`, perhaps others
+#'
+#' @param style_name [chr] name of a style
+#' @param style_item [chr] a style list item name
+#' @param d_type [chr] a valid data type
+#'
+#' @returns [scalar] some style item, type may vary
 get_style_item_by_data_type <- function(style_name, style_item, d_type){
 
-   style <- get_style(style_name)
+   style  <- get_style(style_name)
+   d_type <- assert_data_type(d_type)
 
    switch_strict(
+
       style_item
 
       , "digits" = {
@@ -55,6 +64,7 @@ get_style_item_by_data_type <- function(style_name, style_item, d_type){
             , "count" = style[["digits_sigfig_count"]]
          )
       }
+
       , "scalar" = {
          switch_strict(
             d_type
@@ -63,6 +73,7 @@ get_style_item_by_data_type <- function(style_name, style_item, d_type){
             , "count" = 1
          )
       }
+
       , "n_small" = {
          switch_strict(
             d_type
