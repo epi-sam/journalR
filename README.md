@@ -365,4 +365,14 @@ journalR::format_journal_df(
 #> 3:   all_negative       Negative 13.217% (95%UI 5.655–23.532)
 ```
 
-Done.
+## Contributing
+
+[Contribution Style
+Guide](https://github.com/epi-sam/journalR/blob/main/.github/CONTRIBUTING.md)
+
+## Code of Conduct
+
+Please note that the journalR project is released with a [Contributor
+Code of
+Conduct](https://contributor-covenant.org/version/2/1/CODE_OF_CONDUCT.html).
+By contributing to this project, you agree to abide by its terms.

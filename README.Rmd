@@ -23,6 +23,7 @@ knitr::opts_chunk$set(
 
 The goal of journalR is to ease real-world scientific publication writing. 
 
+
 ## Installation
 
 You can install the development version of journalR from [GitHub](https://github.com/) with:
@@ -311,4 +312,15 @@ journalR::format_journal_df(
 ```
 
 
-Done. 
+
+## Contributing
+
+[Contribution Style Guide](https://github.com/epi-sam/journalR/blob/main/.github/CONTRIBUTING.md)
+
+
+
+## Code of Conduct
+
+Please note that the journalR project is released with a [Contributor Code of Conduct](https://contributor-covenant.org/version/2/1/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.
+
+
