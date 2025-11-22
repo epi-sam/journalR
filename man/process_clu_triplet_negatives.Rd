@@ -18,7 +18,7 @@ process_clu_triplet_negatives(triplets, assert_clu_order = TRUE)
 Vectorized preparation of central, lower, upper values.
 Handles negatives, and swaps ordering where necessary.
 Casting some negatives as positives allows user control to set
-`style$neg_str_mean` appropriately.
+`style$neg_mark_mean` appropriately.
 }
 \details{
 non-exported helper

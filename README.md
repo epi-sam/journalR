@@ -127,7 +127,7 @@ DT_count|>
 ``` r
 new_style(
    style_name = "thousands_labeled"
-   , label_thousands     = TRUE
+   , label_thousands = TRUE
 )
 ```
 
@@ -238,22 +238,22 @@ affect presentation tables.
 print(lancet) # formatted a little nicer
 #>                     key          value
 #>                  <fctr>         <char>
-#>  1:   digits_round_prop              1
-#>  2:         nsmall_prop              1
-#>  3:        method_count         sigfig
-#>  4:   pad_count_sigfigs           TRUE
-#>  5: digits_sigfig_count              3
-#>  6:        nsmall_count              1
+#>  1:   prop_digits_round              1
+#>  2:         prop_nsmall              1
+#>  3:        count_method         sigfig
+#>  4:   count_pad_sigfigs           TRUE
+#>  5: count_digits_sigfig              3
+#>  6:        count_nsmall              1
 #>  7:        decimal.mark              ·
-#>  8:      big.mark_count               
-#>  9:        neg_str_mean a decrease of 
-#> 10:          neg_str_UI              –
+#>  8:      count_big.mark               
+#>  9:       neg_mark_mean a decrease of 
+#> 10:         neg_mark_UI              –
 #> 11:             UI_text               
 #> 12:             UI_only          FALSE
 #> 13:    assert_clu_order           TRUE
 #> 14:     label_thousands          FALSE
 #> 15:           is_lancet           TRUE
-#> 16:            round5up           TRUE
+#> 16:          round_5_up           TRUE
 ```
 
 Counts receive a non-standard thousands separator.
@@ -300,29 +300,35 @@ journalR::format_journal_df(
 Users may define their own styles by creating a named list with the same
 keys as the built-in styles.
 
+- All arguments except the name have sensible defaults - only change
+  what you need.
+  - Read the `new_style()` documentation carefully to understand how
+    each element affects your final output.
+  - Using the “sigfig” `count_method` option involves the most
+    assumptions, “decimal” and “int” are other options.
+    - Read `fround_count()` source in ‘R/format_vectors.R’ for
+      implementation details.
+
 ``` r
 
 journalR::new_style(
-   style_name            = 'my_style'
-   , digits_round_prop   = 3
-   , digits_sigfig_count = 5
-   , nsmall_count        = 3
-   , nsmall_prop         = 3
-   , decimal.mark        = "."
-   , big.mark_count      = ","
-   , neg_str_mean        = "Negative "
-   , neg_str_UI          = "-"
-   , UI_only             = FALSE
+   style_name            = 'wacky_style'
+   , prop_digits_round   = 3
+   , prop_nsmall         = 3
+   , count_digits_sigfig = 5
+   , count_method        = "sigfig"
+   , count_pad_sigfigs   = TRUE
+   , count_nsmall        = 3
+   , neg_mark_mean       = "Negative "
+   , neg_mark_UI         = en_dash()
    , UI_text             = "95%UI "
-   , assert_clu_order    = TRUE
-   , is_lancet           = FALSE
-   , label_thousands     = FALSE
 )
 ```
 
 <!-- Perhaps the user prefers standard thousands separators for counts. -->
 
 ``` r
+# Counts
 journalR::format_journal_df(
    data.frame(
         mean          = c(55.8e3, 54.7e6)
@@ -330,11 +336,28 @@ journalR::format_journal_df(
       , upper         = c(60.7e3, 59.6e6)
    )
    , d_type = "count"
-   , style  = "my_style"
+   , style  = "wacky_style"
 )
 #>                                clu_fmt
 #> 1         55,800 (95%UI 50,700–60,700)
 #> 2 54.700 million (95%UI 48.600–59.600)
+
+# Proportions
+journalR::format_journal_df(
+   data.table::data.table(
+                  data_space    = c("all_positive", "mixed_negative", "all_negative")
+                , mean          = c(.5584654, -0.15665, -0.1321684)
+                , lower         = c(.5076231, -0.25321, -0.235321)
+                , upper         = c(.6076589, 1.365432, -0.056549)
+             )
+   , d_type = "prop"
+   , style = "wacky_style"
+)
+#>        data_space                                     clu_fmt
+#>            <char>                                      <char>
+#> 1:   all_positive               55.847% (95%UI 50.762–60.766)
+#> 2: mixed_negative Negative 15.665% (95%UI –25.321 to 136.543)
+#> 3:   all_negative       Negative 13.217% (95%UI 5.655–23.532)
 ```
 
 <!-- Or perhaps thousands should be treated like millions with high precision. -->

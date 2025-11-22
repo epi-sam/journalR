@@ -21,6 +21,7 @@ get_style("lancet")
 }
 \seealso{
 Other styles: 
+\code{\link{assert_style_schema}()},
 \code{\link{get_style_schema}()},
 \code{\link{new_style}()},
 \code{\link{set_style}()},

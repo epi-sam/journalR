@@ -17,6 +17,7 @@ style_lancet()
 }
 \seealso{
 Other styles: 
+\code{\link{assert_style_schema}()},
 \code{\link{get_style}()},
 \code{\link{get_style_schema}()},
 \code{\link{new_style}()},

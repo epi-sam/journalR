@@ -125,7 +125,7 @@ DT_count|>
 ```{r thou_style_new}
 new_style(
    style_name = "thousands_labeled"
-   , label_thousands     = TRUE
+   , label_thousands = TRUE
 )
 ```
 
@@ -256,30 +256,32 @@ journalR::format_journal_df(
 
 Users may define their own styles by creating a named list with the same keys as the built-in styles.
 
+- All arguments except the name have sensible defaults - only change what you need.
+   - Read the `new_style()` documentation carefully to understand how each element affects your final output.
+   - Using the "sigfig" `count_method` option involves the most assumptions, "decimal" and "int" are other options.
+      - Read `fround_count()` source in 'R/format_vectors.R' for implementation details.
+
 ```{r new_style}
 
 journalR::new_style(
-   style_name            = 'my_style'
-   , digits_round_prop   = 3
-   , digits_sigfig_count = 5
-   , nsmall_count        = 3
-   , nsmall_prop         = 3
-   , decimal.mark        = "."
-   , big.mark_count      = ","
-   , neg_str_mean        = "Negative "
-   , neg_str_UI          = "-"
-   , UI_only             = FALSE
+   style_name            = 'wacky_style'
+   , prop_digits_round   = 3
+   , prop_nsmall         = 3
+   , count_digits_sigfig = 5
+   , count_method        = "sigfig"
+   , count_pad_sigfigs   = TRUE
+   , count_nsmall        = 3
+   , neg_mark_mean       = "Negative "
+   , neg_mark_UI         = en_dash()
    , UI_text             = "95%UI "
-   , assert_clu_order    = TRUE
-   , is_lancet           = FALSE
-   , label_thousands     = FALSE
 )
 ```
 
 
 <!-- Perhaps the user prefers standard thousands separators for counts. -->
 
-```{r apply_new_style_counts}
+```{r apply_wacky_new_style}
+# Counts
 journalR::format_journal_df(
    data.frame(
         mean          = c(55.8e3, 54.7e6)
@@ -287,7 +289,19 @@ journalR::format_journal_df(
       , upper         = c(60.7e3, 59.6e6)
    )
    , d_type = "count"
-   , style  = "my_style"
+   , style  = "wacky_style"
+)
+
+# Proportions
+journalR::format_journal_df(
+   data.table::data.table(
+                  data_space    = c("all_positive", "mixed_negative", "all_negative")
+                , mean          = c(.5584654, -0.15665, -0.1321684)
+                , lower         = c(.5076231, -0.25321, -0.235321)
+                , upper         = c(.6076589, 1.365432, -0.056549)
+             )
+   , d_type = "prop"
+   , style = "wacky_style"
 )
 ```
 
@@ -295,19 +309,14 @@ journalR::format_journal_df(
 
 ```{r new_style_2, include=F}
 journalR::new_style(
-   style_name            = 'my_style2'
-   , digits_round_prop   = 3
-   , digits_sigfig_count = 5
-   , nsmall_count        = 3
-    , nsmall_prop        = 3
-   , decimal.mark        = "."
-   , big.mark_count      = ","
-   , neg_str_mean        = "Negative "
-   , UI_only             = FALSE
+   style_name            = 'wacky_style_thousands'
+   , prop_digits_round   = 3
+   , prop_nsmall         = 3
+   , count_digits_sigfig = 5
+   , count_pad_sigfigs   = TRUE
+   , count_nsmall        = 3
+   , neg_mark_mean       = "Negative "
    , UI_text             = "95%UI "
-   , neg_str_UI          = "-"
-   , assert_clu_order    = TRUE
-   , is_lancet           = FALSE
    , label_thousands     = TRUE
 )
 journalR::format_journal_df(
@@ -317,22 +326,12 @@ journalR::format_journal_df(
       , upper         = c(60754, 59.6e6)
    )
    , d_type = "count"
-   , style  = "my_style2"
+   , style  = "wacky_style_thousands"
 )
 ```
 
 
 ```{r apply_new_style_prop, include=F}
-journalR::format_journal_df(
-   data.table::data.table(
-                  data_space    = c("all_positive", "mixed_negative", "all_negative")
-                , mean          = c(.5584654, -0.15665, -0.1321684)
-                , lower         = c(.5076231, -0.25321, -0.235321)
-                , upper         = c(.6076589, 1.365432, -0.056549)
-             )
-   , d_type = "prop"
-   , style = "my_style2"
-)
 ```
 
 Done. 

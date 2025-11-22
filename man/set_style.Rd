@@ -21,27 +21,28 @@ Set a new style by list
 set_style(
    style_name    = "my_style"
    , style_entry = list(
-      digits_round_prop     = 2
-      , digits_sigfig_count = 3
-      , method_count        = "sigfig"
-      , pad_count_sigfigs   = TRUE
-      , nsmall_prop         = 1
-      , nsmall_count        = 1
+      prop_digits_round     = 2
+      , count_digits_sigfig = 3
+      , count_method        = "sigfig"
+      , count_pad_sigfigs   = TRUE
+      , prop_nsmall         = 1
+      , count_nsmall        = 1
       , decimal.mark        = "."
-      , neg_str_UI          = "-"
-      , big.mark_count      = ","
-      , neg_str_mean        = "a decrease of"
+      , neg_mark_UI         = "-"
+      , count_big.mark      = ","
+      , neg_mark_mean       = "a decrease of"
       , UI_only             = FALSE
       , UI_text             = ""
       , assert_clu_order    = TRUE
       , is_lancet           = FALSE
       , label_thousands     = FALSE
-      , round5up            = TRUE
+      , round_5_up          = TRUE
    )
 )
 }
 \seealso{
 Other styles: 
+\code{\link{assert_style_schema}()},
 \code{\link{get_style}()},
 \code{\link{get_style_schema}()},
 \code{\link{new_style}()},
