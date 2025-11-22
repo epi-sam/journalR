@@ -18,8 +18,10 @@ drop_columns(x, varnames)
 Vectorized version of drop_column()
 }
 \examples{
+\dontrun{
 df <- data.frame(a = 1:3, b = letters[1:3], c = c(TRUE, FALSE, TRUE))
 df <- drop_columns(df, c("b", "c"))
+}
 }
 \seealso{
 Other column_mods: 

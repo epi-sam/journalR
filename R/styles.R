@@ -21,11 +21,12 @@ get_style <- function(style_name) {
 #' Centrally managed definition for all required journal format styles.
 #'
 #' @returns [list] named list of style elements and their expected types
-#' @export
 #' @family styles
 #'
 #' @examples
+#' \dontrun{
 #' get_style_schema()
+#' }
 get_style_schema <- function(){
    list(
       digits_round_prop          = "integer"

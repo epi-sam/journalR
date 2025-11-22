@@ -12,7 +12,7 @@ fround_mag_clu(
 )
 }
 \arguments{
-\item{clu}{[num] a numeric vector of three values in central/lower/upper
+\item{clu}{[num] a numeric triplet of three values in central/lower/upper
 order.}
 
 \item{d_type}{[chr c('prop', 'pp', or 'count')] data type - proportion,

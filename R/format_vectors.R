@@ -349,9 +349,10 @@ fround_dtype <- function(
 #' @param x [num] numeric vector
 #' @param digits [int: default 1L] passed to `round()`
 #' @param nsmall [int: default 1L] passed to `format()`
-#' @param mag [chr c("b", "m", "t")] magnitude (billion, million, thousand)
+#' @param mag [chr c("b", "m", "t")] magnitude (billion, million,
+#'   thousand) passed to set_magnitude()
 #' @param allow_thousands [lgl: default FALSE] allow thousands magnitude?  Not
-#' Lancet-valid.
+#'   Lancet-valid. Passed to `set_magnitude()`
 #' @param decimal.mark [chr: default "."] decimal mark passed to `format()`
 #'
 #' @return [chr] formatted string
@@ -363,11 +364,11 @@ fround_dtype <- function(
 #' fmt_magnitude(123456789)
 fmt_magnitude <- function(
       x
-      , mag             = NULL
-      , allow_thousands = FALSE
       , digits          = 1
       , nsmall          = 1
       , decimal.mark    = "."
+      , mag             = NULL
+      , allow_thousands = FALSE
 ){
 
    checkmate::assert_numeric(x)

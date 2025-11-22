@@ -24,6 +24,7 @@ Add/overwrite a column in a data.frame or data.table, preserving class and
 modifying in place if data.table.
 }
 \examples{
+\dontrun{
 df <- data.frame(a = 1:3, b = letters[1:3])
 df <- add_column(df, "c", c(TRUE, FALSE, TRUE))
 print(df)
@@ -32,6 +33,7 @@ dt <- data.table::data.table(a = 1:3, b = letters[1:3])
 add_column(dt, "c", c(TRUE, FALSE, TRUE)) # modified in place
 print(dt)
 class(dt)
+}
 }
 \seealso{
 Other column_mods: 
