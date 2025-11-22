@@ -160,7 +160,25 @@ fround_count <- function(
    round_5_up    <- style[["round_5_up"]]
    is_lancet     <- style[["is_lancet"]]
 
-   format_one <- function(x) {
+
+   # Counts edge case - magnitude boundaries
+   #
+   # Before we do any formatting, we need to re-check the scale of the central
+   # value as it would round given the user's count method. This must be done
+   # up higher at the formatting level because it affects the final
+   # formatting label. This creates an undesireable repeated logic with
+   # `fround_count()` & `format_journal_clu()` but I see no current way around
+   # it, as there's no good mechanism to pass re-calculated, vectorized
+   # magnitude information back up the stack.
+   #
+   # Must maintain matching 'rounding' logic here and within `format_journal_clu()`
+   #
+   # - fround_count(c(999999, 888888, 2222222)) produces:
+   #   - c("1,000,000", "800,000", "2,000,000")
+   # - but we want:
+   #   - c("1.00 million", "0.80 million", "2.00 million")
+
+   format_one_count <- function(x) {
 
       # --- 0 guard against Lancet edge case
       x_raw <- data.table::copy(x)
@@ -183,99 +201,107 @@ fround_count <- function(
       }
 
       # --- 4 formatting
-      if(method == "sigfig") {
 
-         x_fmt <- signif(x_sc, sigfig)
+      x_chr <- switch_strict(
 
-         # Lancet edge case
-         if (is_lancet && x_raw <= 9999 && x_fmt >= 10000) {
-            big.mark <- big.mark_base
-         }
+         method
 
-         x_chr <- format(
-            x_fmt,
-            scientific   = FALSE,
-            decimal.mark = decimal.mark,
-            big.mark     = big.mark
-         )
+         , "sigfig" = { # sigfig is the messiest
 
-         # --- 5 apply zero-padding logic
+            x_fmt <- signif(x_sc, sigfig)
 
-         if (force_trail) {
-
-            # split integer & decimal parts
-            if (grepl(decimal.mark, x_chr, fixed = TRUE)) {
-               parts <- strsplit(x_chr, decimal.mark, fixed = TRUE)[[1]]
-               int_part <- parts[1]
-               dec_part <- parts[2]
-            } else {
-               int_part <- x_chr
-               dec_part <- ""
+            # Lancet edge case
+            if (is_lancet && x_raw <= 9999 && x_fmt >= 10000) {
+               big.mark <- big.mark_base
             }
 
-            # remove separators
-            numeric_clean <- gsub("[^0-9]", "", paste0(int_part, dec_part))
+            x_chr <- format(
+               x_fmt,
+               scientific   = FALSE,
+               decimal.mark = decimal.mark,
+               big.mark     = big.mark
+            )
 
-            # strip leading zeros – they are not significant
-            numeric_clean <- sub("^0+", "", numeric_clean)
+            # --- 5 apply zero-padding logic
 
-            # how many sig figs currently?
-            current_sf <- nchar(numeric_clean)
+            if (force_trail) {
 
-            # how many more needed?
-            needed <- max(sigfig - current_sf, 0)
-
-            if (needed > 0) {
-               # ensure a decimal exists
-               if (!grepl(decimal.mark, x_chr, fixed = TRUE)) {
-                  x_chr <- paste0(x_chr, decimal.mark)
+               # split integer & decimal parts
+               if (grepl(decimal.mark, x_chr, fixed = TRUE)) {
+                  parts <- strsplit(x_chr, decimal.mark, fixed = TRUE)[[1]]
+                  int_part <- parts[1]
+                  dec_part <- parts[2]
+               } else {
+                  int_part <- x_chr
                   dec_part <- ""
                }
 
-               # pad zeros onto decimal side
-               x_chr <- paste0(x_chr, strrep("0", needed))
+               # remove separators
+               numeric_clean <- gsub("[^0-9]", "", paste0(int_part, dec_part))
+
+               # strip leading zeros – they are not significant
+               numeric_clean <- sub("^0+", "", numeric_clean)
+
+               # how many sig figs currently?
+               current_sf <- nchar(numeric_clean)
+
+               # how many more needed?
+               needed <- max(sigfig - current_sf, 0)
+
+               if (needed > 0) {
+                  # ensure a decimal exists
+                  if (!grepl(decimal.mark, x_chr, fixed = TRUE)) {
+                     x_chr <- paste0(x_chr, decimal.mark)
+                     dec_part <- ""
+                  }
+
+                  # pad zeros onto decimal side
+                  x_chr <- paste0(x_chr, strrep("0", needed))
+               }
             }
+
+            # Institute prefers e.g. c(2, 0.5, 3) rounded to 2.00 (0.500-3.00)
+            # - Current behavior delivers this output
+            # - Build control flow her to allow 2.00 (0.50-3.00) if desired
+            # if(grepl(decimal.mark, x_chr)){
+            #    x_chr <- substr(x_chr, 1, sigfig + nchar(decimal.mark))
+            # }
+
+            return(trimws(x_chr))
          }
 
-         # Institute prefers e.g. c(2, 0.5, 3) rounded to 2.00 (0.500-3.00)
-         # - Build logic to revert to 2.00 (0.50-3.00) here if desired
-         # if(grepl(decimal.mark, x_chr)){
-         #    x_chr <- substr(x_chr, 1, sigfig + nchar(decimal.mark))
-         # }
+         , "decimal" = {
 
-         return(trimws(x_chr))
+            x_fmt <- round(x_sc, digits = nsmall)
 
-      }  else if(method == "decimal") {
+            x_chr <- format(
+               x_fmt,
+               nsmall       = nsmall,
+               decimal.mark = decimal.mark,
+               big.mark     = big.mark,
+               scientific   = FALSE
+            )
+            trimws(x_chr)
+         }
 
-         x_fmt <- round(x_sc, digits = nsmall)
+         , "int" = {
 
-         x_chr <- format(
-            x_fmt,
-            nsmall       = nsmall,
-            decimal.mark = decimal.mark,
-            big.mark     = big.mark,
-            scientific   = FALSE
-         )
+            x_fmt <- round(x_sc, digits = 0)
 
-      } else if(method == "int") {
-
-         x_fmt <- round(x_sc, digits = 0)
-
-         x_chr <- format(
-            x_fmt,
-            decimal.mark = decimal.mark,
-            big.mark     = big.mark,
-            scientific   = FALSE
-         )
-
-      } else {
-         stop("Unknown formatting method: ", method)
-      }
+            x_chr <- format(
+               x_fmt,
+               decimal.mark = decimal.mark,
+               big.mark     = big.mark,
+               scientific   = FALSE
+            )
+            trimws(x_chr)
+         }
+      )
 
       trimws(x_chr)
    }
 
-   unname(vapply(clu, format_one, FUN.VALUE = character(1)))
+   unname(vapply(clu, format_one_count, FUN.VALUE = character(1)))
 }
 
 

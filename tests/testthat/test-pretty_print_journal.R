@@ -216,5 +216,94 @@ test_that("format_lancet_df and format_nature_df work", {
 })
 
 
+test_that("edge case rounding works with and without thousands label", {
+   DF <- tibble::tribble(
+      ~data_space      , ~mean,         ~lower,        ~upper,
+      "thousands"      , 999000,        888888,        2222222,
+      "thousands_edge" , 999999,        888888,        2222222,
+      "millions"       , 55831000,      50724000,      60797000,
+      "billions"       , 5471700000000, 4826600000000, 5978600000000,
+   ) |> as.data.frame() # |> dput()
+
+   expect_equal(
+      DF |> format_journal_df(d_type = "count", style_name = "nature") # |> dput()
+      , structure(list(
+         data_space = c("thousands", "thousands_edge", "millions", "billions"),
+         clu_fmt = c(
+            "999,000 (889,000–2,220,000)",
+            "1.00 million (0.889–2.22)",
+            "55.8 million (50.7–60.8)",
+            "5,470 billion (4,830–5,980)"
+         )
+      ),
+      row.names = c(NA, -4L),
+      class = "data.frame")
+   )
+
+
+   new_style("lab_thou", label_thousands = TRUE)
+   expect_equal(
+      DF |> format_journal_df(d_type = "count", style_name = "lab_thou") # |> dput()
+      , structure(list(
+         data_space = c("thousands", "thousands_edge", "millions", "billions"),
+         clu_fmt = c(
+            "999 thousand (889–2,220)",
+            "1.00 million (0.889–2.22)",
+            "55.8 million (50.7–60.8)",
+            "5,470 billion (4,830–5,980)"
+         )
+      ),
+      row.names = c(NA, -4L),
+      class = "data.frame")
+   )
+
+   new_style("count_dec", count_method = 'decimal', count_nsmall = 2)
+   expect_equal(
+      DF |> format_journal_df(d_type = "count", style_name = "count_dec") # |> dput()
+      , structure(list(
+         data_space = c("thousands", "thousands_edge", "millions", "billions"),
+         clu_fmt = c(
+            "999,000.00 (888,888.00–2,222,222.00)",
+            "999,999.00 (888,888.00–2,222,222.00)",
+            "55.83 million (50.72–60.80)",
+            "5,471.70 billion (4,826.60–5,978.60)"
+         )
+      ),
+      row.names = c(NA, -4L),
+      class = "data.frame")
+   )
+
+   new_style("count_int", count_method = 'int', count_nsmall = 2) # nsmall and sigfig logic should be ignored
+   expect_equal(
+      DF |> format_journal_df(d_type = "count", style_name = "count_int") # |> dput()
+      , structure(list(
+         data_space = c("thousands", "thousands_edge", "millions", "billions"),
+         clu_fmt = c(
+            "999,000 (888,888–2,222,222)",
+            "999,999 (888,888–2,222,222)",
+            "56 million (51–61)",
+            "5,472 billion (4,827–5,979)"
+         )
+      ),
+      row.names = c(NA, -4L),
+      class = "data.frame")
+   )
+
+   new_style("count_int_thou", count_method = 'int', count_nsmall = 2, label_thousands = TRUE)
+   expect_equal(
+      DF |> format_journal_df(d_type = "count", style_name = "count_int_thou") # |> dput()
+      , structure(list(
+         data_space = c("thousands", "thousands_edge", "millions", "billions"),
+         clu_fmt = c(
+            "999 thousand (889–2,222)",
+            "1 million (1–2)", # Not sure there's a way around this or if it's right as-is, or if I care
+            "56 million (51–61)",
+            "5,472 billion (4,827–5,979)"
+         )
+      ),
+      row.names = c(NA, -4L),
+      class = "data.frame")
+   )
+})
 
 

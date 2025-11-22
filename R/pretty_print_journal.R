@@ -53,6 +53,7 @@ format_journal_clu <- function(
    UI_text          <- style[["UI_text"]]
    assert_clu_order <- style[["assert_clu_order"]]
    label_thousands  <- style[["label_thousands"]]
+   round_5_up       <- style[["round_5_up"]]
 
    checkmate::assert_numeric(central, min.len = 1)
    checkmate::assert_numeric(lower)
@@ -90,7 +91,7 @@ format_journal_clu <- function(
       , label_thousands = label_thousands
       , verbose         = FALSE
    )
-   mag_label_vec <- df_mag$mag_label
+   # mag_label_vec <- df_mag$mag_label
 
    # Capture numeric info before character conversion
    # Does UI cross zero? Decide which UI separator to use.
@@ -123,6 +124,45 @@ format_journal_clu <- function(
       , assert_clu_order = assert_clu_order
    )
 
+   # Counts edge case - magnitude boundaries
+   #
+   # Before we do any formatting, we need to re-check the scale of the central
+   # value as it would round given the user's count method. This must be done
+   # here at the formatting level because it affects the final formatting label.
+   # This creates an undesireable repeated logic with `fround_count()` &
+   # `format_journal_clu()` but I see no current way around it, as there's no
+   # good mechanism to pass re-calculated, vectorized magnitude information back
+   # up the stack.
+   #
+   # Must maintain matching 'rounding' logic here and within `fround_count()`
+   #
+   # - fround_count(c(999999, 888888, 2222222)) produces:
+   #   - c("1,000,000", "800,000", "2,000,000")
+   # - but we want:
+   #   - c("1.00 million", "0.80 million", "2.00 million")
+   if(d_type == "count") {
+      central_vals <- clu[["central"]]
+      central_fmts <- NULL
+      if (round_5_up) {
+         central_vals <- central_vals + 1e-9
+      }
+      central_sc <- central_vals / df_mag$denom
+
+      central_fmts <- switch_strict(
+         style[["count_method"]]
+         , "sigfig"  = signif(central_sc, style[["count_digits_sigfig"]])
+         , "decimal" = round(central_sc, digits = style[["count_nsmall"]])
+         , "int"     = round(central_sc, digits = 0)
+      )
+
+      #  re-calc magnitude at original scale, post rounding
+      df_mag <- set_magnitude(
+         x                 = central_fmts * df_mag$denom
+         , mag             = NULL
+         , label_thousands = label_thousands
+         , verbose         = FALSE
+         )
+   }
 
    # Where the magic happens
    # - Negative signs are styled internally
@@ -145,7 +185,7 @@ format_journal_clu <- function(
       .upp          <- triplets_fmt[[i]]['upper']
       .low          <- triplets_fmt[[i]]['lower']
       .mean_neg_txt <- neg_str_mean_vec[i]
-      .mag_label    <- mag_label_vec[i]
+      .mag_label    <- df_mag$mag_label[i]
       .low_upp_sep  <- sep_vec[i]
 
       # Building blocks for final string

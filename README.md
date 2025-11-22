@@ -89,40 +89,42 @@ DT_hp |>
 
 ## Assumptions
 
-**General:**
+### General:
 
 1.  Central/lower/upper triplets are formatted at the same ‘scale’.
 2.  All triplets present with the same number of significant digits.
 
-**Counts:**
+### Counts:
 
 1.  The central value controls the scaling
     1.  Formatting is applied *after* scaling
         1.  e.g. 55,831,000 first scaled to 55.831000 …
         2.  … then truncated to the correct sigfigs (55.8)
-2.  Counts are rounded, but not truncated below 1 million
-    1.  e.g. 999,999 presents as 999,000 if rounded to 3 digits
-    2.  Users may set their own style with `label_thousands = TRUE` to
-        override this behavior
-3.  Negative counts are not supported
+2.  Negative counts are not supported
+3.  Magnitudes over 1 billion are not supported
 
 ``` r
- DT_count <- data.frame(
-    data_space = c("thousands", "millions", "billions")
-    , mean     = c(999999, 55.831e6, 5471.7e9)
-    , lower    = c(800000, 50.724e6, 4826.6e9)
-    , upper    = c(2e6   , 60.797e6, 5978.6e9)
- )
-DT_count|>
+DF_count <- data.frame(
+      data_space = c("thousands", "thousands_edge", "millions", "billions"),
+      mean       = c(999000,      999999,           55831000,   5.4717e+12),
+      lower      = c(888888,      888888,           50724000,   4.8266e+12),
+      upper      = c(2222222,     2222222,          60797000,   5.9786e+12)
+)
+DF_count|>
    journalR::format_journal_df(
       d_type = "count"
-      , remove_clu_columns = FALSE
    )
-#>   data_space        mean      lower      upper                       clu_fmt
-#> 1  thousands 9.99999e+05 8.0000e+05 2.0000e+06 1,000,000 (800,000–2,000,000)
-#> 2   millions 5.58310e+07 5.0724e+07 6.0797e+07      55.8 million (50.7–60.8)
-#> 3   billions 5.47170e+12 4.8266e+12 5.9786e+12   5,470 billion (4,830–5,980)
+#>       data_space                     clu_fmt
+#> 1      thousands 999,000 (889,000–2,220,000)
+#> 2 thousands_edge   1.00 million (0.889–2.22)
+#> 3       millions    55.8 million (50.7–60.8)
+#> 4       billions 5,470 billion (4,830–5,980)
 ```
+
+- Counts are rounded, but not truncated below 1 million
+  - e.g. 999,999 presents as 999,000 if rounded to 3 digits
+  - Users may set their own style with `label_thousands = TRUE` to
+    override this behavior
 
 ``` r
 new_style(
@@ -132,19 +134,19 @@ new_style(
 ```
 
 ``` r
-DT_count|>
+DF_count|>
    journalR::format_journal_df(
       d_type               = "count"
       , style_name         = "thousands_labeled"
-      , remove_clu_columns = FALSE
    )
-#>   data_space        mean      lower      upper                     clu_fmt
-#> 1  thousands 9.99999e+05 8.0000e+05 2.0000e+06  1,000 thousand (800–2,000)
-#> 2   millions 5.58310e+07 5.0724e+07 6.0797e+07    55.8 million (50.7–60.8)
-#> 3   billions 5.47170e+12 4.8266e+12 5.9786e+12 5,470 billion (4,830–5,980)
+#>       data_space                     clu_fmt
+#> 1      thousands    999 thousand (889–2,220)
+#> 2 thousands_edge   1.00 million (0.889–2.22)
+#> 3       millions    55.8 million (50.7–60.8)
+#> 4       billions 5,470 billion (4,830–5,980)
 ```
 
-**Proportions:**
+### Proportions:
 
 1.  Proportions (prop) and Percentage Points (pp) are all multiplied by
     100
@@ -154,9 +156,9 @@ DT_count|>
 ``` r
 DT_prop <- data.table::data.table(
    data_space    = c("all_positive", "mixed_negative", "all_negative", "lower_negative", "central_lower_neg")
-   , mean          = c(.558, -0.1, -0.1, 0.05, -0.05)
-   , lower         = c(.507, -0.25, -0.2, -0.02, -0.1)
-   , upper         = c(.607, 1.3, -0.05, 0.12, 0.1)
+   , mean        = c(.558,           -0.1,             -0.1,            0.05,            -0.05)
+   , lower       = c(.507,           -0.25,            -0.2,           -0.02,            -0.1)
+   , upper       = c(.607,            1.3,             -0.05,           0.12,             0.1)
 )
 DT_prop|>
    journalR::format_journal_df(
@@ -258,6 +260,8 @@ print(lancet) # formatted a little nicer
 
 Counts receive a non-standard thousands separator.
 
+- Lancet decimals are `mid_dot()`.
+
 ``` r
 journalR::format_journal_df(
    data.frame(
@@ -275,15 +279,15 @@ journalR::format_journal_df(
 
 Negatives are handled gracefully.
 
-- Lancet decimals are `mid_dot()` characters
+- Lancet negatives are `en_dash()`.
 
 ``` r
 journalR::format_journal_df(
    data.table::data.table(
                   data_space    = c("all_positive", "mixed_negative", "all_negative")
-                , mean          = c(.5584654, -0.15665, -0.1321684)
-                , lower         = c(.5076231, -0.25321, -0.235321)
-                , upper         = c(.6076589, 1.365432, -0.056549)
+                , mean          = c(.5584654,       -0.15665,         -0.1321684)
+                , lower         = c(.5076231,       -0.25321,         -0.235321)
+                , upper         = c(.6076589,       1.365432,         -0.056549)
              )
    , d_type = "prop"
    , style = "lancet"
@@ -305,7 +309,7 @@ keys as the built-in styles.
   - Read the `new_style()` documentation carefully to understand how
     each element affects your final output.
   - Using the “sigfig” `count_method` option involves the most
-    assumptions, “decimal” and “int” are other options.
+    assumptions
     - Read `fround_count()` source in ‘R/format_vectors.R’ for
       implementation details.
 
@@ -359,7 +363,5 @@ journalR::format_journal_df(
 #> 2: mixed_negative Negative 15.665% (95%UI –25.321 to 136.543)
 #> 3:   all_negative       Negative 13.217% (95%UI 5.655–23.532)
 ```
-
-<!-- Or perhaps thousands should be treated like millions with high precision. -->
 
 Done.

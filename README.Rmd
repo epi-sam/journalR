@@ -11,8 +11,7 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%",
   # print 15 lines of table output
-  tidy.opts = list(width.cutoff = 60
-               , max.print = 15
+  tidy.opts = list(width.cutoff = 120, max.print = 15
   )
 )
 ```
@@ -90,37 +89,40 @@ DT_hp |>
 ## Assumptions
 
 
-**General:**
+### General:
 
 1. Central/lower/upper triplets are formatted at the same 'scale'.
 1. All triplets present with the same number of significant digits.
 
 
 
-**Counts:**
+### Counts:
 
 1. The central value controls the scaling
    1. Formatting is applied _after_ scaling 
       1. e.g. 55,831,000 first scaled to 55.831000 ...
       1. ... then truncated to the correct sigfigs (55.8)
-1. Counts are rounded, but not truncated below 1 million
-   1. e.g. 999,999 presents as 999,000 if rounded to 3 digits
-   1. Users may set their own style with `label_thousands = TRUE` to override this behavior
 1. Negative counts are not supported
+1. Magnitudes over 1 billion are not supported
 
 ```{r assumptions_count}
- DT_count <- data.frame(
-    data_space = c("thousands", "millions", "billions")
-    , mean     = c(999999, 55.831e6, 5471.7e9)
-    , lower    = c(800000, 50.724e6, 4826.6e9)
-    , upper    = c(2e6   , 60.797e6, 5978.6e9)
- )
-DT_count|>
+DF_count <- data.frame(
+      data_space = c("thousands", "thousands_edge", "millions", "billions"),
+      mean       = c(999000,      999999,           55831000,   5.4717e+12),
+      lower      = c(888888,      888888,           50724000,   4.8266e+12),
+      upper      = c(2222222,     2222222,          60797000,   5.9786e+12)
+)
+DF_count|>
    journalR::format_journal_df(
       d_type = "count"
-      , remove_clu_columns = FALSE
    )
 ```
+
+
+- Counts are rounded, but not truncated below 1 million
+   - e.g. 999,999 presents as 999,000 if rounded to 3 digits
+   - Users may set their own style with `label_thousands = TRUE` to override this behavior
+
 
 ```{r thou_style_new}
 new_style(
@@ -131,17 +133,16 @@ new_style(
 
 
 ```{r thou_style_show}
-DT_count|>
+DF_count|>
    journalR::format_journal_df(
       d_type               = "count"
       , style_name         = "thousands_labeled"
-      , remove_clu_columns = FALSE
    )
 ```
 
 
 
-**Proportions:**
+### Proportions:
 
 1. Proportions (prop) and Percentage Points (pp) are all multiplied by 100
 1. All-negative triplets are presented with negative mean only, with upper and lower bounds reversed.
@@ -150,9 +151,9 @@ DT_count|>
 ```{r assumptions_prop}
 DT_prop <- data.table::data.table(
    data_space    = c("all_positive", "mixed_negative", "all_negative", "lower_negative", "central_lower_neg")
-   , mean          = c(.558, -0.1, -0.1, 0.05, -0.05)
-   , lower         = c(.507, -0.25, -0.2, -0.02, -0.1)
-   , upper         = c(.607, 1.3, -0.05, 0.12, 0.1)
+   , mean        = c(.558,           -0.1,             -0.1,            0.05,            -0.05)
+   , lower       = c(.507,           -0.25,            -0.2,           -0.02,            -0.1)
+   , upper       = c(.607,            1.3,             -0.05,           0.12,             0.1)
 )
 DT_prop|>
    journalR::format_journal_df(
@@ -223,6 +224,8 @@ print(lancet) # formatted a little nicer
 
 Counts receive a non-standard thousands separator.
 
+- Lancet decimals are `mid_dot()`.
+
 ```{r lancet_format_counts}
 journalR::format_journal_df(
    data.frame(
@@ -235,17 +238,18 @@ journalR::format_journal_df(
 )
 ```
 
+
 Negatives are handled gracefully.
 
-- Lancet decimals are `mid_dot()` characters
+- Lancet negatives are `en_dash()`.
 
 ```{r lancet_format_prop}
 journalR::format_journal_df(
    data.table::data.table(
                   data_space    = c("all_positive", "mixed_negative", "all_negative")
-                , mean          = c(.5584654, -0.15665, -0.1321684)
-                , lower         = c(.5076231, -0.25321, -0.235321)
-                , upper         = c(.6076589, 1.365432, -0.056549)
+                , mean          = c(.5584654,       -0.15665,         -0.1321684)
+                , lower         = c(.5076231,       -0.25321,         -0.235321)
+                , upper         = c(.6076589,       1.365432,         -0.056549)
              )
    , d_type = "prop"
    , style = "lancet"
@@ -258,7 +262,7 @@ Users may define their own styles by creating a named list with the same keys as
 
 - All arguments except the name have sensible defaults - only change what you need.
    - Read the `new_style()` documentation carefully to understand how each element affects your final output.
-   - Using the "sigfig" `count_method` option involves the most assumptions, "decimal" and "int" are other options.
+   - Using the "sigfig" `count_method` option involves the most assumptions
       - Read `fround_count()` source in 'R/format_vectors.R' for implementation details.
 
 ```{r new_style}
@@ -305,33 +309,5 @@ journalR::format_journal_df(
 )
 ```
 
-<!-- Or perhaps thousands should be treated like millions with high precision. -->
-
-```{r new_style_2, include=F}
-journalR::new_style(
-   style_name            = 'wacky_style_thousands'
-   , prop_digits_round   = 3
-   , prop_nsmall         = 3
-   , count_digits_sigfig = 5
-   , count_pad_sigfigs   = TRUE
-   , count_nsmall        = 3
-   , neg_mark_mean       = "Negative "
-   , UI_text             = "95%UI "
-   , label_thousands     = TRUE
-)
-journalR::format_journal_df(
-   data.frame(
-        mean          = c(55832, 54.7e6)
-      , lower         = c(50797, 48.6e6)
-      , upper         = c(60754, 59.6e6)
-   )
-   , d_type = "count"
-   , style  = "wacky_style_thousands"
-)
-```
-
-
-```{r apply_new_style_prop, include=F}
-```
 
 Done. 

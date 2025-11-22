@@ -8,7 +8,7 @@ if(interactive()){
       library(.pkg, character.only = TRUE)
    }
 
-   # devtools::load_all()
+   # devtools::load_all() # can't load if we want to knit readme
 
    rm(.pkgs, .pkg)
 
