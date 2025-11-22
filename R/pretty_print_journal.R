@@ -55,7 +55,7 @@ fround_mag_clu <- function(
    # - This needs to be done here, not in format_journal_clu() in case
    #   fround_mag_clu() is called by the user
    clu_fmt <- unlist(lapply(clu_fmt, function(x_i_chr) {
-      sub("^-", style$negative_sign, x_i_chr)
+      sub("^-", style$neg_str_UI, x_i_chr)
    }))
 
    return(clu_fmt)
@@ -108,7 +108,7 @@ format_journal_clu <- function(
    d_type <- assert_data_type(d_type)
 
    style                    <- get_style(style_name)
-   mean_neg_text            <- style[["mean_neg_text"]]
+   neg_str_mean            <- style[["neg_str_mean"]]
    UI_only                  <- style[["UI_only"]]
    UI_text                  <- style[["UI_text"]]
    assert_clu_relationships <- style[["assert_clu_relationships"]]
@@ -159,9 +159,9 @@ format_journal_clu <- function(
    })) |> unname()
 
    # Is the central value negative?
-   mean_neg_text_vec <- unlist(lapply(triplets["central", ], function(c_i){
+   neg_str_mean_vec <- unlist(lapply(triplets["central", ], function(c_i){
       if(c_i < 0) {
-         mean_neg_text
+         neg_str_mean
       } else {
          ""
       }
@@ -177,7 +177,7 @@ format_journal_clu <- function(
    )
 
    # Handle central negatives and full-negative triplet sets
-   # - allows style$mean_neg_text to be assigned
+   # - allows style$neg_str_mean to be assigned
    triplets_neg_processed <- process_clu_triplet_negatives(
       triplets = triplets
       , assert_clu_relationships = assert_clu_relationships
@@ -204,7 +204,7 @@ format_journal_clu <- function(
       .cen          <- triplets_fmt[[i]]['central']
       .upp          <- triplets_fmt[[i]]['upper']
       .low          <- triplets_fmt[[i]]['lower']
-      .mean_neg_txt <- mean_neg_text_vec[i]
+      .mean_neg_txt <- neg_str_mean_vec[i]
       .mag_label    <- mag_label_vec[i]
       .low_upp_sep  <- sep_vec[i]
 

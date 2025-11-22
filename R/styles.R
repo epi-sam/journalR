@@ -33,9 +33,9 @@ get_style_schema <- function(){
       , digits_sigfig_count      = "integer"
       , nsmall                   = "integer"
       , decimal.mark             = "character"
-      , negative_sign            = "character"
+      , neg_str_UI            = "character"
       , big.mark_count           = "character"
-      , mean_neg_text            = "character"
+      , neg_str_mean            = "character"
       , UI_only                  = "logical"
       , UI_text                  = "character"
       , assert_clu_relationships = "logical"
@@ -61,9 +61,9 @@ get_style_schema <- function(){
 #'       , digits_sigfig_count      = 3
 #'       , nsmall                   = 1
 #'       , decimal.mark             = "."
-#'       , negative_sign            = "-"
+#'       , neg_str_UI            = "-"
 #'       , big.mark_count           = ","
-#'       , mean_neg_text            = "a decrease of"
+#'       , neg_str_mean            = "a decrease of"
 #'       , UI_only                  = FALSE
 #'       , UI_text                  = ""
 #'       , assert_clu_relationships = TRUE
@@ -86,9 +86,9 @@ set_style <- function(style_name, style_entry){
 #' @param digits_sigfig_count [int] number of significant figures for counts
 #' @param nsmall [int] minimum number of digits to the right of the decimal point
 #' @param decimal.mark [chr] decimal mark
-#' @param negative_sign [chr] character to use for negative sign
+#' @param neg_str_UI [chr] character to use for negative sign
 #' @param big.mark_count [chr] character to use for counts thousand, million, billion separator
-#' @param mean_neg_text [chr] text to use when describing negative mean differences
+#' @param neg_str_mean [chr] text to use when describing negative mean differences
 #' @param UI_only [lgl] whether to format for UI only
 #' @param UI_text [chr] text to use for UI formatting
 #' @param assert_clu_relationships [lgl] whether to assert CLU relationships (ensure lower < central < upper)
@@ -106,9 +106,9 @@ set_style <- function(style_name, style_entry){
 #'   , digits_sigfig_count      = 1
 #'   , nsmall                   = 1
 #'   , decimal.mark             = "."
-#'   , negative_sign            = "-"
+#'   , neg_str_UI            = "-"
 #'   , big.mark_count           = ","
-#'   , mean_neg_text            = "a decrease of"
+#'   , neg_str_mean            = "a decrease of"
 #'   , UI_only                  = FALSE
 #'   , UI_text                  = ""
 #'   , assert_clu_relationships = TRUE
@@ -121,9 +121,9 @@ new_style <- function(
       , digits_sigfig_count
       , nsmall
       , decimal.mark
-      , negative_sign
+      , neg_str_UI
       , big.mark_count
-      , mean_neg_text
+      , neg_str_mean
       , UI_only
       , UI_text
       , assert_clu_relationships
@@ -137,9 +137,9 @@ new_style <- function(
          , digits_sigfig_count      = digits_sigfig_count
          , nsmall                   = nsmall
          , decimal.mark             = decimal.mark
-         , negative_sign            = negative_sign
+         , neg_str_UI            = neg_str_UI
          , big.mark_count           = big.mark_count
-         , mean_neg_text            = mean_neg_text
+         , neg_str_mean            = neg_str_mean
          , UI_only                  = UI_only
          , UI_text                  = UI_text
          , assert_clu_relationships = assert_clu_relationships
@@ -171,9 +171,9 @@ style_nature <- function(){
          , nsmall                   = 1
          , digits_sigfig_count      = 3
          , decimal.mark             = "."
-         , negative_sign            = "-"
+         , neg_str_UI            = "-"
          , big.mark_count           = ","
-         , mean_neg_text            = "-"
+         , neg_str_mean            = "-"
          , UI_only                  = FALSE
          , UI_text                  = ""
          , assert_clu_relationships = TRUE
@@ -200,9 +200,9 @@ style_lancet <- function(){
          , nsmall                   = 1
          , digits_sigfig_count      = 3
          , decimal.mark             = mid_dot()
-         , negative_sign            = en_dash()
+         , neg_str_UI            = en_dash()
          , big.mark_count           = thin_space()
-         , mean_neg_text            = "a decrease of "
+         , neg_str_mean            = "a decrease of "
          , UI_only                  = FALSE
          , UI_text                  = ""
          , assert_clu_relationships = TRUE
