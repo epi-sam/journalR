@@ -12,7 +12,7 @@
 #    count_digits_sigfig <- style[["count_digits_sigfig"]]
 #    nsmall              <- style[["count_nsmall"]]
 #    decimal.mark        <- style[["decimal.mark"]]
-#    big.mark_count      <- style[["big.mark_count"]]
+#    count_big.mark      <- style[["count_big.mark"]]
 #    is_lancet           <- style[["is_lancet"]]
 #
 #    unlist(
@@ -22,11 +22,11 @@
 #          epsilon <- 1e-9
 #          x_i <- x_i + epsilon
 #
-#          big.mark_count_og <- data.table::copy(big.mark_count)
+#          big.mark_count_og <- data.table::copy(count_big.mark)
 #
 #          # lancet spec for counts under 10,000
 #          if(is_lancet && abs(round(x_i, 0)) <= 9999) {
-#             big.mark_count <- ""
+#             count_big.mark <- ""
 #             nsmall <- 0
 #          }
 #
@@ -69,7 +69,7 @@
 #          x_i_chr <- format(
 #             x              = x_i_div
 #             , decimal.mark = decimal.mark
-#             , big.mark     = big.mark_count
+#             , big.mark     = count_big.mark
 #             , nsmall       = nsmall
 #             , scientific   = FALSE
 #          ) |>

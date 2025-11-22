@@ -16,7 +16,7 @@ get_style_schema <- function(){
       , count_digits_sigfig = "integer"
       , count_pad_sigfigs   = "logical"
       , count_nsmall        = "integer"
-      , big.mark_count      = "character"
+      , count_big.mark      = "character"
       , decimal.mark        = "character"
       , neg_str_mean        = "character"
       , neg_str_UI          = "character"
@@ -50,7 +50,7 @@ get_style_schema <- function(){
 #'       , count_nsmall        = 1
 #'       , decimal.mark        = "."
 #'       , neg_str_UI          = "-"
-#'       , big.mark_count      = ","
+#'       , count_big.mark      = ","
 #'       , neg_str_mean        = "a decrease of"
 #'       , UI_only             = FALSE
 #'       , UI_text             = ""
@@ -81,7 +81,7 @@ set_style <- function(style_name, style_entry){
 #' @param decimal.mark [chr: default "."] decimal mark e.g. "." or `mid_dot()` for Lancet.
 #' @param neg_str_mean [chr: default "-"] string to describe central value negatives - e.g. "-1 (-2 to 4)" could become "Negtive 1 (-2 to 4)"
 #' @param neg_str_UI [chr: default "-"] string to describe negative sign in UI brackets e.g. "1 (-2 to 4)" could become "1 (--2 to 4)" (en-dash)
-#' @param big.mark_count [chr: default ","] character to use for counts thousand, million, billion separator e.g. ","
+#' @param count_big.mark [chr: default ","] character to use for counts thousand, million, billion separator e.g. ","
 #' @param UI_only [lgl: default FALSE] Return only UI from `format_journal_df()` family functions?
 #' @param UI_text [chr: default ""] Text to appear inside UI brackets before numbers e.g. "2 (1 -- 4)" could become "2 (95\%UI 1 -- 4)"
 #' @param assert_clu_order [lgl: default TRUE] whether to assert CLU relationships (ensure lower < central < upper)
@@ -104,7 +104,7 @@ new_style <- function(
       , count_digits_sigfig = 3
       , count_pad_sigfigs   = TRUE
       , count_nsmall        = 1
-      , big.mark_count      = ","
+      , count_big.mark      = ","
       , decimal.mark        = "."
       , neg_str_mean        = "-"
       , neg_str_UI          = "-"
@@ -124,7 +124,7 @@ new_style <- function(
          , count_digits_sigfig = count_digits_sigfig
          , count_pad_sigfigs   = count_pad_sigfigs
          , count_nsmall        = count_nsmall
-         , big.mark_count      = big.mark_count
+         , count_big.mark      = count_big.mark
          , decimal.mark        = decimal.mark
          , neg_str_mean        = neg_str_mean
          , neg_str_UI          = neg_str_UI
@@ -181,7 +181,7 @@ style_nature <- function(){
          , count_pad_sigfigs   = TRUE
          , count_nsmall        = 1
          , decimal.mark        = "."
-         , big.mark_count      = ","
+         , count_big.mark      = ","
          , neg_str_mean        = "-"
          , neg_str_UI          = "-"
          , UI_text             = ""
@@ -214,7 +214,7 @@ style_lancet <- function(){
          , count_digits_sigfig = 3
          , count_nsmall        = 1
          , decimal.mark        = mid_dot()
-         , big.mark_count      = thin_space()
+         , count_big.mark      = thin_space()
          , neg_str_mean        = "a decrease of "
          , neg_str_UI          = en_dash()
          , UI_text             = ""
