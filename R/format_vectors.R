@@ -116,7 +116,7 @@ fround_props <- function(
 
    clu <- clu * 100
 
-   round(x = clu, digits = style$digits_round_prop) |>
+   round(x = clu, digits = style$prop_digits_round) |>
       format(nsmall = style$nsmall_prop, decimal.mark = style$decimal.mark) |>
       trimws()
 }

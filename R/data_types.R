@@ -10,7 +10,7 @@
 #' get_data_types()
 get_data_types <- function(){
    c(
-      "prop"
+        "prop"
       , "pp"
       , "count"
    )
@@ -18,7 +18,7 @@ get_data_types <- function(){
 
 return_data_type_labels <- function(){
    dtype_labels <- list(
-      prop    = "%"
+        prop  = "%"
       , pp    = " pp"
       , count = ""
    )
@@ -62,8 +62,8 @@ get_style_item_by_data_type <- function(style_name, style_item, d_type){
       , "digits" = {
          switch_strict(
             d_type
-            , "prop"  = style[["digits_round_prop"]]
-            , "pp"    = style[["digits_round_prop"]]
+            , "prop"  = style[["prop_digits_round"]]
+            , "pp"    = style[["prop_digits_round"]]
             , "count" = style[["digits_sigfig_count"]]
          )
       }

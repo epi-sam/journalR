@@ -10,7 +10,7 @@
 #' get_style_schema()
 get_style_schema <- function(){
    list(
-      digits_round_prop     = "integer"
+      prop_digits_round     = "integer"
       , nsmall_prop         = "integer"
       , method_count        = "character"
       , digits_sigfig_count = "integer"
@@ -42,7 +42,7 @@ get_style_schema <- function(){
 #' set_style(
 #'    style_name    = "my_style"
 #'    , style_entry = list(
-#'       digits_round_prop     = 2
+#'       prop_digits_round     = 2
 #'       , digits_sigfig_count = 3
 #'       , method_count        = "sigfig"
 #'       , pad_count_sigfigs   = TRUE
@@ -72,7 +72,7 @@ set_style <- function(style_name, style_entry){
 #' Wrapper function to create and set a new style in one step.
 #'
 #' @param style_name [chr] name of the style to set
-#' @param digits_round_prop [int: default 1] number of digits to round proportions to
+#' @param prop_digits_round [int: default 1] number of digits to round proportions to
 #' @param nsmall_prop [int: default 1] minimum number of digits to the right of the decimal point - proportions
 #' @param method_count [chr: c("sigfig", "decimal", "int")] choose how to report counts - prioritize sigfigs across mean/lower/upper, hard-set decimals, or leave numbers in integer space.
 #' @param digits_sigfig_count [int: default 3] number of significant figures for counts
@@ -98,7 +98,7 @@ set_style <- function(style_name, style_entry){
 #' new_style(style_name = "my_style")
 new_style <- function(
       style_name
-      , digits_round_prop   = 1
+      , prop_digits_round   = 1
       , nsmall_prop         = 1
       , method_count        = "sigfig"
       , digits_sigfig_count = 3
@@ -118,7 +118,7 @@ new_style <- function(
    set_style(
       style_name    = style_name
       , style_entry = list(
-         digits_round_prop     = digits_round_prop
+         prop_digits_round     = prop_digits_round
          , nsmall_prop         = nsmall_prop
          , method_count        = method_count
          , digits_sigfig_count = digits_sigfig_count
@@ -174,7 +174,7 @@ get_style <- function(style_name) {
 style_nature <- function(){
    assert_style_schema(
       list(
-         digits_round_prop     = 1
+         prop_digits_round     = 1
          , nsmall_prop         = 1
          , method_count        = "sigfig"
          , digits_sigfig_count = 3
@@ -207,7 +207,7 @@ style_nature <- function(){
 style_lancet <- function(){
    assert_style_schema(
       list(
-         digits_round_prop     = 1
+         prop_digits_round     = 1
          , nsmall_prop         = 1
          , method_count        = "sigfig"
          , pad_count_sigfigs   = TRUE
