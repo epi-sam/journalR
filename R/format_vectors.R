@@ -152,7 +152,7 @@ fround_count <- function(
    style <- get_style(style_name)
 
    method        <- style[["count_method"]]
-   sigfig        <- style[["digits_sigfig_count"]]
+   sigfig        <- style[["count_digits_sigfig"]]
    nsmall        <- style[["nsmall_count"]]
    big.mark_base <- style[["big.mark_count"]]
    force_trail   <- style[["pad_count_sigfigs"]]

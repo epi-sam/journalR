@@ -9,7 +9,7 @@
 #    checkmate::assert_data_frame(df_mag, nrows = 1)
 #
 #    style <- get_style(style_name)
-#    digits_sigfig_count <- style[["digits_sigfig_count"]]
+#    count_digits_sigfig <- style[["count_digits_sigfig"]]
 #    nsmall              <- style[["nsmall_count"]]
 #    decimal.mark        <- style[["decimal.mark"]]
 #    big.mark_count      <- style[["big.mark_count"]]
@@ -30,27 +30,27 @@
 #             nsmall <- 0
 #          }
 #
-#          # Need accurate sig figs for numbers <= digits_sigfig_count e.g.
+#          # Need accurate sig figs for numbers <= count_digits_sigfig e.g.
 #          # c(10.5, 0.2, 20.3) should become c("10.5", "0.200", "20.3") if
-#          # digits_sigfig_count = 3. Ensure number of digits are not counted as
+#          # count_digits_sigfig = 3. Ensure number of digits are not counted as
 #          # scientific notation e.g. '6e+06' should count as 7 digits, not 5
 #          # characters.
 #          x_i_rnd <- round(x_i)
 #          digits_x_i_whole <- nchar(format(x_i_rnd, scientific = FALSE)) - ifelse(x_i_rnd == 0, 1, 0) # account for zero
-#          if(abs(x_i) > 0 & digits_x_i_whole <= digits_sigfig_count) {
-#             nsmall <- digits_sigfig_count - digits_x_i_whole
+#          if(abs(x_i) > 0 & digits_x_i_whole <= count_digits_sigfig) {
+#             nsmall <- count_digits_sigfig - digits_x_i_whole
 #          }
 #
 #          # x divided
 #          x_i_div <- signif(
 #             x        = (x_i / df_mag$denom)
-#             , digits = digits_sigfig_count
+#             , digits = count_digits_sigfig
 #          )
 #          checkmate::assert_numeric(x_i, len = 1)
 #
 #          # Ensure e.g. 95.0 million (89.0-101) retains same sigfigs across set of values
 #          if(
-#             nchar(format(x_i_div, scientific = FALSE)) >= digits_sigfig_count
+#             nchar(format(x_i_div, scientific = FALSE)) >= count_digits_sigfig
 #             & nsmall > 0
 #             & !grepl("\\.", x_i_div)
 #          ){
@@ -60,10 +60,10 @@
 #          # Edge case - thousands with high digit precision keep correct nsmall
 #          if(
 #             df_mag$mag == "t"
-#             & nchar(format(x_i_rnd, scientific = FALSE)) >= digits_sigfig_count
+#             & nchar(format(x_i_rnd, scientific = FALSE)) >= count_digits_sigfig
 #             & nsmall == 0
 #          ){
-#             nsmall <- digits_sigfig_count - (nchar(x_i_div) - nchar(decimal.mark)) + nchar(decimal.mark)
+#             nsmall <- count_digits_sigfig - (nchar(x_i_div) - nchar(decimal.mark)) + nchar(decimal.mark)
 #          }
 #
 #          x_i_chr <- format(
@@ -90,11 +90,11 @@
 #
 #          # zero pad formatted string to correct sig figs if too short
 #          if(
-#             nchar(x_i_chr) < (digits_sigfig_count + nchar(decimal.mark))
+#             nchar(x_i_chr) < (count_digits_sigfig + nchar(decimal.mark))
 #             & nsmall > 0
 #          ) {
 #             # pad   <- required nchar                             - current nchar
-#             n_zeros <- (digits_sigfig_count + nchar(decimal.mark)) - nchar(x_i_chr)
+#             n_zeros <- (count_digits_sigfig + nchar(decimal.mark)) - nchar(x_i_chr)
 #             zeros   <- paste0(rep.int("0", n_zeros), collapse = '')
 #             x_i_chr <- sprintf("%s%s", x_i_chr, zeros)
 #          }

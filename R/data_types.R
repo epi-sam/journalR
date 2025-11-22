@@ -64,7 +64,7 @@ get_style_item_by_data_type <- function(style_name, style_item, d_type){
             d_type
             , "prop"  = style[["prop_digits_round"]]
             , "pp"    = style[["prop_digits_round"]]
-            , "count" = style[["digits_sigfig_count"]]
+            , "count" = style[["count_digits_sigfig"]]
          )
       }
 
