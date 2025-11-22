@@ -258,9 +258,11 @@ print(lancet) # formatted a little nicer
 #> 16:          round_5_up           TRUE
 ```
 
-Counts receive a non-standard thousands separator.
+Lancet receives non-standard formatting
 
 - Lancet decimals are `mid_dot()`.
+- Thousands counts from 9,999 to 999,999 recieve `thin_space()`
+  delimeter.
 
 ``` r
 journalR::format_journal_df(
