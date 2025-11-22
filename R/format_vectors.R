@@ -337,7 +337,7 @@ fround_clu_triplet <- function(
    # - This needs to be done here, not in format_journal_clu() in case
    #   fround_clu_triplet() is called by the user
    clu_fmt <- unlist(lapply(clu_fmt, function(x_i_chr) {
-      sub("^-", style$neg_str_UI, x_i_chr)
+      sub("^-", style$neg_mark_UI, x_i_chr)
    }))
 
    return(clu_fmt)
