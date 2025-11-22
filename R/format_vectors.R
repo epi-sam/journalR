@@ -8,7 +8,7 @@
 #' Vectorized preparation of central, lower, upper values.
 #' Handles negatives, and swaps ordering where necessary.
 #' Casting some negatives as positives allows user control to set
-#' `style$neg_str_mean` appropriately.
+#' `style$neg_mark_mean` appropriately.
 #'
 #' non-exported helper
 #'
@@ -58,7 +58,7 @@ process_clu_triplet_negatives <- function(
       central_neg <- (triplet["central"] < 0) & !all_neg
 
       # If just the mean is negative, invert just the mean
-      # - style$neg_str_mean handles the text prefixing
+      # - style$neg_mark_mean handles the text prefixing
       if(central_neg) triplet["central"] <- triplet["central"] * -1
 
       # If the triplet is all negative, invert and flip upper, lower values

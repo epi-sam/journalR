@@ -48,7 +48,7 @@ format_journal_clu <- function(
    d_type <- assert_data_type(d_type)
 
    style            <- get_style(style_name)
-   neg_str_mean     <- style[["neg_str_mean"]]
+   neg_mark_mean     <- style[["neg_mark_mean"]]
    UI_only          <- style[["UI_only"]]
    UI_text          <- style[["UI_text"]]
    assert_clu_order <- style[["assert_clu_order"]]
@@ -101,7 +101,7 @@ format_journal_clu <- function(
    # Is the central value negative?
    neg_str_mean_vec <- unlist(lapply(triplets["central", ], function(c_i){
       if(c_i < 0) {
-         neg_str_mean
+         neg_mark_mean
       } else {
          ""
       }
@@ -117,7 +117,7 @@ format_journal_clu <- function(
    )
 
    # Handle central negatives and full-negative triplet sets
-   # - allows style$neg_str_mean to be assigned
+   # - allows style$neg_mark_mean to be assigned
    triplets_neg_processed <- process_clu_triplet_negatives(
       triplets = triplets
       , assert_clu_order = assert_clu_order

@@ -18,7 +18,7 @@ get_style_schema <- function(){
       , count_nsmall        = "integer"
       , count_big.mark      = "character"
       , decimal.mark        = "character"
-      , neg_str_mean        = "character"
+      , neg_mark_mean        = "character"
       , neg_str_UI          = "character"
       , UI_text             = "character"
       , UI_only             = "logical"
@@ -51,7 +51,7 @@ get_style_schema <- function(){
 #'       , decimal.mark        = "."
 #'       , neg_str_UI          = "-"
 #'       , count_big.mark      = ","
-#'       , neg_str_mean        = "a decrease of"
+#'       , neg_mark_mean        = "a decrease of"
 #'       , UI_only             = FALSE
 #'       , UI_text             = ""
 #'       , assert_clu_order    = TRUE
@@ -79,7 +79,7 @@ set_style <- function(style_name, style_entry){
 #' @param count_nsmall [int: default 1] passed to `format()` if `count_method` == 'decimal'
 #' @param count_pad_sigfigs [lgl: default TRUE] signif(5.00, 3) is "5" - do you want to pad the trailing 0s back on - usually TRUE?
 #' @param decimal.mark [chr: default "."] decimal mark e.g. "." or `mid_dot()` for Lancet.
-#' @param neg_str_mean [chr: default "-"] string to describe central value negatives - e.g. "-1 (-2 to 4)" could become "Negtive 1 (-2 to 4)"
+#' @param neg_mark_mean [chr: default "-"] string to describe central value negatives - e.g. "-1 (-2 to 4)" could become "Negtive 1 (-2 to 4)"
 #' @param neg_str_UI [chr: default "-"] string to describe negative sign in UI brackets e.g. "1 (-2 to 4)" could become "1 (--2 to 4)" (en-dash)
 #' @param count_big.mark [chr: default ","] character to use for counts thousand, million, billion separator e.g. ","
 #' @param UI_only [lgl: default FALSE] Return only UI from `format_journal_df()` family functions?
@@ -106,7 +106,7 @@ new_style <- function(
       , count_nsmall        = 1
       , count_big.mark      = ","
       , decimal.mark        = "."
-      , neg_str_mean        = "-"
+      , neg_mark_mean        = "-"
       , neg_str_UI          = "-"
       , UI_only             = FALSE
       , UI_text             = ""
@@ -126,7 +126,7 @@ new_style <- function(
          , count_nsmall        = count_nsmall
          , count_big.mark      = count_big.mark
          , decimal.mark        = decimal.mark
-         , neg_str_mean        = neg_str_mean
+         , neg_mark_mean        = neg_mark_mean
          , neg_str_UI          = neg_str_UI
          , UI_only             = UI_only
          , UI_text             = UI_text
@@ -182,7 +182,7 @@ style_nature <- function(){
          , count_nsmall        = 1
          , decimal.mark        = "."
          , count_big.mark      = ","
-         , neg_str_mean        = "-"
+         , neg_mark_mean        = "-"
          , neg_str_UI          = "-"
          , UI_text             = ""
          , UI_only             = FALSE
@@ -215,7 +215,7 @@ style_lancet <- function(){
          , count_nsmall        = 1
          , decimal.mark        = mid_dot()
          , count_big.mark      = thin_space()
-         , neg_str_mean        = "a decrease of "
+         , neg_mark_mean        = "a decrease of "
          , neg_str_UI          = en_dash()
          , UI_text             = ""
          , UI_only             = FALSE
