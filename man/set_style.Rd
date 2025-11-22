@@ -2,7 +2,7 @@
 % Please edit documentation in R/styles.R
 \name{set_style}
 \alias{set_style}
-\title{Set a new style schema}
+\title{Set a new style by list}
 \usage{
 set_style(style_name, style_entry)
 }
@@ -15,7 +15,7 @@ set_style(style_name, style_entry)
 [chr] invisible vector of input objects, to allow easier un-locking
 }
 \description{
-Set a new style schema
+Set a new style by list
 }
 \examples{
 set_style(
@@ -23,6 +23,8 @@ set_style(
    , style_entry = list(
       digits_round_prop     = 2
       , digits_sigfig_count = 3
+      , method_count        = "sigfig"
+      , pad_count_sigfigs   = TRUE
       , nsmall_prop         = 1
       , nsmall_count        = 1
       , decimal.mark        = "."
@@ -34,6 +36,7 @@ set_style(
       , assert_clu_order    = TRUE
       , is_lancet           = FALSE
       , label_thousands     = FALSE
+      , round5up            = TRUE
    )
 )
 }

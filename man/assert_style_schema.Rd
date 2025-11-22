@@ -14,7 +14,7 @@ assert_style_schema(style_entry)
 }
 \description{
 Validates that a style entry conforms to the expected schema defined in
-get_style_schema().
+`get_style_schema()`.
 }
 \seealso{
 Other assertions: 

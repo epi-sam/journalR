@@ -100,6 +100,9 @@ DT_hp |>
 **Counts:**
 
 1. The central value controls the scaling
+   1. Formatting is applied _after_ scaling 
+      1. e.g. 55,831,000 first scaled to 55.831000 ...
+      1. ... then truncated to the correct sigfigs (55.8)
 1. Counts are rounded, but not truncated below 1 million
    1. e.g. 999,999 presents as 999,000 if rounded to 3 digits
    1. Users may set their own style with `label_thousands = TRUE` to override this behavior
@@ -108,9 +111,9 @@ DT_hp |>
 ```{r assumptions_count}
  DT_count <- data.frame(
     data_space = c("thousands", "millions", "billions")
-    , mean     = c(999999, 55.8e6, 54.7e9)
-    , lower    = c(800000, 50.7e6, 48.6e9)
-    , upper    = c(2e6   , 60.7e6, 59.6e9)
+    , mean     = c(999999, 55.831e6, 5471.7e9)
+    , lower    = c(800000, 50.724e6, 4826.6e9)
+    , upper    = c(2e6   , 60.797e6, 5978.6e9)
  )
 DT_count|>
    journalR::format_journal_df(

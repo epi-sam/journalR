@@ -77,7 +77,7 @@ assert_data_type <- function(d_type){
 #' Assert style schema
 #'
 #' Validates that a style entry conforms to the expected schema defined in
-#' get_style_schema().
+#' `get_style_schema()`.
 #'
 #' @param style_entry [list] named list representing a style entry
 #'
@@ -88,6 +88,13 @@ assert_style_schema <- function(style_entry){
    checkmate::assert_list(style_entry, names = "named")
    style_schema <- get_style_schema()
 
+   # Assert names
+   assert_x_in_y(names(style_schema), names(style_entry))
+
+   # Assert choices
+   assert_set_choice(style_entry[["method_count"]], c("sigfig", "decimal", "int"))
+
+   # Assert data types
    lapply(seq_along(style_entry), function(i){
       x              <- style_entry[[i]]
       xname          <- names(style_entry)[i]
@@ -98,13 +105,12 @@ assert_style_schema <- function(style_entry){
       assert_set_choice(xname, choices = names(style_schema))
       checkmate::assert_scalar(x)
 
-      # assert data types, checking for integerish values, and converting to
-      # integer gracefully when found
+      # Check for integerish values, and convert to integer gracefully if found
       if(xtype_expected == "integer"){
          x_is_int <- FALSE
          if(xtype_actual == "integer"){
             x_is_int <- TRUE
-         } else if(xtype_actual == "double"){
+         } else if (xtype_actual == "double") {
             # check for integerish
             if(x == floor(x)){
                x_is_int <- TRUE
@@ -129,6 +135,7 @@ assert_style_schema <- function(style_entry){
 
       checkmate::assert_class(x, classes = xtype_expected, null.ok = FALSE)
    })
+
 
    return(style_entry)
 }

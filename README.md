@@ -97,6 +97,9 @@ DT_hp |>
 **Counts:**
 
 1.  The central value controls the scaling
+    1.  Formatting is applied *after* scaling
+        1.  e.g. 55,831,000 first scaled to 55.831000 …
+        2.  … then truncated to the correct sigfigs (55.8)
 2.  Counts are rounded, but not truncated below 1 million
     1.  e.g. 999,999 presents as 999,000 if rounded to 3 digits
     2.  Users may set their own style with `label_thousands = TRUE` to
@@ -106,19 +109,19 @@ DT_hp |>
 ``` r
  DT_count <- data.frame(
     data_space = c("thousands", "millions", "billions")
-    , mean     = c(999999, 55.8e6, 54.7e9)
-    , lower    = c(800000, 50.7e6, 48.6e9)
-    , upper    = c(2e6   , 60.7e6, 59.6e9)
+    , mean     = c(999999, 55.831e6, 5471.7e9)
+    , lower    = c(800000, 50.724e6, 4826.6e9)
+    , upper    = c(2e6   , 60.797e6, 5978.6e9)
  )
 DT_count|>
    journalR::format_journal_df(
       d_type = "count"
       , remove_clu_columns = FALSE
    )
-#>   data_space        mean    lower    upper                       clu_fmt
-#> 1  thousands      999999 8.00e+05 2.00e+06 1,000,000 (800,000–2,000,000)
-#> 2   millions    55800000 5.07e+07 6.07e+07      55.8 million (50.7–60.7)
-#> 3   billions 54700000000 4.86e+10 5.96e+10      54.7 billion (48.6–59.6)
+#>   data_space        mean      lower      upper                       clu_fmt
+#> 1  thousands 9.99999e+05 8.0000e+05 2.0000e+06 1,000,000 (800,000–2,000,000)
+#> 2   millions 5.58310e+07 5.0724e+07 6.0797e+07      55.8 million (50.7–60.8)
+#> 3   billions 5.47170e+12 4.8266e+12 5.9786e+12   5,470 billion (4,830–5,980)
 ```
 
 ``` r
@@ -128,10 +131,14 @@ DT_count|>
       , style_name         = "thousands_labeled"
       , remove_clu_columns = FALSE
    )
-#>   data_space        mean    lower    upper                           clu_fmt
-#> 1  thousands      999999 8.00e+05 2.00e+06 1,000.0 thousand (800.00–2,000.0)
-#> 2   millions    55800000 5.07e+07 6.07e+07          55.8 million (50.7–60.7)
-#> 3   billions 54700000000 4.86e+10 5.96e+10          54.7 billion (48.6–59.6)
+#>   data_space        mean      lower      upper
+#> 1  thousands 9.99999e+05 8.0000e+05 2.0000e+06
+#> 2   millions 5.58310e+07 5.0724e+07 6.0797e+07
+#> 3   billions 5.47170e+12 4.8266e+12 5.9786e+12
+#>                             clu_fmt
+#> 1 1,000.0 thousand (800.00–2,000.0)
+#> 2          55.8 million (50.7–60.8)
+#> 3       5,470 billion (4,830–5,980)
 ```
 
 **Proportions:**

@@ -95,7 +95,7 @@ test_that("format_lancet_clu works",
              expect_equal(format_lancet_clu(central = c(-0.05, 0.994), lower = c(-0.15, 0.984), upper = c(0.998, 0.998), d_type = "pp")
                           , c("a decrease of 5·0 pp (–15·0 to 99·8)", "99·4 pp (98·4–99·8)"))
              expect_equal(format_lancet_clu(central = rep(2e6, 2), lower = rep(.5e6, 2), upper = rep(3e6, 2), d_type = "count")
-                          , c("2·00 million (0·50–3·00)", "2·00 million (0·50–3·00)"))
+                          , c("2·00 million (0·500–3·00)", "2·00 million (0·500–3·00)"))
              expect_equal(format_lancet_clu(central = c(-0.994, -0.994), upper = c(-0.984, -0.984), lower = c(-0.998, -0.998), d_type = "prop")
                           , c("a decrease of 99·4% (98·4–99·8)", "a decrease of 99·4% (98·4–99·8)"))
              expect_equal(format_lancet_clu(central = c(-0.994, -0.994), upper = c(-0.984, -0.984), lower = c(-0.998, -0.998), d_type = "prop")

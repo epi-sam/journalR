@@ -2,13 +2,15 @@
 % Please edit documentation in R/styles.R
 \name{new_style}
 \alias{new_style}
-\title{Create a new style}
+\title{Make a new style by args}
 \usage{
 new_style(
   style_name,
   digits_round_prop,
-  digits_sigfig_count,
   nsmall_prop,
+  method_count,
+  digits_sigfig_count,
+  pad_count_sigfigs,
   nsmall_count,
   decimal.mark,
   neg_str_UI,
@@ -18,7 +20,8 @@ new_style(
   UI_text,
   assert_clu_order,
   is_lancet,
-  label_thousands
+  label_thousands,
+  round5up
 )
 }
 \arguments{
@@ -26,9 +29,9 @@ new_style(
 
 \item{digits_round_prop}{[int] number of digits to round proportions to}
 
-\item{digits_sigfig_count}{[int] number of significant figures for counts}
-
 \item{nsmall_prop}{[int] minimum number of digits to the right of the decimal point - proportions}
+
+\item{digits_sigfig_count}{[int] number of significant figures for counts}
 
 \item{decimal.mark}{[chr] decimal mark}
 
@@ -59,6 +62,7 @@ new_style(
   style_name            = "my_style"
   , digits_round_prop   = 1
   , digits_sigfig_count = 1
+  , pad_count_sigfigs   = TRUE
   , nsmall_prop         = 1
   , nsmall_count        = 1
   , decimal.mark        = "."
@@ -70,6 +74,7 @@ new_style(
   , assert_clu_order    = TRUE
   , is_lancet           = FALSE
   , label_thousands     = FALSE
+  , round5up            = TRUE
 )
 }
 \seealso{

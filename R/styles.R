@@ -12,7 +12,9 @@ get_style_schema <- function(){
    list(
       digits_round_prop     = "integer"
       , nsmall_prop         = "integer"
+      , method_count        = "character"
       , digits_sigfig_count = "integer"
+      , pad_count_sigfigs   = "logical"
       , nsmall_count        = "integer"
       , big.mark_count      = "character"
       , decimal.mark        = "character"
@@ -23,10 +25,49 @@ get_style_schema <- function(){
       , assert_clu_order    = "logical"
       , label_thousands     = "logical"
       , is_lancet           = "logical"
+      , round5up            = "logical"
    )
 }
 
-#' Create a new style
+#' Set a new style by list
+#'
+#' @param style_name [chr] name of the style to set
+#' @param style_entry [list] named list representing the style entry
+#'
+#' @returns [chr] invisible vector of input objects, to allow easier un-locking
+#' @export
+#' @family styles
+#'
+#' @examples
+#' set_style(
+#'    style_name    = "my_style"
+#'    , style_entry = list(
+#'       digits_round_prop     = 2
+#'       , digits_sigfig_count = 3
+#'       , method_count        = "sigfig"
+#'       , pad_count_sigfigs   = TRUE
+#'       , nsmall_prop         = 1
+#'       , nsmall_count        = 1
+#'       , decimal.mark        = "."
+#'       , neg_str_UI          = "-"
+#'       , big.mark_count      = ","
+#'       , neg_str_mean        = "a decrease of"
+#'       , UI_only             = FALSE
+#'       , UI_text             = ""
+#'       , assert_clu_order    = TRUE
+#'       , is_lancet           = FALSE
+#'       , label_thousands     = FALSE
+#'       , round5up            = TRUE
+#'    )
+#' )
+set_style <- function(style_name, style_entry){
+   # checkmate::assert_string(style_name) # done within set_dict_format()
+   assert_style_schema(style_entry)
+   set_dict_format(dict_name = style_name, dict_entry = style_entry)
+}
+
+
+#' Make a new style by args
 #'
 #' Wrapper function to create and set a new style in one step.
 #'
@@ -53,6 +94,7 @@ get_style_schema <- function(){
 #'   style_name            = "my_style"
 #'   , digits_round_prop   = 1
 #'   , digits_sigfig_count = 1
+#'   , pad_count_sigfigs   = TRUE
 #'   , nsmall_prop         = 1
 #'   , nsmall_count        = 1
 #'   , decimal.mark        = "."
@@ -64,12 +106,15 @@ get_style_schema <- function(){
 #'   , assert_clu_order    = TRUE
 #'   , is_lancet           = FALSE
 #'   , label_thousands     = FALSE
+#'   , round5up            = TRUE
 #' )
 new_style <- function(
       style_name
       , digits_round_prop
-      , digits_sigfig_count
       , nsmall_prop
+      , method_count
+      , digits_sigfig_count
+      , pad_count_sigfigs
       , nsmall_count
       , decimal.mark
       , neg_str_UI
@@ -80,13 +125,16 @@ new_style <- function(
       , assert_clu_order
       , is_lancet
       , label_thousands
+      , round5up
 ){
    set_style(
       style_name    = style_name
       , style_entry = list(
          digits_round_prop     = digits_round_prop
          , nsmall_prop         = nsmall_prop
+         , method_count        = method_count
          , digits_sigfig_count = digits_sigfig_count
+         , pad_count_sigfigs   = pad_count_sigfigs
          , nsmall_count        = nsmall_count
          , big.mark_count      = big.mark_count
          , decimal.mark        = decimal.mark
@@ -97,42 +145,9 @@ new_style <- function(
          , assert_clu_order    = assert_clu_order
          , is_lancet           = is_lancet
          , label_thousands     = label_thousands
+         , round5up            = round5up
       )
    )
-}
-
-#' Set a new style schema
-#'
-#' @param style_name [chr] name of the style to set
-#' @param style_entry [list] named list representing the style entry
-#'
-#' @returns [chr] invisible vector of input objects, to allow easier un-locking
-#' @export
-#' @family styles
-#'
-#' @examples
-#' set_style(
-#'    style_name    = "my_style"
-#'    , style_entry = list(
-#'       digits_round_prop     = 2
-#'       , digits_sigfig_count = 3
-#'       , nsmall_prop         = 1
-#'       , nsmall_count        = 1
-#'       , decimal.mark        = "."
-#'       , neg_str_UI          = "-"
-#'       , big.mark_count      = ","
-#'       , neg_str_mean        = "a decrease of"
-#'       , UI_only             = FALSE
-#'       , UI_text             = ""
-#'       , assert_clu_order    = TRUE
-#'       , is_lancet           = FALSE
-#'       , label_thousands     = FALSE
-#'    )
-#' )
-set_style <- function(style_name, style_entry){
-   # checkmate::assert_string(style_name) # done within set_dict_format()
-   assert_style_schema(style_entry)
-   set_dict_format(dict_name = style_name, dict_entry = style_entry)
 }
 
 #' Get a style from the styles dictionary
@@ -173,7 +188,9 @@ style_nature <- function(){
       list(
          digits_round_prop     = 1
          , nsmall_prop         = 1
+         , method_count        = "sigfig"
          , digits_sigfig_count = 3
+         , pad_count_sigfigs   = TRUE
          , nsmall_count        = 1
          , decimal.mark        = "."
          , big.mark_count      = ","
@@ -184,6 +201,7 @@ style_nature <- function(){
          , assert_clu_order    = TRUE
          , label_thousands     = FALSE
          , is_lancet           = FALSE
+         , round5up            = TRUE
       )
    )
 }
@@ -203,6 +221,8 @@ style_lancet <- function(){
       list(
          digits_round_prop     = 1
          , nsmall_prop         = 1
+         , method_count        = "sigfig"
+         , pad_count_sigfigs   = TRUE
          , digits_sigfig_count = 3
          , nsmall_count        = 1
          , decimal.mark        = mid_dot()
@@ -214,6 +234,7 @@ style_lancet <- function(){
          , assert_clu_order    = TRUE
          , label_thousands     = FALSE
          , is_lancet           = TRUE
+         , round5up            = TRUE
       )
    )
 }
