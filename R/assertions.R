@@ -104,7 +104,7 @@ assert_style_schema <- function(style_entry){
    assert_x_in_y(names(style_schema), names(style_entry))
 
    # Assert choices
-   assert_set_choice(style_entry[["method_count"]], c("sigfig", "decimal", "int"))
+   assert_set_choice(style_entry[["count_method"]], c("sigfig", "decimal", "int"))
 
    # Assert data types
    lapply(seq_along(style_entry), function(i){
