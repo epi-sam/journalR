@@ -34,6 +34,13 @@ process_clu_triplet_negatives <- function(
    # 1. input  - three vectors of equal length (central, lower, upper)
    # 2. output - triplet sets of (central, lower, upper) values for presentation
 
+   checkmate::assert_matrix(
+      triplets
+      , mode        = "numeric"
+      , nrows       = 3
+      , any.missing = FALSE
+      , row.names   = "strict"
+   )
    assert_x_in_y(x = c("central", "lower", "upper"), y = rownames(triplets))
 
    if(assert_clu_relationships == TRUE){
