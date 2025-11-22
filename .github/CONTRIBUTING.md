@@ -5,6 +5,11 @@ Norms for writing code in the project.
 Lean into the [Tidyverse Style Guide](https://style.tidyverse.org) when possible, but don't adhere to it slavishly when common sense dictates otherwise, or where noted below.
 
 
+## Tests
+
+New functionality should be tested.  A high-level integration test is a good place to start.
+If unit testing appears necessary, please add them.  Let tests drive development. 
+
 
 ## Names
 
