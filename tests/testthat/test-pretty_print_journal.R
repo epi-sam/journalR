@@ -217,13 +217,12 @@ test_that("format_lancet_df and format_nature_df work", {
 
 
 test_that("edge case rounding works with and without thousands label", {
-   DF <- tibble::tribble(
-      ~data_space      , ~mean,         ~lower,        ~upper,
-      "thousands"      , 999000,        888888,        2222222,
-      "thousands_edge" , 999999,        888888,        2222222,
-      "millions"       , 55831000,      50724000,      60797000,
-      "billions"       , 5471700000000, 4826600000000, 5978600000000,
-   ) |> as.data.frame() # |> dput()
+   DF <- data.frame(
+         data_space = c("thousands", "thousands_edge", "millions", "billions"),
+         mean       = c(999000,      999999,           55831000,   5.4717e+12),
+         lower      = c(888888,      888888,           50724000,   4.8266e+12),
+         upper      = c(2222222,     2222222,          60797000,   5.9786e+12)
+   )
 
    expect_equal(
       DF |> format_journal_df(d_type = "count", style_name = "nature") # |> dput()
