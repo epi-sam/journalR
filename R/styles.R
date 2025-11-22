@@ -10,7 +10,7 @@
 #' get_style_schema()
 get_style_schema <- function(){
    list(
-      prop_digits_round     = "integer"
+      prop_digits_round   = "integer"
       , prop_nsmall         = "integer"
       , count_method        = "character"
       , count_digits_sigfig = "integer"
@@ -18,16 +18,123 @@ get_style_schema <- function(){
       , count_nsmall        = "integer"
       , count_big.mark      = "character"
       , decimal.mark        = "character"
-      , neg_mark_mean        = "character"
-      , neg_mark_UI          = "character"
+      , neg_mark_mean       = "character"
+      , neg_mark_UI         = "character"
       , UI_text             = "character"
       , UI_only             = "logical"
       , assert_clu_order    = "logical"
       , label_thousands     = "logical"
       , is_lancet           = "logical"
-      , round5up            = "logical"
+      , round_5_up          = "logical"
    )
 }
+
+
+#' Assert style schema
+#'
+#' Validates that a style entry conforms to the expected schema defined in
+#' `get_style_schema()`.
+#'
+#' @param style_entry [list] named list representing a style entry
+#'
+#' @returns [list] invisible validated style_entry
+#' @family assertions
+#' @family styles
+assert_style_schema <- function(style_entry){
+
+   require_args(style_entry)
+
+   checkmate::assert_list(style_entry, names = "named")
+
+   # Assert all entry elements are present
+   style_schema <- get_style_schema()
+   assert_x_in_y(names(style_schema), names(style_entry))
+
+   # Assert choice subsets for some key items
+   tryCatch(
+      assert_set_choice(style_entry[["count_method"]], c("sigfig", "decimal", "int"))
+      , error = function(e)
+      {
+         stop(
+            sprintf(
+               "Style schema is malformed (%s) - please inspect the sytle_entry:\n  "
+               , "count_method"
+            )
+            , conditionMessage(e)
+         )
+      }
+   )
+
+   # Assert data types
+   lapply(seq_along(style_entry), function(i){
+      x              <- style_entry[[i]]
+      xname          <- names(style_entry)[i]
+      xtype_expected <- style_schema[[xname]]
+      xtype_actual   <- typeof(x)
+      xclass_actual  <- class(x)
+
+      tryCatch(
+         assert_set_choice(xname, choices = names(style_schema))
+         , error = function(e)
+         {
+            stop(
+               sprintf(
+                  "Style schema is malformed (%s) - please inspect the sytle_entry:\n  "
+                  , xname
+               )
+               , conditionMessage(e)
+            )
+         }
+      )
+
+      tryCatch(
+         checkmate::assert_scalar(x)
+         , error = function(e)
+         {
+            stop(
+               sprintf(
+                  "All style_entries must be length 1 key/value pairs: (%s)\n  "
+                  , xname
+               )
+               , conditionMessage(e)
+            )
+         }
+      )
+
+      # Check for integerish values, and convert to integer gracefully if found
+      if(xtype_expected == "integer"){
+         x_is_int <- FALSE
+         if(xtype_actual == "integer"){
+            x_is_int <- TRUE
+         } else if (xtype_actual == "double") {
+            # check for integerish
+            if(x == floor(x)){
+               x_is_int <- TRUE
+            }
+         }
+
+         if(x_is_int) {
+            x <- as.integer(x)
+         } else {
+            stop(
+               sprintf(
+                  "style element '%s' should be integer(ish) but is of type '%s' (class: %s)"
+                  , xname
+                  , xtype_actual
+                  , toString(xclass_actual)
+               )
+            )
+         }
+         # so far integers always set number of formatting digits
+         checkmate::assert_integer(x, lower = 0)
+      } # end of integer handling
+
+      checkmate::assert_class(x, classes = xtype_expected, null.ok = FALSE)
+   })
+
+   invisible(style_entry)
+}
+
 
 #' Set a new style by list
 #'
@@ -49,15 +156,15 @@ get_style_schema <- function(){
 #'       , prop_nsmall         = 1
 #'       , count_nsmall        = 1
 #'       , decimal.mark        = "."
-#'       , neg_mark_UI          = "-"
+#'       , neg_mark_UI         = "-"
 #'       , count_big.mark      = ","
-#'       , neg_mark_mean        = "a decrease of"
+#'       , neg_mark_mean       = "a decrease of"
 #'       , UI_only             = FALSE
 #'       , UI_text             = ""
 #'       , assert_clu_order    = TRUE
 #'       , is_lancet           = FALSE
 #'       , label_thousands     = FALSE
-#'       , round5up            = TRUE
+#'       , round_5_up          = TRUE
 #'    )
 #' )
 set_style <- function(style_name, style_entry){
@@ -87,7 +194,7 @@ set_style <- function(style_name, style_entry){
 #' @param assert_clu_order [lgl: default TRUE] whether to assert CLU relationships (ensure lower < central < upper)
 #' @param is_lancet [lgl: default FALSE] TRUE to handle edge-case Lancet count formatting policies
 #' @param label_thousands [lgl: default FALSE] whether format counts as e.g. 10,000 as '10 thousand'
-#' @param round5up [lgl: default TRUE] In R, `round(1245, 3)` is "1240".  Do you want to round to "1250" instead? Default TRUE to conform with common expectations.
+#' @param round_5_up [lgl: default TRUE] In R, `round(1245, 3)` is "1240".  Do you want to round to "1250" instead? Default TRUE to conform with common expectations.
 #'
 #' @returns [chr] invisible vector of input objects
 #' @export
@@ -106,14 +213,14 @@ new_style <- function(
       , count_nsmall        = 1
       , count_big.mark      = ","
       , decimal.mark        = "."
-      , neg_mark_mean        = "-"
-      , neg_mark_UI          = "-"
+      , neg_mark_mean       = "-"
+      , neg_mark_UI         = "-"
       , UI_only             = FALSE
       , UI_text             = ""
       , assert_clu_order    = TRUE
       , is_lancet           = FALSE
       , label_thousands     = FALSE
-      , round5up            = TRUE
+      , round_5_up          = TRUE
 ){
    set_style(
       style_name    = style_name
@@ -126,14 +233,14 @@ new_style <- function(
          , count_nsmall        = count_nsmall
          , count_big.mark      = count_big.mark
          , decimal.mark        = decimal.mark
-         , neg_mark_mean        = neg_mark_mean
-         , neg_mark_UI          = neg_mark_UI
+         , neg_mark_mean       = neg_mark_mean
+         , neg_mark_UI         = neg_mark_UI
          , UI_only             = UI_only
          , UI_text             = UI_text
          , assert_clu_order    = assert_clu_order
          , is_lancet           = is_lancet
          , label_thousands     = label_thousands
-         , round5up            = round5up
+         , round_5_up          = round_5_up
       )
    )
 }
@@ -182,14 +289,14 @@ style_nature <- function(){
          , count_nsmall        = 1
          , decimal.mark        = "."
          , count_big.mark      = ","
-         , neg_mark_mean        = "-"
-         , neg_mark_UI          = "-"
+         , neg_mark_mean       = "-"
+         , neg_mark_UI         = "-"
          , UI_text             = ""
          , UI_only             = FALSE
          , assert_clu_order    = TRUE
          , label_thousands     = FALSE
          , is_lancet           = FALSE
-         , round5up            = TRUE
+         , round_5_up          = TRUE
       )
    )
 }
@@ -215,14 +322,14 @@ style_lancet <- function(){
          , count_nsmall        = 1
          , decimal.mark        = mid_dot()
          , count_big.mark      = thin_space()
-         , neg_mark_mean        = "a decrease of "
-         , neg_mark_UI          = en_dash()
+         , neg_mark_mean       = "a decrease of "
+         , neg_mark_UI         = en_dash()
          , UI_text             = ""
          , UI_only             = FALSE
          , assert_clu_order    = TRUE
          , label_thousands     = FALSE
          , is_lancet           = TRUE
-         , round5up            = TRUE
+         , round_5_up          = TRUE
       )
    )
 }

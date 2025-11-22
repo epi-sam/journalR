@@ -1,3 +1,4 @@
+# ---- Marks -----------------------------------------------------------------
 test_that("mid_dot works",
           {
              expect_equal(mid_dot(), "·")
@@ -66,7 +67,7 @@ test_that("format_mean_df works",
              expect_equal(DT_result, DT_expected)
           })
 
-# Integration tests -----
+# ---- Integration tests -----------------------------------------------------------------
 
 test_that("fround_clu_triplet works",
           {
@@ -137,7 +138,7 @@ test_that("format_lancet_clu works",
              # rounding edge case
              expect_equal(format_lancet_clu(central = 9995, lower = 9990, upper = 10100, d_type = 'count')
                           , c("10 000 (9990–10 100)"))
-             # round5up test
+             # round_5_up test
              expect_equal(
                 format_journal_clu(central = 1145, lower = 1135, upper = 1155, d_type = 'count'), "1,150 (1,140–1,160)"
              )
@@ -261,3 +262,5 @@ test_that("format_lancet_df and format_nature_df work",
                 )
              )
           })
+
+# ---- Assertions -----------------------------------------------------------------

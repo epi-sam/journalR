@@ -48,7 +48,7 @@ format_journal_clu <- function(
    d_type <- assert_data_type(d_type)
 
    style            <- get_style(style_name)
-   neg_mark_mean     <- style[["neg_mark_mean"]]
+   neg_mark_mean    <- style[["neg_mark_mean"]]
    UI_only          <- style[["UI_only"]]
    UI_text          <- style[["UI_text"]]
    assert_clu_order <- style[["assert_clu_order"]]

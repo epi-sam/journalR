@@ -110,7 +110,7 @@ fround_props <- function(
 ){
    style <- get_style(style_name)
 
-   if (style$round5up) {
+   if (style$round_5_up) {
       clu <- clu + 1e-9
    }
 
@@ -157,7 +157,7 @@ fround_count <- function(
    big.mark_base <- style[["count_big.mark"]]
    force_trail   <- style[["count_pad_sigfigs"]]
    decimal.mark  <- style[["decimal.mark"]]
-   round5up      <- style[["round5up"]]
+   round_5_up    <- style[["round_5_up"]]
    is_lancet     <- style[["is_lancet"]]
 
    format_one <- function(x) {
@@ -166,7 +166,7 @@ fround_count <- function(
       x_raw <- data.table::copy(x)
 
       # --- 1 apply round-5-up rule
-      if (round5up) {
+      if (round_5_up) {
          x <- x + 1e-9
       }
 
@@ -361,15 +361,19 @@ fround_clu_triplet <- function(
 format_oxford_comma <- function(vec, sep = "and") {
    checkmate::assert_vector(vec, min.len = 1)
    checkmate::assert_string(sep)
+
    n       <- length(vec)
    set1    <- toString(vec[1:(n - 1)])
+
    if(n > 2) {
       sep <- sprintf(", %s ", sep)
    } else {
       sep <- sprintf(" %s ", sep)
    }
-   set2    <- vec[n]
-   str     <- sprintf("%s%s%s", set1, sep, set2)
+
+   set2 <- vec[n]
+   str  <- sprintf("%s%s%s", set1, sep, set2)
+
    return(str)
 }
 
