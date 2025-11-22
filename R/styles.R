@@ -14,7 +14,7 @@ get_style_schema <- function(){
       , prop_nsmall         = "integer"
       , count_method        = "character"
       , count_digits_sigfig = "integer"
-      , pad_count_sigfigs   = "logical"
+      , count_pad_sigfigs   = "logical"
       , nsmall_count        = "integer"
       , big.mark_count      = "character"
       , decimal.mark        = "character"
@@ -45,7 +45,7 @@ get_style_schema <- function(){
 #'       prop_digits_round     = 2
 #'       , count_digits_sigfig = 3
 #'       , count_method        = "sigfig"
-#'       , pad_count_sigfigs   = TRUE
+#'       , count_pad_sigfigs   = TRUE
 #'       , prop_nsmall         = 1
 #'       , nsmall_count        = 1
 #'       , decimal.mark        = "."
@@ -77,7 +77,7 @@ set_style <- function(style_name, style_entry){
 #' @param count_method [chr: c("sigfig", "decimal", "int")] choose how to report counts - prioritize sigfigs across mean/lower/upper, hard-set decimals, or leave numbers in integer space.
 #' @param count_digits_sigfig [int: default 3] number of significant figures for counts
 #' @param nsmall_count [int: default 1] passed to `format()` if `count_method` == 'decimal'
-#' @param pad_count_sigfigs [lgl: default TRUE] signif(5.00, 3) is "5" - do you want to pad the trailing 0s back on - usually TRUE?
+#' @param count_pad_sigfigs [lgl: default TRUE] signif(5.00, 3) is "5" - do you want to pad the trailing 0s back on - usually TRUE?
 #' @param decimal.mark [chr: default "."] decimal mark e.g. "." or `mid_dot()` for Lancet.
 #' @param neg_str_mean [chr: default "-"] string to describe central value negatives - e.g. "-1 (-2 to 4)" could become "Negtive 1 (-2 to 4)"
 #' @param neg_str_UI [chr: default "-"] string to describe negative sign in UI brackets e.g. "1 (-2 to 4)" could become "1 (--2 to 4)" (en-dash)
@@ -102,7 +102,7 @@ new_style <- function(
       , prop_nsmall         = 1
       , count_method        = "sigfig"
       , count_digits_sigfig = 3
-      , pad_count_sigfigs   = TRUE
+      , count_pad_sigfigs   = TRUE
       , nsmall_count        = 1
       , big.mark_count      = ","
       , decimal.mark        = "."
@@ -122,7 +122,7 @@ new_style <- function(
          , prop_nsmall         = prop_nsmall
          , count_method        = count_method
          , count_digits_sigfig = count_digits_sigfig
-         , pad_count_sigfigs   = pad_count_sigfigs
+         , count_pad_sigfigs   = count_pad_sigfigs
          , nsmall_count        = nsmall_count
          , big.mark_count      = big.mark_count
          , decimal.mark        = decimal.mark
@@ -178,7 +178,7 @@ style_nature <- function(){
          , prop_nsmall         = 1
          , count_method        = "sigfig"
          , count_digits_sigfig = 3
-         , pad_count_sigfigs   = TRUE
+         , count_pad_sigfigs   = TRUE
          , nsmall_count        = 1
          , decimal.mark        = "."
          , big.mark_count      = ","
@@ -210,7 +210,7 @@ style_lancet <- function(){
          prop_digits_round     = 1
          , prop_nsmall         = 1
          , count_method        = "sigfig"
-         , pad_count_sigfigs   = TRUE
+         , count_pad_sigfigs   = TRUE
          , count_digits_sigfig = 3
          , nsmall_count        = 1
          , decimal.mark        = mid_dot()

@@ -155,7 +155,7 @@ fround_count <- function(
    sigfig        <- style[["count_digits_sigfig"]]
    nsmall        <- style[["nsmall_count"]]
    big.mark_base <- style[["big.mark_count"]]
-   force_trail   <- style[["pad_count_sigfigs"]]
+   force_trail   <- style[["count_pad_sigfigs"]]
    decimal.mark  <- style[["decimal.mark"]]
    round5up      <- style[["round5up"]]
    is_lancet     <- style[["is_lancet"]]
