@@ -8,7 +8,8 @@ new_style(
   style_name,
   digits_round_prop,
   digits_sigfig_count,
-  nsmall,
+  nsmall_prop,
+  nsmall_count,
   decimal.mark,
   neg_str_UI,
   big.mark_count,
@@ -27,7 +28,7 @@ new_style(
 
 \item{digits_sigfig_count}{[int] number of significant figures for counts}
 
-\item{nsmall}{[int] minimum number of digits to the right of the decimal point}
+\item{nsmall_prop}{[int] minimum number of digits to the right of the decimal point - proportions}
 
 \item{decimal.mark}{[chr] decimal mark}
 
@@ -58,7 +59,8 @@ new_style(
   style_name    = "my_style"
   , digits_round_prop        = 1
   , digits_sigfig_count      = 1
-  , nsmall                   = 1
+  , nsmall_prop                   = 1
+  , nsmall_count = 1
   , decimal.mark             = "."
   , neg_str_UI            = "-"
   , big.mark_count           = ","

@@ -13,9 +13,7 @@ get_style_schema()
 Centrally managed definition for all required journal format styles.
 }
 \examples{
-\dontrun{
 get_style_schema()
-}
 }
 \seealso{
 Other styles: 

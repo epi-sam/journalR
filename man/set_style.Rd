@@ -23,7 +23,8 @@ set_style(
    , style_entry = list(
       digits_round_prop          = 2
       , digits_sigfig_count      = 3
-      , nsmall                   = 1
+      , nsmall_prop                   = 1
+      , nsmall_count = 1
       , decimal.mark             = "."
       , neg_str_UI            = "-"
       , big.mark_count           = ","

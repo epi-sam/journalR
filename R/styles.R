@@ -21,17 +21,17 @@ get_style <- function(style_name) {
 #' Centrally managed definition for all required journal format styles.
 #'
 #' @returns [list] named list of style elements and their expected types
+#' @export
 #' @family styles
 #'
 #' @examples
-#' \dontrun{
 #' get_style_schema()
-#' }
 get_style_schema <- function(){
    list(
       digits_round_prop          = "integer"
+      , nsmall_prop                   = "integer"
       , digits_sigfig_count      = "integer"
-      , nsmall                   = "integer"
+      , nsmall_count                   = "integer"
       , decimal.mark             = "character"
       , neg_str_UI            = "character"
       , big.mark_count           = "character"
@@ -59,7 +59,8 @@ get_style_schema <- function(){
 #'    , style_entry = list(
 #'       digits_round_prop          = 2
 #'       , digits_sigfig_count      = 3
-#'       , nsmall                   = 1
+#'       , nsmall_prop                   = 1
+#'       , nsmall_count = 1
 #'       , decimal.mark             = "."
 #'       , neg_str_UI            = "-"
 #'       , big.mark_count           = ","
@@ -84,7 +85,7 @@ set_style <- function(style_name, style_entry){
 #' @param style_name [chr] name of the style to set
 #' @param digits_round_prop [int] number of digits to round proportions to
 #' @param digits_sigfig_count [int] number of significant figures for counts
-#' @param nsmall [int] minimum number of digits to the right of the decimal point
+#' @param nsmall_prop [int] minimum number of digits to the right of the decimal point - proportions
 #' @param decimal.mark [chr] decimal mark
 #' @param neg_str_UI [chr] character to use for negative sign
 #' @param big.mark_count [chr] character to use for counts thousand, million, billion separator
@@ -104,7 +105,8 @@ set_style <- function(style_name, style_entry){
 #'   style_name    = "my_style"
 #'   , digits_round_prop        = 1
 #'   , digits_sigfig_count      = 1
-#'   , nsmall                   = 1
+#'   , nsmall_prop                   = 1
+#'   , nsmall_count = 1
 #'   , decimal.mark             = "."
 #'   , neg_str_UI            = "-"
 #'   , big.mark_count           = ","
@@ -119,7 +121,8 @@ new_style <- function(
       style_name
       , digits_round_prop
       , digits_sigfig_count
-      , nsmall
+      , nsmall_prop
+      , nsmall_count
       , decimal.mark
       , neg_str_UI
       , big.mark_count
@@ -135,7 +138,8 @@ new_style <- function(
       , style_entry = list(
          digits_round_prop          = digits_round_prop
          , digits_sigfig_count      = digits_sigfig_count
-         , nsmall                   = nsmall
+         , nsmall_prop                   = nsmall_prop
+         , nsmall_count = nsmall_count
          , decimal.mark             = decimal.mark
          , neg_str_UI            = neg_str_UI
          , big.mark_count           = big.mark_count
@@ -168,7 +172,8 @@ style_nature <- function(){
    assert_style_schema(
       list(
          digits_round_prop          = 1
-         , nsmall                   = 1
+         , nsmall_prop                   = 1
+         , nsmall_count = 1
          , digits_sigfig_count      = 3
          , decimal.mark             = "."
          , neg_str_UI            = "-"
@@ -197,8 +202,9 @@ style_lancet <- function(){
    assert_style_schema(
       list(
          digits_round_prop          = 1
-         , nsmall                   = 1
+         , nsmall_prop                   = 1
          , digits_sigfig_count      = 3
+         , nsmall_count = 1
          , decimal.mark             = mid_dot()
          , neg_str_UI            = en_dash()
          , big.mark_count           = thin_space()

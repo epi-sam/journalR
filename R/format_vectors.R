@@ -112,7 +112,7 @@ fround_props <- function(
    clu <- clu + epsilon
    clu <- clu * 100
    round(x = clu, digits = style$digits_round_prop) |>
-      format(nsmall = style$nsmall, decimal.mark = style$decimal.mark) |>
+      format(nsmall = style$nsmall_prop, decimal.mark = style$decimal.mark) |>
       trimws()
 }
 
@@ -143,7 +143,7 @@ fround_count <- function(
 
    style <- get_style(style_name)
    digits_sigfig_count <- style[["digits_sigfig_count"]]
-   nsmall              <- style[["nsmall"]]
+   nsmall              <- style[["nsmall_count"]]
    decimal.mark        <- style[["decimal.mark"]]
    big.mark_count      <- style[["big.mark_count"]]
    is_lancet           <- style[["is_lancet"]]
@@ -387,7 +387,7 @@ fround_dtype <- function(
    checkmate::assert_character(decimal.mark, len = 1)
 
    # select data-type label
-   suffix <- get_data_type_labels()[[d_type]]
+   suffix <- get_data_type_labels(d_type)
 
    # round and format
    x_fmt <- x  |>

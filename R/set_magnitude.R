@@ -5,7 +5,7 @@
 #' functions.
 #'
 #' 'Thousands' label is not a Lancet-valid, which uses ddd<narrow-space>ddd
-#' format.  See `fround_clu_triplet()` for details.
+#' format.  See `fround_count()` for details.
 #'
 #' @param x [num] numeric vector
 #' @param mag [chr: default NULL c(NULL, "T", "B", "M")] NULL (auto-detect),
@@ -17,7 +17,7 @@
 #'
 #' @return [data.frame] with vector elements: mag, mag_label, and denom Each vector
 #'   element has one item per length(x)
-#' @seealso [fround_clu_triplet()]
+#' @seealso [fround_count()]
 #' @export
 #' @family magnitudes
 #'

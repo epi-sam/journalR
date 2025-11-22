@@ -138,7 +138,7 @@ format_journal_clu <- function(
       triplet_fmt
    })
 
-   d_type_label <- get_data_type_labels()[[d_type]]
+   d_type_label <- get_data_type_labels(d_type)
 
    str_vec <- unlist(lapply(seq_along(triplets_fmt), function(i){
       .cen          <- triplets_fmt[[i]]['central']
@@ -274,21 +274,23 @@ format_means_df <- function(
 
    style <- get_style(style_name)
 
-   digits <- switch(
-      d_type
-      , "prop"  = style[["digits_round_prop"]]
-      , "pp"    = style[["digits_round_prop"]]
-      , "count" = style[["digits_sigfig_count"]]
+   digits <- get_style_item_by_data_type(
+      style_name   = style_name
+      , style_item = "digits"
+      , d_type     = d_type
+   )
+   scalar <- get_style_item_by_data_type(
+      style_name   = style_name
+      , style_item = "scalar"
+      , d_type     = d_type
+   )
+   n_small <- get_style_item_by_data_type(
+      style_name   = style_name
+      , style_item = "n_small"
+      , d_type     = d_type
    )
 
-   scalar <- switch(
-      d_type
-      , "prop"  = 100
-      , "pp"    = 100
-      , "count" = 1
-   )
-
-   label <- get_data_type_labels()[[d_type]]
+   label <- get_data_type_labels(d_type)
 
    mean_varnames <- grep(
       pattern = sprintf("^%s[_]+", central_var)
@@ -306,7 +308,7 @@ format_means_df <- function(
                , mag             = NULL
                , label_thousands = style[["label_thousands"]]
                , digits          = digits
-               , nsmall          = style[["nsmall"]]
+               , nsmall          = n_small
             )
             , label
          )
