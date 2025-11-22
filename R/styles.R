@@ -57,7 +57,7 @@ assert_style_schema <- function(style_entry){
       {
          stop(
             sprintf(
-               "Style schema is malformed (%s) - please inspect the sytle_entry:\n  "
+               "Style schema is malformed - %s - please inspect the sytle_entry:\n  "
                , "count_method"
             )
             , conditionMessage(e)
@@ -79,7 +79,7 @@ assert_style_schema <- function(style_entry){
          {
             stop(
                sprintf(
-                  "Style schema is malformed (%s) - please inspect the sytle_entry:\n  "
+                  "Style schema is malformed - %s - please inspect the sytle_entry:\n  "
                   , xname
                )
                , conditionMessage(e)
@@ -93,7 +93,7 @@ assert_style_schema <- function(style_entry){
          {
             stop(
                sprintf(
-                  "All style_entries must be length 1 key/value pairs: (%s)\n  "
+                  "All style_entries must be length 1 key/value pairs: %s\n  "
                   , xname
                )
                , conditionMessage(e)
@@ -118,7 +118,7 @@ assert_style_schema <- function(style_entry){
          } else {
             stop(
                sprintf(
-                  "style element '%s' should be integer(ish) but is of type '%s' (class: %s)"
+                  "style element '%s' should be integer-ish but is type: '%s', class: %s"
                   , xname
                   , xtype_actual
                   , toString(xclass_actual)
