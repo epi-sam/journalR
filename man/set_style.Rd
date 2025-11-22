@@ -25,14 +25,14 @@ set_style(
       , digits_sigfig_count      = 3
       , nsmall                   = 1
       , decimal.mark             = "."
-      , negative_sign            = "-"
+      , neg_str_UI            = "-"
       , big.mark_count           = ","
-      , mean_neg_text            = "a decrease of"
+      , neg_str_mean            = "a decrease of"
       , UI_only                  = FALSE
       , UI_text                  = ""
-      , assert_clu_relationships = TRUE
+      , assert_clu_order = TRUE
       , is_lancet                = FALSE
-      , allow_thousands          = FALSE
+      , label_thousands          = FALSE
    )
 )
 }

@@ -5,7 +5,7 @@
 \title{Define magnitude, magnitude label and denominator for a vector of numeric
 values.}
 \usage{
-set_magnitude(x, mag = NULL, allow_thousands = FALSE, verbose = TRUE)
+set_magnitude(x, mag = NULL, label_thousands = FALSE, verbose = TRUE)
 }
 \arguments{
 \item{x}{[num] numeric vector}
@@ -14,10 +14,10 @@ set_magnitude(x, mag = NULL, allow_thousands = FALSE, verbose = TRUE)
 otherwise user-override (not recommended) - (M)illions or (B)illions or
 (T)housands (thousands are not Lancet-valid)}
 
-\item{allow_thousands}{[lgl: default FALSE] allow (T)housands magnitude?  Not
+\item{label_thousands}{[lgl: default FALSE] allow (T)housands magnitude?  Not
 Lancet-valid.}
 
-\item{verbose}{[lgl: default TRUE] warn if allow_thousands is TRUE}
+\item{verbose}{[lgl: default TRUE] warn if label_thousands is TRUE}
 }
 \value{
 [data.frame] with vector elements: mag, mag_label, and denom Each vector

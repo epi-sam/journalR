@@ -10,7 +10,7 @@ fmt_magnitude(
   nsmall = 1,
   decimal.mark = ".",
   mag = NULL,
-  allow_thousands = FALSE
+  label_thousands = FALSE
 )
 }
 \arguments{
@@ -25,7 +25,7 @@ fmt_magnitude(
 \item{mag}{[chr c("b", "m", "t")] magnitude (billion, million,
 thousand) passed to set_magnitude()}
 
-\item{allow_thousands}{[lgl: default FALSE] allow thousands magnitude?  Not
+\item{label_thousands}{[lgl: default FALSE] allow thousands magnitude?  Not
 Lancet-valid. Passed to `set_magnitude()`}
 }
 \value{

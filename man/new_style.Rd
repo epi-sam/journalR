@@ -10,14 +10,14 @@ new_style(
   digits_sigfig_count,
   nsmall,
   decimal.mark,
-  negative_sign,
+  neg_str_UI,
   big.mark_count,
-  mean_neg_text,
+  neg_str_mean,
   UI_only,
   UI_text,
-  assert_clu_relationships,
+  assert_clu_order,
   is_lancet,
-  allow_thousands
+  label_thousands
 )
 }
 \arguments{
@@ -31,21 +31,21 @@ new_style(
 
 \item{decimal.mark}{[chr] decimal mark}
 
-\item{negative_sign}{[chr] character to use for negative sign}
+\item{neg_str_UI}{[chr] character to use for negative sign}
 
 \item{big.mark_count}{[chr] character to use for counts thousand, million, billion separator}
 
-\item{mean_neg_text}{[chr] text to use when describing negative mean differences}
+\item{neg_str_mean}{[chr] text to use when describing negative mean differences}
 
 \item{UI_only}{[lgl] whether to format for UI only}
 
 \item{UI_text}{[chr] text to use for UI formatting}
 
-\item{assert_clu_relationships}{[lgl] whether to assert CLU relationships (ensure lower < central < upper)}
+\item{assert_clu_order}{[lgl] whether to assert CLU relationships (ensure lower < central < upper)}
 
 \item{is_lancet}{[lgl] whether the style is for Lancet formatting - controls specific edge-case behaviors}
 
-\item{allow_thousands}{[lgl] whether format counts as e.g. 10,000 as '10 thousand'}
+\item{label_thousands}{[lgl] whether format counts as e.g. 10,000 as '10 thousand'}
 }
 \value{
 [chr] invisible vector of input objects, to allow easier un-locking
@@ -60,14 +60,14 @@ new_style(
   , digits_sigfig_count      = 1
   , nsmall                   = 1
   , decimal.mark             = "."
-  , negative_sign            = "-"
+  , neg_str_UI            = "-"
   , big.mark_count           = ","
-  , mean_neg_text            = "a decrease of"
+  , neg_str_mean            = "a decrease of"
   , UI_only                  = FALSE
   , UI_text                  = ""
-  , assert_clu_relationships = TRUE
+  , assert_clu_order = TRUE
   , is_lancet                = FALSE
-  , allow_thousands          = FALSE
+  , label_thousands          = FALSE
 )
 }
 \seealso{

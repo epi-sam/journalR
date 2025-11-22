@@ -4,12 +4,12 @@
 \alias{process_clu_triplet_negatives}
 \title{Prepare central, lower, upper value triplets for journal presentation}
 \usage{
-process_clu_triplet_negatives(triplets, assert_clu_relationships = TRUE)
+process_clu_triplet_negatives(triplets, assert_clu_order = TRUE)
 }
 \arguments{
 \item{triplets}{[matrix]  with rownames 'central', 'lower', 'upper'}
 
-\item{assert_clu_relationships}{[lgl: default TRUE] assert that central, lower, upper relationships are valid}
+\item{assert_clu_order}{[lgl: default TRUE] assert that central, lower, upper relationships are valid}
 }
 \value{
 [num matrix] matrix with rows 'central', 'lower', 'upper' and columns for each triplet set
@@ -18,7 +18,7 @@ process_clu_triplet_negatives(triplets, assert_clu_relationships = TRUE)
 Vectorized preparation of central, lower, upper values.
 Handles negatives, and swaps ordering where necessary.
 Casting some negatives as positives allows user control to set
-`style$mean_neg_text` appropriately.
+`style$neg_str_mean` appropriately.
 }
 \details{
 non-exported helper
