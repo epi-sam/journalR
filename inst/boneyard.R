@@ -10,7 +10,7 @@
 #
 #    style <- get_style(style_name)
 #    count_digits_sigfig <- style[["count_digits_sigfig"]]
-#    nsmall              <- style[["nsmall_count"]]
+#    nsmall              <- style[["count_nsmall"]]
 #    decimal.mark        <- style[["decimal.mark"]]
 #    big.mark_count      <- style[["big.mark_count"]]
 #    is_lancet           <- style[["is_lancet"]]

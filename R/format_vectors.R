@@ -153,7 +153,7 @@ fround_count <- function(
 
    method        <- style[["count_method"]]
    sigfig        <- style[["count_digits_sigfig"]]
-   nsmall        <- style[["nsmall_count"]]
+   nsmall        <- style[["count_nsmall"]]
    big.mark_base <- style[["big.mark_count"]]
    force_trail   <- style[["count_pad_sigfigs"]]
    decimal.mark  <- style[["decimal.mark"]]

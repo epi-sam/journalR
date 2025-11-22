@@ -15,7 +15,7 @@ get_style_schema <- function(){
       , count_method        = "character"
       , count_digits_sigfig = "integer"
       , count_pad_sigfigs   = "logical"
-      , nsmall_count        = "integer"
+      , count_nsmall        = "integer"
       , big.mark_count      = "character"
       , decimal.mark        = "character"
       , neg_str_mean        = "character"
@@ -47,7 +47,7 @@ get_style_schema <- function(){
 #'       , count_method        = "sigfig"
 #'       , count_pad_sigfigs   = TRUE
 #'       , prop_nsmall         = 1
-#'       , nsmall_count        = 1
+#'       , count_nsmall        = 1
 #'       , decimal.mark        = "."
 #'       , neg_str_UI          = "-"
 #'       , big.mark_count      = ","
@@ -76,7 +76,7 @@ set_style <- function(style_name, style_entry){
 #' @param prop_nsmall [int: default 1] minimum number of digits to the right of the decimal point - proportions
 #' @param count_method [chr: c("sigfig", "decimal", "int")] choose how to report counts - prioritize sigfigs across mean/lower/upper, hard-set decimals, or leave numbers in integer space.
 #' @param count_digits_sigfig [int: default 3] number of significant figures for counts
-#' @param nsmall_count [int: default 1] passed to `format()` if `count_method` == 'decimal'
+#' @param count_nsmall [int: default 1] passed to `format()` if `count_method` == 'decimal'
 #' @param count_pad_sigfigs [lgl: default TRUE] signif(5.00, 3) is "5" - do you want to pad the trailing 0s back on - usually TRUE?
 #' @param decimal.mark [chr: default "."] decimal mark e.g. "." or `mid_dot()` for Lancet.
 #' @param neg_str_mean [chr: default "-"] string to describe central value negatives - e.g. "-1 (-2 to 4)" could become "Negtive 1 (-2 to 4)"
@@ -103,7 +103,7 @@ new_style <- function(
       , count_method        = "sigfig"
       , count_digits_sigfig = 3
       , count_pad_sigfigs   = TRUE
-      , nsmall_count        = 1
+      , count_nsmall        = 1
       , big.mark_count      = ","
       , decimal.mark        = "."
       , neg_str_mean        = "-"
@@ -123,7 +123,7 @@ new_style <- function(
          , count_method        = count_method
          , count_digits_sigfig = count_digits_sigfig
          , count_pad_sigfigs   = count_pad_sigfigs
-         , nsmall_count        = nsmall_count
+         , count_nsmall        = count_nsmall
          , big.mark_count      = big.mark_count
          , decimal.mark        = decimal.mark
          , neg_str_mean        = neg_str_mean
@@ -179,7 +179,7 @@ style_nature <- function(){
          , count_method        = "sigfig"
          , count_digits_sigfig = 3
          , count_pad_sigfigs   = TRUE
-         , nsmall_count        = 1
+         , count_nsmall        = 1
          , decimal.mark        = "."
          , big.mark_count      = ","
          , neg_str_mean        = "-"
@@ -212,7 +212,7 @@ style_lancet <- function(){
          , count_method        = "sigfig"
          , count_pad_sigfigs   = TRUE
          , count_digits_sigfig = 3
-         , nsmall_count        = 1
+         , count_nsmall        = 1
          , decimal.mark        = mid_dot()
          , big.mark_count      = thin_space()
          , neg_str_mean        = "a decrease of "
