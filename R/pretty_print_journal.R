@@ -9,7 +9,7 @@
 #' Format and round without unit labeling
 #' - Use `format_lancet_clu()` for unit labels
 #'
-#' @param clu [num] a numeric vector of three values in central/lower/upper
+#' @param clu [num] a numeric triplet of three values in central/lower/upper
 #'   order.
 #' @param d_type [chr c('prop', 'pp', or 'count')] data type - proportion,
 #'   percentage point or count
@@ -35,41 +35,28 @@ fround_mag_clu <- function(
       , df_mag     = set_magnitude(clu[1]) # assuming central is in first position
 ) {
 
-   style                    <- get_style(style_name)
-   digits_round_prop        <- style[["digits_round_prop"]]
-   digits_sigfig_count      <- style[["digits_sigfig_count"]]
-   nsmall                   <- style[["nsmall"]]
-   decimal.mark             <- style[["decimal.mark"]]
-   negative_sign            <- style[["negative_sign"]]
-   big.mark_count           <- style[["big.mark_count"]]
-   is_lancet                <- style[["is_lancet"]]
-   assert_clu_relationships <- style[["assert_clu_relationships"]]
+   style  <- get_style(style_name)
    d_type <- assert_data_type(d_type)
 
    checkmate::assert_vector(clu, len = 3)
    checkmate::assert_numeric(clu, len = 3)
-   if(assert_clu_relationships == TRUE){
+   if(style$assert_clu_relationships == TRUE){
       assert_clu_relationship(clu[1], clu[2], clu[3])
    }
-   checkmate::assert_data_frame(df_mag)
 
    clu_fmt <- switch_strict(
       d_type
-      , "prop"  = fround_propish(x = clu, digits = digits_round_prop, nsmall = nsmall, decimal.mark = decimal.mark)
-      , "pp"    = fround_propish(x = clu, digits = digits_round_prop, nsmall = nsmall, decimal.mark = decimal.mark)
-      , "count" = fround_countish(
-         clu                   = clu
-         , df_mag              = df_mag
-         , digits_sigfig_count = digits_sigfig_count
-         , decimal.mark        = decimal.mark
-         , big.mark_count      = big.mark_count
-         , nsmall              = nsmall
-         , is_lancet           = is_lancet
-      )
+      , "prop"  = fround_props(clu = clu, style_name = style_name)
+      , "pp"    = fround_props(clu = clu, style_name = style_name)
+      , "count" = fround_count(clu = clu, style_name = style_name, df_mag = df_mag)
    )
 
-   # replace negative sign (with Lancet standard if applicable)
-   clu_fmt <- unlist(lapply(clu_fmt, function(x_i_chr){sub("^-", negative_sign, x_i_chr)}))
+   # replace negative sign
+   # - This needs to be done here, not in format_journal_clu() in case
+   #   fround_mag_clu() is called by the user
+   clu_fmt <- unlist(lapply(clu_fmt, function(x_i_chr) {
+      sub("^-", style$negative_sign, x_i_chr)
+   }))
 
    return(clu_fmt)
 }
@@ -121,17 +108,10 @@ format_journal_clu <- function(
    d_type <- assert_data_type(d_type)
 
    style                    <- get_style(style_name)
-   digits_round_prop        <- style[["digits_round_prop"]]
-   digits_sigfig_count      <- style[["digits_sigfig_count"]]
-   nsmall                   <- style[["nsmall"]]
-   decimal.mark             <- style[["decimal.mark"]]
-   negative_sign            <- style[["negative_sign"]]
-   big.mark_count           <- style[["big.mark_count"]]
    mean_neg_text            <- style[["mean_neg_text"]]
    UI_only                  <- style[["UI_only"]]
    UI_text                  <- style[["UI_text"]]
    assert_clu_relationships <- style[["assert_clu_relationships"]]
-   is_lancet                <- style[["is_lancet"]]
    allow_thousands          <- style[["allow_thousands"]]
 
    checkmate::assert_numeric(central, min.len = 1)
@@ -179,7 +159,7 @@ format_journal_clu <- function(
    })) |> unname()
 
    # Is the central value negative?
-   decrease_stub_vec <- unlist(lapply(triplets["central", ], function(c_i){
+   mean_neg_text_vec <- unlist(lapply(triplets["central", ], function(c_i){
       if(c_i < 0) {
          mean_neg_text
       } else {
@@ -205,6 +185,7 @@ format_journal_clu <- function(
 
 
    # Where the magic happens
+   # - Negative signs are styled internally
    triplets_fmt <- lapply(seq_len(ncol(triplets_neg_processed)), function(idx){
       triplet_fmt <- fround_mag_clu(
          clu          = triplets_neg_processed[, idx]
@@ -220,15 +201,18 @@ format_journal_clu <- function(
    d_type_label <- get_data_type_labels()[[d_type]]
 
    str_vec <- unlist(lapply(seq_along(triplets_fmt), function(i){
-      .cen <- triplets_fmt[[i]]['central']
-      .upp <- triplets_fmt[[i]]['upper']
-      .low <- triplets_fmt[[i]]['lower']
+      .cen          <- triplets_fmt[[i]]['central']
+      .upp          <- triplets_fmt[[i]]['upper']
+      .low          <- triplets_fmt[[i]]['lower']
+      .mean_neg_txt <- mean_neg_text_vec[i]
+      .mag_label    <- mag_label_vec[i]
+      .low_upp_sep  <- sep_vec[i]
 
       # Building blocks for final string
-      str <- glue::glue("{decrease_stub_vec[i]}{.cen}{d_type_label} {mag_label_vec[i]}({UI_text}{.low}{sep_vec[i]}{.upp})")
+      str <- glue::glue("{.mean_neg_txt}{.cen}{d_type_label} {.mag_label}({UI_text}{.low}{.low_upp_sep}{.upp})")
 
       if (UI_only) {
-         str <- glue::glue("{UI_text}{.low}{sep_vec[i]}{.upp}{mag_label_vec[i]}")
+         str <- glue::glue("{UI_text}{.low}{.low_upp_sep}{.upp}{.mag_label}")
       }
 
       return(str)

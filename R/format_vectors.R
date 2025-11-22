@@ -54,11 +54,6 @@ process_clu_triplet_negatives <- function(
    # process negatives
    triplets <- apply(triplets, 2, function(triplet){
 
-      # FIXME SB - 2025 Nov 21 - moved to fround_propish where it belongs
-      # # proportion to percentage
-      # if(d_type %in% c("prop", "pp")) triplet <- triplet * 100
-
-
       all_neg     <- all(triplet <= 0)
       central_neg <- (triplet["central"] < 0) & !all_neg
 
@@ -88,16 +83,6 @@ process_clu_triplet_negatives <- function(
       return(triplet)
    })
 
-   # assert any negative inversions left things in good shape
-   # FIXME SB - 2025 Nov 21 - this doesn't work with central negative inversion
-   # if(assert_clu_relationships == TRUE){
-   #    assert_clu_relationship(
-   #       central = triplets['central',]
-   #       , lower = triplets['lower',]
-   #       , upper = triplets['upper',]
-   #    )
-   # }
-
    return(triplets)
 
 }
@@ -106,28 +91,28 @@ process_clu_triplet_negatives <- function(
 #'
 #' non-exported helper
 #'
-#' @param x [num] numeric vector
-#' @param digits [integer] passed to `round()`
-#' @param nsmall [integer] passed to `format()`
-#' @param decimal.mark [chr] passed to `format()`
+#' @param style_name [chr] style name - controls rounding and
+#'   formatting.
+#' @param clu [num] numeric vector
 #'
 #' @returns [chr] formatted string
 #' @family vector_formats
 #'
 #' @examples
 #' \dontrun{
-#' fround_propish(0.123456789)
+#' fround_propish(0.123456789, 'nature')
 #' }
-fround_propish <- function(
-      x
-      , digits       = 1L
-      , nsmall       = 1L
-      , decimal.mark = "."
+fround_props <- function(
+      clu
+      , style_name
 ){
+   style <- get_style(style_name)
    # hack for floating point rounding issues
    epsilon <- 1e-9
-   round(x = x * 100 + epsilon, digits = digits) |>
-      format(nsmall = nsmall, decimal.mark = decimal.mark) |>
+   clu <- clu + epsilon
+   clu <- clu * 100
+   round(x = clu, digits = style$digits_round_prop) |>
+      format(nsmall = style$nsmall, decimal.mark = style$decimal.mark) |>
       trimws()
 }
 
@@ -136,39 +121,32 @@ fround_propish <- function(
 #' non-exported helper
 #'
 #' @param clu [num] numeric triplet of counts (central, lower, upper)
+#' @param style_name [chr] style name - controls rounding and
+#'   formatting.
 #' @param df_mag [data.frame] magnitude df as returned by `set_magnitude()`
-#' @param digits_sigfig_count [integer] significant figures for counts
-#' @param nsmall [integer] minimum number of digits to the right of the decimal point
-#' @param decimal.mark [chr] passed to `format()`
-#' @param big.mark_count [chr] passed to `format()`
-#' @param is_lancet [lgl] if TRUE, apply Lancet-specific formatting rules
 #'
 #' @returns [chr] formatted string vector
 #' @family vector_formats
 #'
 #' @examples
 #' \dontrun{
-#' fround_countish(
-#'    clu                   = c(12345, 67890, 6e6)
-#'    , df_mag              = set_magnitude(12345)
-#'    , digits_sigfig_count = 3L
-#'    , nsmall              = 1L
-#'    , decimal.mark        = "."
-#'    , big.mark_count      = ","
-#'    , is_lancet           = FALSE
-#' )
+#' fround_countish(clu = c(12345, 67890, 6.6666e6), df_mag = set_magnitude(12345), style_name = 'nature')
 #' }
-fround_countish <- function(
+fround_count <- function(
       clu
+      , style_name
       , df_mag
-      , digits_sigfig_count = 3L
-      , nsmall              = 1L
-      , decimal.mark        = "."
-      , big.mark_count      = ","
-      , is_lancet           = FALSE
 ) {
 
    if(any(clu < 0)) stop("Formatting counts under 0 not yet supported: ", toString(clu))
+   checkmate::assert_data_frame(df_mag, nrows = 1)
+
+   style <- get_style(style_name)
+   digits_sigfig_count <- style[["digits_sigfig_count"]]
+   nsmall              <- style[["nsmall"]]
+   decimal.mark        <- style[["decimal.mark"]]
+   big.mark_count      <- style[["big.mark_count"]]
+   is_lancet           <- style[["is_lancet"]]
 
    unlist(
       lapply(clu, function(x_i){
@@ -185,7 +163,7 @@ fround_countish <- function(
             nsmall <- 0
          }
 
-         # Still need accurate sig figs for numbers <= digits_sigfig_count e.g.
+         # Need accurate sig figs for numbers <= digits_sigfig_count e.g.
          # c(10.5, 0.2, 20.3) should become c("10.5", "0.200", "20.3") if
          # digits_sigfig_count = 3. Ensure number of digits are not counted as
          # scientific notation e.g. '6e+06' should count as 7 digits, not 5
