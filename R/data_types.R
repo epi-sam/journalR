@@ -80,8 +80,8 @@ get_style_item_by_data_type <- function(style_name, style_item, d_type){
       , "n_small" = {
          switch_strict(
             d_type
-            , "prop"  = style[["nsmall_prop"]]
-            , "pp"    = style[["nsmall_prop"]]
+            , "prop"  = style[["prop_nsmall"]]
+            , "pp"    = style[["prop_nsmall"]]
             , "count" = style[["nsmall_count"]]
          )
       }

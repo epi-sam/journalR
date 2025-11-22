@@ -11,7 +11,7 @@
 get_style_schema <- function(){
    list(
       prop_digits_round     = "integer"
-      , nsmall_prop         = "integer"
+      , prop_nsmall         = "integer"
       , method_count        = "character"
       , digits_sigfig_count = "integer"
       , pad_count_sigfigs   = "logical"
@@ -46,7 +46,7 @@ get_style_schema <- function(){
 #'       , digits_sigfig_count = 3
 #'       , method_count        = "sigfig"
 #'       , pad_count_sigfigs   = TRUE
-#'       , nsmall_prop         = 1
+#'       , prop_nsmall         = 1
 #'       , nsmall_count        = 1
 #'       , decimal.mark        = "."
 #'       , neg_str_UI          = "-"
@@ -73,7 +73,7 @@ set_style <- function(style_name, style_entry){
 #'
 #' @param style_name [chr] name of the style to set
 #' @param prop_digits_round [int: default 1] number of digits to round proportions to
-#' @param nsmall_prop [int: default 1] minimum number of digits to the right of the decimal point - proportions
+#' @param prop_nsmall [int: default 1] minimum number of digits to the right of the decimal point - proportions
 #' @param method_count [chr: c("sigfig", "decimal", "int")] choose how to report counts - prioritize sigfigs across mean/lower/upper, hard-set decimals, or leave numbers in integer space.
 #' @param digits_sigfig_count [int: default 3] number of significant figures for counts
 #' @param nsmall_count [int: default 1] passed to `format()` if `method_count` == 'decimal'
@@ -99,7 +99,7 @@ set_style <- function(style_name, style_entry){
 new_style <- function(
       style_name
       , prop_digits_round   = 1
-      , nsmall_prop         = 1
+      , prop_nsmall         = 1
       , method_count        = "sigfig"
       , digits_sigfig_count = 3
       , pad_count_sigfigs   = TRUE
@@ -119,7 +119,7 @@ new_style <- function(
       style_name    = style_name
       , style_entry = list(
          prop_digits_round     = prop_digits_round
-         , nsmall_prop         = nsmall_prop
+         , prop_nsmall         = prop_nsmall
          , method_count        = method_count
          , digits_sigfig_count = digits_sigfig_count
          , pad_count_sigfigs   = pad_count_sigfigs
@@ -175,7 +175,7 @@ style_nature <- function(){
    assert_style_schema(
       list(
          prop_digits_round     = 1
-         , nsmall_prop         = 1
+         , prop_nsmall         = 1
          , method_count        = "sigfig"
          , digits_sigfig_count = 3
          , pad_count_sigfigs   = TRUE
@@ -208,7 +208,7 @@ style_lancet <- function(){
    assert_style_schema(
       list(
          prop_digits_round     = 1
-         , nsmall_prop         = 1
+         , prop_nsmall         = 1
          , method_count        = "sigfig"
          , pad_count_sigfigs   = TRUE
          , digits_sigfig_count = 3
