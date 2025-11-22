@@ -237,6 +237,67 @@ fround_count <- function(
    )
 }
 
+#' Format and round central/lower/upper value sets by magnitude without units.
+#'
+#' `central` could be mean/median/point_estimate. `d_type` is required (count
+#' data requires nuanced logic), but labels are not returned.
+#'
+#' Format and round without unit labeling
+#' - Use `format_lancet_clu()` for unit labels
+#'
+#' @param clu [num] a numeric triplet of three values in central/lower/upper
+#'   order.
+#' @param d_type [chr c('prop', 'pp', or 'count')] data type - proportion,
+#'   percentage point or count
+#' @param df_mag [named list] output from `set_magnitude()` - must be based on
+#'   central value of a central/lower/upper set - central and all UI values
+#'   inherit the same scale as the central tendency.
+#' @param style_name [chr: default 'nature'] style name - controls rounding and
+#'   formatting.
+#' @return [chr] formatted string (vectorized)
+#' @family styled_formats
+#'
+#' @examples
+#' \dontrun{
+#' fround_clu_triplet(clu = c(central = 0.2, lower = 0.1, upper = 0.3), d_type = "prop")
+#' fround_clu_triplet(clu = c(central = 0.2, lower = -0.1, upper = 0.3), d_type = "pp")
+#' fround_clu_triplet(clu = c(central = 95e6, lower = 89e6, upper = 101e6), d_type = "count")
+#' fround_clu_triplet(clu = c(central = 95e6, lower = 1e5, upper = 101e9), d_type = "count")
+#' fround_clu_triplet(clu = c(central = 678901, lower = 123456, upper = 6e6), d_type = "count")
+#' }
+fround_clu_triplet <- function(
+      clu
+      , d_type
+      , style_name = "nature"
+      , df_mag     = set_magnitude(clu[1]) # assuming central is in first position
+) {
+
+   style  <- get_style(style_name)
+   d_type <- assert_data_type(d_type)
+
+   checkmate::assert_vector(clu, len = 3)
+   checkmate::assert_numeric(clu, len = 3)
+   if(style$assert_clu_order == TRUE){
+      assert_clu_relationship(clu[1], clu[2], clu[3])
+   }
+
+   clu_fmt <- switch_strict(
+      d_type
+      , "prop"  = fround_props(clu = clu, style_name = style_name)
+      , "pp"    = fround_props(clu = clu, style_name = style_name)
+      , "count" = fround_count(clu = clu, style_name = style_name, df_mag = df_mag)
+   )
+
+   # replace negative sign
+   # - This needs to be done here, not in format_journal_clu() in case
+   #   fround_clu_triplet() is called by the user
+   clu_fmt <- unlist(lapply(clu_fmt, function(x_i_chr) {
+      sub("^-", style$neg_str_UI, x_i_chr)
+   }))
+
+   return(clu_fmt)
+}
+
 # ---- Public -----------------------------------------------------------------
 
 #' Format vector of items with Oxford comma

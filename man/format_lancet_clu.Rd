@@ -37,6 +37,6 @@ Other styled_formats:
 \code{\link{format_means_df}()},
 \code{\link{format_nature_clu}()},
 \code{\link{format_nature_df}()},
-\code{\link{fround_mag_clu}()}
+\code{\link{fround_clu_triplet}()}
 }
 \concept{styled_formats}

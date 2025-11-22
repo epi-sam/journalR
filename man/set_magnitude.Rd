@@ -29,13 +29,13 @@ functions.
 }
 \details{
 'Thousands' label is not a Lancet-valid, which uses ddd<narrow-space>ddd
-format.  See `fround_mag_clu()` for details.
+format.  See `fround_clu_triplet()` for details.
 }
 \examples{
 set_magnitude(c(1e-6, 1, 1e3, 1e6, 1e9))
 }
 \seealso{
-[fround_mag_clu()]
+[fround_clu_triplet()]
 
 Other magnitudes: 
 \code{\link{fmt_magnitude}()}
