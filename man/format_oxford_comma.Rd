@@ -26,9 +26,9 @@ format_oxford_comma(1:3, "or")
 Other vector_formats: 
 \code{\link{fmt_magnitude}()},
 \code{\link{fround}()},
-\code{\link{fround_countish}()},
+\code{\link{fround_count}()},
 \code{\link{fround_dtype}()},
 \code{\link{fround_dtype_lancet}()},
-\code{\link{fround_propish}()}
+\code{\link{fround_props}()}
 }
 \concept{vector_formats}

@@ -17,9 +17,4 @@ lock_some_bindings(objs, env = globalenv())
 \description{
 Safely tries to lock the specified object bindings in the given environment.
 }
-\examples{
-\dontrun{
-lock_some_bindings(c("my_var1", "my_var2"))
-}
-}
 \concept{bindings}

@@ -6,26 +6,27 @@
 \usage{
 fmt_magnitude(
   x,
-  mag = NULL,
-  allow_thousands = FALSE,
   digits = 1,
   nsmall = 1,
-  decimal.mark = "."
+  decimal.mark = ".",
+  mag = NULL,
+  label_thousands = FALSE
 )
 }
 \arguments{
 \item{x}{[num] numeric vector}
-
-\item{mag}{[chr c("b", "m", "t")] magnitude (billion, million, thousand)}
-
-\item{allow_thousands}{[lgl: default FALSE] allow thousands magnitude?  Not
-Lancet-valid.}
 
 \item{digits}{[int: default 1L] passed to `round()`}
 
 \item{nsmall}{[int: default 1L] passed to `format()`}
 
 \item{decimal.mark}{[chr: default "."] decimal mark passed to `format()`}
+
+\item{mag}{[chr c("b", "m", "t")] magnitude (billion, million,
+thousand) passed to set_magnitude()}
+
+\item{label_thousands}{[lgl: default FALSE] allow thousands magnitude?  Not
+Lancet-valid. Passed to `set_magnitude()`}
 }
 \value{
 [chr] formatted string
@@ -46,10 +47,10 @@ fmt_magnitude(123456789)
 Other vector_formats: 
 \code{\link{format_oxford_comma}()},
 \code{\link{fround}()},
-\code{\link{fround_countish}()},
+\code{\link{fround_count}()},
 \code{\link{fround_dtype}()},
 \code{\link{fround_dtype_lancet}()},
-\code{\link{fround_propish}()}
+\code{\link{fround_props}()}
 
 Other magnitudes: 
 \code{\link{set_magnitude}()}

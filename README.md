@@ -45,45 +45,132 @@ Let’s say you have done some statistical analysis.
 DT <- data.table::as.data.table(mtcars)
 
 # calculate mean/lower/upper 95% UI for mpg by cyl
-DT_mpg <- DT[
+DT_hp <- DT[
    , .(
-        mean  = mean(mpg)
-      , lower = quantile(mpg, 0.025)
-      , upper = quantile(mpg, 0.975)
+        mean  = mean(hp)
+      , lower = quantile(hp, 0.025)
+      , upper = quantile(hp, 0.975)
    )
    , by = cyl
 ]
+data.table::setorderv(DT_hp, 'cyl')
 
-print(DT_mpg)
-#>      cyl     mean  lower   upper
-#>    <num>    <num>  <num>   <num>
-#> 1:     6 19.74286 17.845 21.3400
-#> 2:     4 26.66364 21.425 33.5250
-#> 3:     8 15.10000 10.400 19.0375
+print(DT_hp)
+#>      cyl      mean  lower   upper
+#>    <num>     <num>  <num>   <num>
+#> 1:     4  82.63636  54.50 112.000
+#> 2:     6 122.28571 105.75 167.200
+#> 3:     8 209.21429 150.00 311.925
 ```
 
 Once they’re ready for presentation, you’ll want to format them.
 
 Enter `format_journal_df()`:
 
-- Format a mean/lower/upper set of three columns into a
-  `mean (lower -- upper)` string.
+- Format a central/lower/upper set of three columns into an
+  e.g. `mean (lower -- upper)` string.
   - Ready for easy copy/paste into Word or similar.
 - The user must provide a data type (`d_type`), which tells the function
   how to format the numbers.
-  - mean/lower/upper relationships are asserted (lower \< mean \< upper)
-    before formatting.
+  - central/lower/upper relationships are asserted (lower \< central \<
+    upper) before formatting.
 
 ``` r
-DT_mpg |>
+DT_hp |>
    journalR::format_journal_df(
       d_type = "count"
    )
-#>      cyl          clu_fmt
-#>    <num>           <char>
-#> 1:     6 19.7 (17.8–21.3)
-#> 2:     4 26.7 (21.4–33.5)
-#> 3:     8 15.1 (10.4–19.0)
+#>      cyl         clu_fmt
+#>    <num>          <char>
+#> 1:     4 82.6 (54.5–112)
+#> 2:     6   122 (106–167)
+#> 3:     8   209 (150–312)
+```
+
+## Assumptions
+
+### General:
+
+1.  Central/lower/upper triplets are formatted at the same ‘scale’.
+2.  All triplets present with the same number of significant digits.
+
+### Counts:
+
+1.  The central value controls the scaling
+    1.  Formatting is applied *after* scaling
+        1.  e.g. 55,831,000 first scaled to 55.831000 …
+        2.  … then truncated to the correct sigfigs (55.8)
+2.  Negative counts are not supported
+3.  Magnitudes over 1 billion are not supported
+
+``` r
+DF_count <- data.frame(
+      data_space = c("thousands", "thousands_edge", "millions", "billions"),
+      mean       = c(999000,      999999,           55831000,   5.4717e+12),
+      lower      = c(888888,      888888,           50724000,   4.8266e+12),
+      upper      = c(2222222,     2222222,          60797000,   5.9786e+12)
+)
+DF_count|>
+   journalR::format_journal_df(
+      d_type = "count"
+   )
+#>       data_space                     clu_fmt
+#> 1      thousands 999,000 (889,000–2,220,000)
+#> 2 thousands_edge   1.00 million (0.889–2.22)
+#> 3       millions    55.8 million (50.7–60.8)
+#> 4       billions 5,470 billion (4,830–5,980)
+```
+
+- Count-space magnitude-edge-cases are handled.
+  - By default, thousands do not receive a label.
+  - Users may set their own style with `label_thousands = TRUE`.
+
+``` r
+new_style(
+   style_name = "thousands_labeled"
+   , label_thousands = TRUE
+)
+```
+
+``` r
+DF_count|>
+   journalR::format_journal_df(
+      d_type               = "count"
+      , style_name         = "thousands_labeled"
+   )
+#>       data_space                     clu_fmt
+#> 1      thousands    999 thousand (889–2,220)
+#> 2 thousands_edge   1.00 million (0.889–2.22)
+#> 3       millions    55.8 million (50.7–60.8)
+#> 4       billions 5,470 billion (4,830–5,980)
+```
+
+### Proportions:
+
+1.  Proportions (prop) and Percentage Points (pp) are all multiplied by
+    100
+2.  All-negative triplets are presented with negative mean only, with
+    upper and lower bounds reversed.
+
+``` r
+DT_prop <- data.table::data.table(
+   data_space    = c("all_positive", "mixed_negative", "all_negative", "lower_negative", "central_lower_neg")
+   , mean        = c(.558,           -0.1,             -0.1,            0.05,            -0.05)
+   , lower       = c(.507,           -0.25,            -0.2,           -0.02,            -0.1)
+   , upper       = c(.607,            1.3,             -0.05,           0.12,             0.1)
+)
+DT_prop|>
+   journalR::format_journal_df(
+      d_type = "prop"
+      , remove_clu_columns = FALSE
+   )
+#>           data_space   mean  lower  upper                 clu_fmt
+#>               <char>  <num>  <num>  <num>                  <char>
+#> 1:      all_positive  0.558  0.507  0.607       55.8% (50.7–60.7)
+#> 2:    mixed_negative -0.100 -0.250  1.300 -10.0% (-25.0 to 130.0)
+#> 3:      all_negative -0.100 -0.200 -0.050       -10.0% (5.0–20.0)
+#> 4:    lower_negative  0.050 -0.020  0.120     5.0% (-2.0 to 12.0)
+#> 5: central_lower_neg -0.050 -0.100  0.100   -5.0% (-10.0 to 10.0)
 ```
 
 ## Options
@@ -150,23 +237,31 @@ affect presentation tables.
 ``` r
 # print(style_lancet()) # as a list
 print(lancet) # formatted a little nicer
-#>                          key          value
-#>                       <fctr>         <char>
-#>  1:        digits_round_prop              1
-#>  2:                   nsmall              1
-#>  3:      digits_sigfig_count              3
-#>  4:             decimal.mark              ·
-#>  5:            negative_sign              –
-#>  6:           big.mark_count               
-#>  7:            mean_neg_text a decrease of 
-#>  8:                  UI_only          FALSE
-#>  9:                  UI_text               
-#> 10: assert_clu_relationships           TRUE
-#> 11:                is_lancet           TRUE
-#> 12:          allow_thousands          FALSE
+#>                     key          value
+#>                  <fctr>         <char>
+#>  1:   prop_digits_round              1
+#>  2:         prop_nsmall              1
+#>  3:        count_method         sigfig
+#>  4:   count_pad_sigfigs           TRUE
+#>  5: count_digits_sigfig              3
+#>  6:        count_nsmall              1
+#>  7:        decimal.mark              ·
+#>  8:      count_big.mark               
+#>  9:       neg_mark_mean a decrease of 
+#> 10:         neg_mark_UI              –
+#> 11:             UI_text               
+#> 12:             UI_only          FALSE
+#> 13:    assert_clu_order           TRUE
+#> 14:     label_thousands          FALSE
+#> 15:           is_lancet           TRUE
+#> 16:          round_5_up           TRUE
 ```
 
-Counts receive a non-standard thousands separator.
+Lancet receives non-standard formatting
+
+- Lancet decimals are `mid_dot()`.
+- Thousands counts from 9,999 to 999,999 recieve `thin_space()`
+  delimeter.
 
 ``` r
 journalR::format_journal_df(
@@ -185,15 +280,15 @@ journalR::format_journal_df(
 
 Negatives are handled gracefully.
 
-- Lancet decimals are `mid_dot()` characters
+- Lancet negatives are `en_dash()`.
 
 ``` r
 journalR::format_journal_df(
    data.table::data.table(
                   data_space    = c("all_positive", "mixed_negative", "all_negative")
-                , mean          = c(.5584654, -0.15665, -0.1321684)
-                , lower         = c(.5076231, -0.25321, -0.235321)
-                , upper         = c(.6076589, 1.365432, -0.056549)
+                , mean          = c(.5584654,       -0.15665,         -0.1321684)
+                , lower         = c(.5076231,       -0.25321,         -0.235321)
+                , upper         = c(.6076589,       1.365432,         -0.056549)
              )
    , d_type = "prop"
    , style = "lancet"
@@ -210,28 +305,35 @@ journalR::format_journal_df(
 Users may define their own styles by creating a named list with the same
 keys as the built-in styles.
 
+- All arguments except the name have sensible defaults - only change
+  what you need.
+  - Read the `new_style()` documentation carefully to understand how
+    each element affects your final output.
+  - Using the “sigfig” `count_method` option involves the most
+    assumptions
+    - Read `fround_count()` source in ‘R/format_vectors.R’ for
+      implementation details.
+
 ``` r
 
 journalR::new_style(
-   style_name                 = 'my_style'
-   , digits_round_prop        = 3
-   , digits_sigfig_count      = 5
-   , nsmall                   = 3
-   , decimal.mark             = "."
-   , negative_sign            = "-"
-   , big.mark_count           = ","
-   , mean_neg_text            = "Negative "
-   , UI_only                  = FALSE
-   , UI_text                  = "95%UI "
-   , assert_clu_relationships = TRUE
-   , is_lancet                = FALSE
-   , allow_thousands          = FALSE
+   style_name            = 'wacky_style'
+   , prop_digits_round   = 3
+   , prop_nsmall         = 3
+   , count_digits_sigfig = 5
+   , count_method        = "sigfig"
+   , count_pad_sigfigs   = TRUE
+   , count_nsmall        = 3
+   , neg_mark_mean       = "Negative "
+   , neg_mark_UI         = en_dash()
+   , UI_text             = "95%UI "
 )
 ```
 
 <!-- Perhaps the user prefers standard thousands separators for counts. -->
 
 ``` r
+# Counts
 journalR::format_journal_df(
    data.frame(
         mean          = c(55.8e3, 54.7e6)
@@ -239,13 +341,28 @@ journalR::format_journal_df(
       , upper         = c(60.7e3, 59.6e6)
    )
    , d_type = "count"
-   , style  = "my_style"
+   , style  = "wacky_style"
 )
 #>                                clu_fmt
 #> 1         55,800 (95%UI 50,700–60,700)
 #> 2 54.700 million (95%UI 48.600–59.600)
-```
 
-<!-- Or perhaps thousands should be treated like millions with high precision. -->
+# Proportions
+journalR::format_journal_df(
+   data.table::data.table(
+                  data_space    = c("all_positive", "mixed_negative", "all_negative")
+                , mean          = c(.5584654, -0.15665, -0.1321684)
+                , lower         = c(.5076231, -0.25321, -0.235321)
+                , upper         = c(.6076589, 1.365432, -0.056549)
+             )
+   , d_type = "prop"
+   , style = "wacky_style"
+)
+#>        data_space                                     clu_fmt
+#>            <char>                                      <char>
+#> 1:   all_positive               55.847% (95%UI 50.762–60.766)
+#> 2: mixed_negative Negative 15.665% (95%UI –25.321 to 136.543)
+#> 3:   all_negative       Negative 13.217% (95%UI 5.655–23.532)
+```
 
 Done.

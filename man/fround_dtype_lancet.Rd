@@ -39,8 +39,8 @@ Other vector_formats:
 \code{\link{fmt_magnitude}()},
 \code{\link{format_oxford_comma}()},
 \code{\link{fround}()},
-\code{\link{fround_countish}()},
+\code{\link{fround_count}()},
 \code{\link{fround_dtype}()},
-\code{\link{fround_propish}()}
+\code{\link{fround_props}()}
 }
 \concept{vector_formats}

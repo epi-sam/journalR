@@ -1,80 +1,6 @@
 # started: 2025 Aug 29 13:51:03
 # purpose: formatting functions for journal presentation
 
-#' Format and round central/lower/upper value sets by magnitude without units.
-#'
-#' `central` could be mean/median/point_estimate. `d_type` is required (count
-#' data requires nuanced logic), but labels are not returned.
-#'
-#' Format and round without unit labeling
-#' - Use `format_lancet_clu()` for unit labels
-#'
-#' @param clu [num] a numeric vector of three values in central/lower/upper
-#'   order.
-#' @param d_type [chr c('prop', 'pp', or 'count')] data type - proportion,
-#'   percentage point or count
-#' @param mag_list [named list] output from `set_magnitude()` - must be based on
-#'   central value of a central/lower/upper set - central and all UI values
-#'   inherit the same scale as the central tendency.
-#' @param style_name [chr: default 'nature'] style name - controls rounding and
-#'   formatting.
-#' @return [chr] formatted string (vectorized)
-#' @export
-#' @family styled_formats
-#'
-#' @examples
-#' fround_mag_clu(clu = c(central = 0.2, lower = 0.1, upper = 0.3), d_type = "prop")
-#' fround_mag_clu(clu = c(central = 0.2, lower = -0.1, upper = 0.3), d_type = "pp")
-#' fround_mag_clu(clu = c(central = 95e6, lower = 89e6, upper = 101e6), d_type = "count")
-#' fround_mag_clu(clu = c(central = 95e6, lower = 1e5, upper = 101e9), d_type = "count")
-#' fround_mag_clu(clu = c(central = 678901, lower = 123456, upper = 6e6), d_type = "count")
-fround_mag_clu <- function(
-      clu
-      , d_type
-      , style_name = "nature"
-      , mag_list   = set_magnitude(clu[1]) # assuming central is in first position
-) {
-
-   style                    <- get_style(style_name)
-   digits_round_prop        <- style[["digits_round_prop"]]
-   digits_sigfig_count      <- style[["digits_sigfig_count"]]
-   nsmall                   <- style[["nsmall"]]
-   decimal.mark             <- style[["decimal.mark"]]
-   negative_sign            <- style[["negative_sign"]]
-   big.mark_count           <- style[["big.mark_count"]]
-   is_lancet                <- style[["is_lancet"]]
-   assert_clu_relationships <- style[["assert_clu_relationships"]]
-   d_type <- assert_data_type(d_type)
-
-   checkmate::assert_vector(clu, len = 3)
-   checkmate::assert_numeric(clu, len = 3)
-   if(assert_clu_relationships == TRUE){
-      assert_clu_relationship(clu[1], clu[2], clu[3])
-   }
-   checkmate::assert_list(mag_list, names = "named")
-   checkmate::assert_names(names(mag_list), must.include = c("denom"))
-
-   clu_fmt <- switch_strict(
-      d_type
-      , "prop"  = fround_propish(x = clu, digits = digits_round_prop, nsmall = nsmall, decimal.mark = decimal.mark)
-      , "pp"    = fround_propish(x = clu, digits = digits_round_prop, nsmall = nsmall, decimal.mark = decimal.mark)
-      , "count" = fround_countish(
-         clu                   = clu
-         , mag_list            = mag_list
-         , digits_sigfig_count = digits_sigfig_count
-         , decimal.mark        = decimal.mark
-         , big.mark_count      = big.mark_count
-         , nsmall              = nsmall
-         , is_lancet           = is_lancet
-      )
-   )
-
-   # replace negative sign (with Lancet standard if applicable)
-   clu_fmt <- unlist(lapply(clu_fmt, function(x_i_chr){sub("^-", negative_sign, x_i_chr)}))
-
-   return(clu_fmt)
-}
-
 
 # Generic Formatting -----------------------------------------------------------
 
@@ -121,19 +47,13 @@ format_journal_clu <- function(
 
    d_type <- assert_data_type(d_type)
 
-   style                    <- get_style(style_name)
-   digits_round_prop        <- style[["digits_round_prop"]]
-   digits_sigfig_count      <- style[["digits_sigfig_count"]]
-   nsmall                   <- style[["nsmall"]]
-   decimal.mark             <- style[["decimal.mark"]]
-   negative_sign            <- style[["negative_sign"]]
-   big.mark_count           <- style[["big.mark_count"]]
-   mean_neg_text            <- style[["mean_neg_text"]]
-   UI_only                  <- style[["UI_only"]]
-   UI_text                  <- style[["UI_text"]]
-   assert_clu_relationships <- style[["assert_clu_relationships"]]
-   is_lancet                <- style[["is_lancet"]]
-   allow_thousands          <- style[["allow_thousands"]]
+   style            <- get_style(style_name)
+   neg_mark_mean    <- style[["neg_mark_mean"]]
+   UI_only          <- style[["UI_only"]]
+   UI_text          <- style[["UI_text"]]
+   assert_clu_order <- style[["assert_clu_order"]]
+   label_thousands  <- style[["label_thousands"]]
+   round_5_up       <- style[["round_5_up"]]
 
    checkmate::assert_numeric(central, min.len = 1)
    checkmate::assert_numeric(lower)
@@ -143,114 +63,136 @@ format_journal_clu <- function(
    checkmate::assert_vector(upper)
 
    # lists with two shapes for assertions and processing
-   # 1. three vectors of equal length (central, lower, upper)
-   # 2. list of sets of central, lower, upper triplet values
-   clu <- list(
+   # 1. input  - three vectors of equal length (central, lower, upper)
+   # 2. output - triplet sets of (central, lower, upper) values for presentation
+
+   clu <- df_strict( # handles equal length assertion
       central = central
       , lower = lower
       , upper = upper
    )
-   # assert dimensions
-   clu_lengths <- unique(unlist(Map(length, clu)))
-   checkmate::assert_true(length(clu_lengths) == 1)
-   if(assert_clu_relationships == TRUE){
-      assert_clu_relationship(clu$central, clu$lower, clu$upper)
+
+   if(assert_clu_order == TRUE){
+      assert_clu_relationship(
+         central = clu$central
+         , lower = clu$lower
+         , upper = clu$upper
+      )
    }
 
-   triplets <- lapply(seq_along(central), function(i) {
-      c(central = central[i], lower = lower[i], upper = upper[i])
-   })
-   # assert dimensions
-   triplet_lengths <- unique(unlist(Map(length, triplets)))
-   checkmate::assert_true(length(triplet_lengths) == 1)
-   checkmate::assert_true(triplet_lengths == 3)
+   triplets <- t(clu) # transpose for easier processing
+
+   # Magnitude of triplets use raw central value
+   # lower and upper inherit central value magnitude scaling
+   df_mag  <- set_magnitude(
+      # x                 = clu$central
+      x                 = triplets["central", ]
+      , mag             = NULL
+      , label_thousands = label_thousands
+      , verbose         = FALSE
+   )
+   # mag_label_vec <- df_mag$mag_label
 
    # Capture numeric info before character conversion
    # Does UI cross zero? Decide which UI separator to use.
-   UI_crosses_zero_vec <- unlist(lapply(triplets, function(triplet) {
+   UI_crosses_zero_vec <- unlist(apply(triplets, 2, function(triplet) {
       (triplet["lower"] < 0) & (triplet["upper"] > 0)
    })) |> unname()
+
    # Is the central value negative?
-   decrease_stub <- unlist(lapply(
-      central < 0
-      , dplyr::if_else, true = mean_neg_text, false = ""
-   ))
-   # Is the whole set negative?
-   all_neg_vec <- unlist(lapply(triplets, function(triplet) all(triplet <= 0)))
-   sep_vec     <- dplyr::if_else(
+   neg_str_mean_vec <- unlist(lapply(triplets["central", ], function(c_i){
+      if(c_i < 0) {
+         neg_mark_mean
+      } else {
+         ""
+      }
+   }))
+
+   # Is the whole triplet set negative?
+   all_neg_vec <- unlist(apply(triplets, 2, function(triplet) all(triplet <= 0)))
+
+   # Which `(x to/- y)` separator based on triplet set pos/neg relationships
+   sep_vec <- data.table::fifelse(
       (UI_crosses_zero_vec == TRUE & all_neg_vec == FALSE)
       , " to ", en_dash()
    )
 
-   # process triplets
-   triplets <- lapply(triplets, function(triplet){
+   # Handle central negatives and full-negative triplet sets
+   # - allows style$neg_mark_mean to be assigned
+   triplets_neg_processed <- process_clu_triplet_negatives(
+      triplets = triplets
+      , assert_clu_order = assert_clu_order
+   )
 
-      # proportion to percentage
-      if(d_type %in% c("prop", "pp")) triplet <- triplet * 100
-
-      all_neg     <- all(triplet <= 0)
-      central_neg <- (triplet["central"] < 0) & !all_neg
-
-      # If just the mean is negative, invert just the mean
-      if(central_neg) triplet["central"] <- triplet["central"] * -1
-
-      # If the triplet is all negative, invert and flip upper, lower values
-      if(all_neg) {
-         triplet <- triplet * -1
-         l_temp  <- triplet[["lower"]]
-         u_temp  <- triplet[["upper"]]
-         triplet[["lower"]] <- u_temp
-         triplet[["upper"]] <- l_temp
+   # Counts edge case - magnitude boundaries
+   #
+   # Before we do any formatting, we need to re-check the scale of the central
+   # value as it would round given the user's count method. This must be done
+   # here at the formatting level because it affects the final formatting label.
+   # This creates an undesireable repeated logic with `fround_count()` &
+   # `format_journal_clu()` but I see no current way around it, as there's no
+   # good mechanism to pass re-calculated, vectorized magnitude information back
+   # up the stack.
+   #
+   # Must maintain matching 'rounding' logic here and within `fround_count()`
+   #
+   # - fround_count(c(999999, 888888, 2222222)) produces:
+   #   - c("1,000,000", "800,000", "2,000,000")
+   # - but we want:
+   #   - c("1.00 million", "0.80 million", "2.00 million")
+   if(d_type == "count") {
+      central_vals <- clu[["central"]]
+      central_fmts <- NULL
+      if (round_5_up) {
+         central_vals <- central_vals + 1e-9
       }
-      return(triplet)
-   })
-   triplets <- lapply(triplets, function(x) {names(x) <- c("central", "lower", "upper"); x})
+      central_sc <- central_vals / df_mag$denom
 
-   # assert any negative inversions left things in good shape
-   if(assert_clu_relationships == TRUE){
-      assert_x_gte_y(x = upper,   y = central)
-      assert_x_gte_y(x = central, y = lower)
-      assert_x_gte_y(x = upper,   y = lower) # probably redundant
+      central_fmts <- switch_strict(
+         style[["count_method"]]
+         , "sigfig"  = signif(central_sc, style[["count_digits_sigfig"]])
+         , "decimal" = round(central_sc, digits = style[["count_nsmall"]])
+         , "int"     = round(central_sc, digits = 0)
+      )
+
+      #  re-calc magnitude at original scale, post rounding
+      df_mag <- set_magnitude(
+         x                 = central_fmts * df_mag$denom
+         , mag             = NULL
+         , label_thousands = label_thousands
+         , verbose         = FALSE
+         )
    }
 
-   mag_list  <- set_magnitude(
-      x                 = central
-      , mag             = NULL
-      , allow_thousands = allow_thousands
-      , verbose         = FALSE
-   )
-   mag_label <- mag_list$mag_label
-   mag_table <- data.table::as.data.table(mag_list) # easier to use this format here
-
    # Where the magic happens
-   triplets_fmt <- lapply(seq_along(triplets), function(idx){
-      triplet_fmt <- fround_mag_clu(
-         clu                   = triplets[[idx]]
-         , d_type              = d_type
-         , style_name          = style_name
-         , mag_list            = as.list(mag_table[idx, ])
+   # - Negative signs are styled internally
+   triplets_fmt <- lapply(seq_len(ncol(triplets_neg_processed)), function(idx){
+      triplet_fmt <- fround_clu_triplet(
+         clu          = triplets_neg_processed[, idx]
+         , d_type     = d_type
+         , style_name = style_name
+         , df_mag     = df_mag[idx, ]
       )
+      # These should be retained, but let's use belt and suspenders
       names(triplet_fmt) <- c("central", "lower", "upper")
       triplet_fmt
    })
 
-   n_sets <- length(triplets_fmt)
-
-   d_type_label <- switch_strict(
-      d_type
-      , "prop"  = rep.int("%",   n_sets)
-      , "pp"    = rep.int(" pp", n_sets)
-      , "count" = rep.int("",    n_sets)
-   )
+   d_type_label <- get_data_type_labels(d_type)
 
    str_vec <- unlist(lapply(seq_along(triplets_fmt), function(i){
-      .cen <- triplets_fmt[[i]]['central']
-      .upp <- triplets_fmt[[i]]['upper']
-      .low <- triplets_fmt[[i]]['lower']
-      str <- glue::glue("{decrease_stub[i]}{.cen}{d_type_label[i]} {mag_label[i]}({UI_text}{.low}{sep_vec[i]}{.upp})")
+      .cen          <- triplets_fmt[[i]]['central']
+      .upp          <- triplets_fmt[[i]]['upper']
+      .low          <- triplets_fmt[[i]]['lower']
+      .mean_neg_txt <- neg_str_mean_vec[i]
+      .mag_label    <- df_mag$mag_label[i]
+      .low_upp_sep  <- sep_vec[i]
+
+      # Building blocks for final string
+      str <- glue::glue("{.mean_neg_txt}{.cen}{d_type_label} {.mag_label}({UI_text}{.low}{.low_upp_sep}{.upp})")
 
       if (UI_only) {
-         str <- glue::glue("{UI_text}{.low}{sep_vec[i]}{.upp}{mag_label[i]}")
+         str <- glue::glue("{UI_text}{.low}{.low_upp_sep}{.upp}{.mag_label}")
       }
 
       return(str)
@@ -259,6 +201,7 @@ format_journal_clu <- function(
 
    return(str_vec)
 }
+
 
 #' Return a table with formatted central, lower, upper
 #'
@@ -371,21 +314,23 @@ format_means_df <- function(
 
    style <- get_style(style_name)
 
-   digits <- switch(
-      d_type
-      , "prop"  = style[["digits_round_prop"]]
-      , "pp"    = style[["digits_round_prop"]]
-      , "count" = style[["digits_sigfig_count"]]
+   digits <- get_style_item_by_data_type(
+      style_name   = style_name
+      , style_item = "digits"
+      , d_type     = d_type
+   )
+   scalar <- get_style_item_by_data_type(
+      style_name   = style_name
+      , style_item = "scalar"
+      , d_type     = d_type
+   )
+   n_small <- get_style_item_by_data_type(
+      style_name   = style_name
+      , style_item = "n_small"
+      , d_type     = d_type
    )
 
-   scalar <- switch(
-      d_type
-      , "prop"  = 100
-      , "pp"    = 100
-      , "count" = 1
-   )
-
-   label <- get_data_type_labels()[[d_type]]
+   label <- get_data_type_labels(d_type)
 
    mean_varnames <- grep(
       pattern = sprintf("^%s[_]+", central_var)
@@ -401,9 +346,9 @@ format_means_df <- function(
             fmt_magnitude(
                x                 = df[[varname]] * scalar
                , mag             = NULL
-               , allow_thousands = style[["allow_thousands"]]
+               , label_thousands = style[["label_thousands"]]
                , digits          = digits
-               , nsmall          = style[["nsmall"]]
+               , nsmall          = n_small
             )
             , label
          )
@@ -416,34 +361,6 @@ format_means_df <- function(
 
 # Lancet Family Formatting -----------------------------------------------------
 
-
-#' Format and round central, lower, upper value sets by magnitude without units
-#' for Lancet journal presentation
-#'
-#' @param clu [num] a numeric vector of three values in central, lower, upper order.
-#' @param d_type [chr c('prop', 'pp', or 'count')] data type - proportion,
-#'  percentage point or count.
-#' @param mag_list [named list] output from `set_magnitude()` - must be based on
-#'  central value of a central, lower, upper set - central and all UI values
-#'  inherit the same scale as the central tendency.
-#'
-#' @returns [chr] formatted string (vectorized)
-#' @export
-#'
-#' @examples
-#' fround_mag_clu_lancet(c(central = 0.2, lower = 0.1, upper = 0.3), "prop")
-fround_mag_clu_lancet <- function(
-      clu
-      , d_type
-      , mag_list   = set_magnitude(clu[1]) # assuming central is in first position
-) {
-   fround_mag_clu(
-      clu          = clu
-      , d_type     = d_type
-      , style_name = "lancet"
-      , mag_list   = mag_list
-   )
-}
 
 #' Format central, lower, upper value triplets for Lancet journal presentation
 #'
@@ -532,33 +449,6 @@ format_lancet_df <- function(
 
 # Nature Family Formatting -----------------------------------------------------
 
-#' Format and round central, lower, upper value sets by magnitude without units
-#' for Nature journal presentation.
-#'
-#' @param clu [num] a numeric vector of three values in central, lower, upper order.
-#' @param d_type [chr c('prop', 'pp', or 'count')] data type - proportion,
-#'  percentage point or count.
-#' @param mag_list [named list] output from `set_magnitude()` - must be based on
-#'  central value of a central, lower, upper set - central and all UI values
-#'  inherit the same scale as the central tendency.
-#'
-#' @returns [chr] formatted string (vectorized)
-#' @export
-#'
-#' @examples
-#' fround_mag_clu_nature(c(central = 0.2, lower = 0.1, upper = 0.3), "prop")
-fround_mag_clu_nature <- function(
-      clu
-      , d_type
-      , mag_list   = set_magnitude(clu[1]) # assuming central is in first position
-) {
-   fround_mag_clu(
-      clu          = clu
-      , d_type     = d_type
-      , style_name = "nature"
-      , mag_list   = mag_list
-   )
-}
 
 #' Format central, lower, upper value triplets for Nature journal presentation
 #'

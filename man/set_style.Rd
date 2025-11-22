@@ -2,7 +2,7 @@
 % Please edit documentation in R/styles.R
 \name{set_style}
 \alias{set_style}
-\title{Set a new style schema}
+\title{Set a new style by list}
 \usage{
 set_style(style_name, style_entry)
 }
@@ -15,29 +15,34 @@ set_style(style_name, style_entry)
 [chr] invisible vector of input objects, to allow easier un-locking
 }
 \description{
-Set a new style schema
+Set a new style by list
 }
 \examples{
 set_style(
    style_name    = "my_style"
    , style_entry = list(
-      digits_round_prop          = 2
-      , digits_sigfig_count      = 3
-      , nsmall                   = 1
-      , decimal.mark             = "."
-      , negative_sign            = "-"
-      , big.mark_count           = ","
-      , mean_neg_text            = "a decrease of"
-      , UI_only                  = FALSE
-      , UI_text                  = ""
-      , assert_clu_relationships = TRUE
-      , is_lancet                = FALSE
-      , allow_thousands          = FALSE
+      prop_digits_round     = 2
+      , count_digits_sigfig = 3
+      , count_method        = "sigfig"
+      , count_pad_sigfigs   = TRUE
+      , prop_nsmall         = 1
+      , count_nsmall        = 1
+      , decimal.mark        = "."
+      , neg_mark_UI         = "-"
+      , count_big.mark      = ","
+      , neg_mark_mean       = "a decrease of"
+      , UI_only             = FALSE
+      , UI_text             = ""
+      , assert_clu_order    = TRUE
+      , is_lancet           = FALSE
+      , label_thousands     = FALSE
+      , round_5_up          = TRUE
    )
 )
 }
 \seealso{
 Other styles: 
+\code{\link{assert_style_schema}()},
 \code{\link{get_style}()},
 \code{\link{get_style_schema}()},
 \code{\link{new_style}()},

@@ -2,80 +2,90 @@
 % Please edit documentation in R/styles.R
 \name{new_style}
 \alias{new_style}
-\title{Create a new style}
+\title{Make a new style by args}
 \usage{
 new_style(
   style_name,
-  digits_round_prop,
-  digits_sigfig_count,
-  nsmall,
-  decimal.mark,
-  negative_sign,
-  big.mark_count,
-  mean_neg_text,
-  UI_only,
-  UI_text,
-  assert_clu_relationships,
-  is_lancet,
-  allow_thousands
+  prop_digits_round = 1,
+  prop_nsmall = 1,
+  count_method = "sigfig",
+  count_digits_sigfig = 3,
+  count_pad_sigfigs = TRUE,
+  count_nsmall = 1,
+  count_big.mark = ",",
+  decimal.mark = ".",
+  neg_mark_mean = "-",
+  neg_mark_UI = "-",
+  UI_only = FALSE,
+  UI_text = "",
+  assert_clu_order = TRUE,
+  is_lancet = FALSE,
+  label_thousands = FALSE,
+  round_5_up = TRUE
 )
 }
 \arguments{
 \item{style_name}{[chr] name of the style to set}
 
-\item{digits_round_prop}{[int] number of digits to round proportions to}
+\item{prop_digits_round}{[int: default 1] number of digits to round proportions to}
 
-\item{digits_sigfig_count}{[int] number of significant figures for counts}
+\item{prop_nsmall}{[int: default 1] minimum number of digits to the right of the decimal point - proportions}
 
-\item{nsmall}{[int] minimum number of digits to the right of the decimal point}
+\item{count_method}{[chr: c("sigfig", "decimal", "int")] choose how to report counts - prioritize sigfigs across mean/lower/upper, hard-set decimals, or leave numbers in integer space.}
 
-\item{decimal.mark}{[chr] decimal mark}
+\item{count_digits_sigfig}{[int: default 3] number of significant figures for counts}
 
-\item{negative_sign}{[chr] character to use for negative sign}
+\item{count_pad_sigfigs}{[lgl: default TRUE] signif(5.00, 3) is "5" - do you want to pad the trailing 0s back on - usually TRUE?}
 
-\item{big.mark_count}{[chr] character to use for counts thousand, million, billion separator}
+\item{count_nsmall}{[int: default 1] passed to `format()` if `count_method` == 'decimal'}
 
-\item{mean_neg_text}{[chr] text to use when describing negative mean differences}
+\item{count_big.mark}{[chr: default ","] character to use for counts thousand, million, billion separator e.g. ","}
 
-\item{UI_only}{[lgl] whether to format for UI only}
+\item{decimal.mark}{[chr: default "."] decimal mark e.g. "." or `mid_dot()` for Lancet.}
 
-\item{UI_text}{[chr] text to use for UI formatting}
+\item{neg_mark_mean}{[chr: default "-"] string to describe central value negatives - e.g. "-1 (-2 to 4)" could become "Negtive 1 (-2 to 4)"}
 
-\item{assert_clu_relationships}{[lgl] whether to assert CLU relationships (ensure lower < central < upper)}
+\item{neg_mark_UI}{[chr: default "-"] string to describe negative sign in UI brackets e.g. "1 (-2 to 4)" could become "1 (--2 to 4)" (en-dash)}
 
-\item{is_lancet}{[lgl] whether the style is for Lancet formatting - controls specific edge-case behaviors}
+\item{UI_only}{[lgl: default FALSE] Return only UI from `format_journal_df()` family functions?}
 
-\item{allow_thousands}{[lgl] whether format counts as e.g. 10,000 as '10 thousand'}
+\item{UI_text}{[chr: default ""] Text to appear inside UI brackets before numbers e.g. "2 (1 -- 4)" could become "2 (95\%UI 1 -- 4)"}
+
+\item{assert_clu_order}{[lgl: default TRUE] whether to assert CLU relationships (ensure lower < central < upper)}
+
+\item{is_lancet}{[lgl: default FALSE] TRUE to handle edge-case Lancet count formatting policies}
+
+\item{label_thousands}{[lgl: default FALSE] whether format counts as e.g. 10,000 as '10 thousand'}
+
+\item{round_5_up}{[lgl: default TRUE] In R, `round(1245, 3)` is "1240".  Do you want to round to "1250" instead? Default TRUE to conform with common expectations.}
 }
 \value{
-[chr] invisible vector of input objects, to allow easier un-locking
+[chr] invisible vector of input objects
 }
 \description{
 Wrapper function to create and set a new style in one step.
 }
 \examples{
-new_style(
-  style_name    = "my_style"
-  , digits_round_prop        = 1
-  , digits_sigfig_count      = 1
-  , nsmall                   = 1
-  , decimal.mark             = "."
-  , negative_sign            = "-"
-  , big.mark_count           = ","
-  , mean_neg_text            = "a decrease of"
-  , UI_only                  = FALSE
-  , UI_text                  = ""
-  , assert_clu_relationships = TRUE
-  , is_lancet                = FALSE
-  , allow_thousands          = FALSE
-)
+new_style(style_name = "my_style")
 }
 \seealso{
 Other styles: 
+\code{\link{assert_style_schema}()},
 \code{\link{get_style}()},
 \code{\link{get_style_schema}()},
 \code{\link{set_style}()},
 \code{\link{style_lancet}()},
 \code{\link{style_nature}()}
+
+Other styled_formats: 
+\code{\link{format_journal_clu}()},
+\code{\link{format_journal_df}()},
+\code{\link{format_lancet_clu}()},
+\code{\link{format_lancet_df}()},
+\code{\link{format_means_df}()},
+\code{\link{format_nature_clu}()},
+\code{\link{format_nature_df}()},
+\code{\link{fround_clu_triplet}()}
 }
+\concept{styled_formats}
 \concept{styles}

@@ -8,10 +8,6 @@
 #' @returns [chr] invisible vector of input objects, to allow easier un-locking
 #'
 #' @family bindings
-#' @examples
-#' \dontrun{
-#' lock_some_bindings(c("my_var1", "my_var2"))
-#' }
 lock_some_bindings <- function(objs, env = globalenv()){
    checkmate::assert_character(objs)
    for(x in objs){

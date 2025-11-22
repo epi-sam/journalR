@@ -4,7 +4,10 @@
 \alias{get_data_type_labels}
 \title{Get data type labels}
 \usage{
-get_data_type_labels()
+get_data_type_labels(d_type)
+}
+\arguments{
+\item{d_type}{[chr]}
 }
 \value{
 [list] named list of data type labels
@@ -13,7 +16,7 @@ get_data_type_labels()
 Centrally managed definition for all data type labels.
 }
 \examples{
-get_data_type_labels()
+get_data_type_labels('prop')
 }
 \seealso{
 Other data_types: 

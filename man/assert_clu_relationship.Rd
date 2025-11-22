@@ -23,9 +23,6 @@ are consistent with CLU (Central, Lower, Upper) conventions:
 - central >= lower
 - upper >= lower
 }
-\examples{
-assert_clu_relationship(c(5, 10, 15), c(3, 8, 12), c(7, 12, 18))
-}
 \seealso{
 Other assertions: 
 \code{\link{assert_data_type}()},

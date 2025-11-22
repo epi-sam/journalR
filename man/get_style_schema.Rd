@@ -17,6 +17,7 @@ get_style_schema()
 }
 \seealso{
 Other styles: 
+\code{\link{assert_style_schema}()},
 \code{\link{get_style}()},
 \code{\link{new_style}()},
 \code{\link{set_style}()},

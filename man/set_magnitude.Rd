@@ -5,7 +5,7 @@
 \title{Define magnitude, magnitude label and denominator for a vector of numeric
 values.}
 \usage{
-set_magnitude(x, mag = NULL, allow_thousands = FALSE, verbose = TRUE)
+set_magnitude(x, mag = NULL, label_thousands = FALSE, verbose = TRUE)
 }
 \arguments{
 \item{x}{[num] numeric vector}
@@ -14,13 +14,13 @@ set_magnitude(x, mag = NULL, allow_thousands = FALSE, verbose = TRUE)
 otherwise user-override (not recommended) - (M)illions or (B)illions or
 (T)housands (thousands are not Lancet-valid)}
 
-\item{allow_thousands}{[lgl: default FALSE] allow (T)housands magnitude?  Not
+\item{label_thousands}{[lgl: default FALSE] allow (T)housands magnitude?  Not
 Lancet-valid.}
 
-\item{verbose}{[lgl: default TRUE] warn if allow_thousands is TRUE}
+\item{verbose}{[lgl: default TRUE] warn if label_thousands is TRUE}
 }
 \value{
-[list] with vector elements: mag, mag_label, and denom Each vector
+[data.frame] with vector elements: mag, mag_label, and denom Each vector
   element has one item per length(x)
 }
 \description{
@@ -29,13 +29,13 @@ functions.
 }
 \details{
 'Thousands' label is not a Lancet-valid, which uses ddd<narrow-space>ddd
-format.  See `fround_mag_clu()` for details.
+format.  See `fround_count()` for details.
 }
 \examples{
 set_magnitude(c(1e-6, 1, 1e3, 1e6, 1e9))
 }
 \seealso{
-[fround_mag_clu()]
+[fround_count()]
 
 Other magnitudes: 
 \code{\link{fmt_magnitude}()}
