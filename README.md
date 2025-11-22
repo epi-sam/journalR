@@ -121,10 +121,9 @@ DF_count|>
 #> 4       billions 5,470 billion (4,830–5,980)
 ```
 
-- Counts are rounded, but not truncated below 1 million
-  - e.g. 999,999 presents as 999,000 if rounded to 3 digits
-  - Users may set their own style with `label_thousands = TRUE` to
-    override this behavior
+- Count-space magnitude-edge-cases are handled.
+  - By default, thousands do not receive a label.
+  - Users may set their own style with `label_thousands = TRUE`.
 
 ``` r
 new_style(
