@@ -40,7 +40,7 @@ fround_mag_clu <- function(
 
    checkmate::assert_vector(clu, len = 3)
    checkmate::assert_numeric(clu, len = 3)
-   if(style$assert_clu_relationships == TRUE){
+   if(style$assert_clu_order == TRUE){
       assert_clu_relationship(clu[1], clu[2], clu[3])
    }
 
@@ -111,8 +111,8 @@ format_journal_clu <- function(
    neg_str_mean            <- style[["neg_str_mean"]]
    UI_only                  <- style[["UI_only"]]
    UI_text                  <- style[["UI_text"]]
-   assert_clu_relationships <- style[["assert_clu_relationships"]]
-   allow_thousands          <- style[["allow_thousands"]]
+   assert_clu_order <- style[["assert_clu_order"]]
+   label_thousands          <- style[["label_thousands"]]
 
    checkmate::assert_numeric(central, min.len = 1)
    checkmate::assert_numeric(lower)
@@ -131,7 +131,7 @@ format_journal_clu <- function(
       , upper = upper
    )
 
-   if(assert_clu_relationships == TRUE){
+   if(assert_clu_order == TRUE){
       assert_clu_relationship(
          central = clu$central
          , lower = clu$lower
@@ -147,7 +147,7 @@ format_journal_clu <- function(
       # x                 = clu$central
       x                 = triplets["central", ]
       , mag             = NULL
-      , allow_thousands = allow_thousands
+      , label_thousands = label_thousands
       , verbose         = FALSE
    )
    mag_label_vec <- df_mag$mag_label
@@ -180,7 +180,7 @@ format_journal_clu <- function(
    # - allows style$neg_str_mean to be assigned
    triplets_neg_processed <- process_clu_triplet_negatives(
       triplets = triplets
-      , assert_clu_relationships = assert_clu_relationships
+      , assert_clu_order = assert_clu_order
    )
 
 
@@ -364,7 +364,7 @@ format_means_df <- function(
             fmt_magnitude(
                x                 = df[[varname]] * scalar
                , mag             = NULL
-               , allow_thousands = style[["allow_thousands"]]
+               , label_thousands = style[["label_thousands"]]
                , digits          = digits
                , nsmall          = style[["nsmall"]]
             )

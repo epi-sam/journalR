@@ -13,7 +13,7 @@
 #' non-exported helper
 #'
 #' @param triplets [matrix]  with rownames 'central', 'lower', 'upper'
-#' @param assert_clu_relationships [lgl: default TRUE] assert that central, lower, upper relationships are valid
+#' @param assert_clu_order [lgl: default TRUE] assert that central, lower, upper relationships are valid
 #'
 #' @returns [num matrix] matrix with rows 'central', 'lower', 'upper' and columns for each triplet set
 #'
@@ -27,7 +27,7 @@
 #' }
 process_clu_triplet_negatives <- function(
       triplets
-      , assert_clu_relationships = TRUE
+      , assert_clu_order = TRUE
 ){
 
    # lists with two shapes for assertions and processing
@@ -43,7 +43,7 @@ process_clu_triplet_negatives <- function(
    )
    assert_x_in_y(x = c("central", "lower", "upper"), y = rownames(triplets))
 
-   if(assert_clu_relationships == TRUE){
+   if(assert_clu_order == TRUE){
       assert_clu_relationship(
          central = triplets["central", ]
          , lower = triplets["lower", ]
@@ -70,7 +70,7 @@ process_clu_triplet_negatives <- function(
          triplet[["lower"]] <- u_temp
          triplet[["upper"]] <- l_temp
 
-         if(assert_clu_relationships == TRUE){
+         if(assert_clu_order == TRUE){
             assert_clu_relationship(
                central = triplet["central"]
                , lower = triplet["lower"]
@@ -351,7 +351,7 @@ fround_dtype <- function(
 #' @param nsmall [int: default 1L] passed to `format()`
 #' @param mag [chr c("b", "m", "t")] magnitude (billion, million,
 #'   thousand) passed to set_magnitude()
-#' @param allow_thousands [lgl: default FALSE] allow thousands magnitude?  Not
+#' @param label_thousands [lgl: default FALSE] allow thousands magnitude?  Not
 #'   Lancet-valid. Passed to `set_magnitude()`
 #' @param decimal.mark [chr: default "."] decimal mark passed to `format()`
 #'
@@ -368,19 +368,19 @@ fmt_magnitude <- function(
       , nsmall          = 1
       , decimal.mark    = "."
       , mag             = NULL
-      , allow_thousands = FALSE
+      , label_thousands = FALSE
 ){
 
    checkmate::assert_numeric(x)
    checkmate::assert_vector(x)
-   checkmate::assert_logical(allow_thousands, len = 1)
+   checkmate::assert_logical(label_thousands, len = 1)
    checkmate::assert_integerish(digits, len = 1, lower = 0)
    checkmate::assert_integerish(nsmall, len = 1, lower = 0)
 
    df_mag <- set_magnitude(
       x
       , mag             = mag
-      , allow_thousands = allow_thousands
+      , label_thousands = label_thousands
       , verbose         = FALSE
    )
 

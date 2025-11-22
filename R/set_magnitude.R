@@ -11,9 +11,9 @@
 #' @param mag [chr: default NULL c(NULL, "T", "B", "M")] NULL (auto-detect),
 #'   otherwise user-override (not recommended) - (M)illions or (B)illions or
 #'   (T)housands (thousands are not Lancet-valid)
-#' @param allow_thousands [lgl: default FALSE] allow (T)housands magnitude?  Not
+#' @param label_thousands [lgl: default FALSE] allow (T)housands magnitude?  Not
 #'   Lancet-valid.
-#' @param verbose [lgl: default TRUE] warn if allow_thousands is TRUE
+#' @param verbose [lgl: default TRUE] warn if label_thousands is TRUE
 #'
 #' @return [data.frame] with vector elements: mag, mag_label, and denom Each vector
 #'   element has one item per length(x)
@@ -26,17 +26,17 @@
 set_magnitude <- function(
       x
       , mag             = NULL
-      , allow_thousands = FALSE
+      , label_thousands = FALSE
       , verbose         = TRUE
 ){
 
    checkmate::assert_numeric(x)
    checkmate::assert_vector(x)
    checkmate::assert_character(mag, len = 1, null.ok = TRUE)
-   checkmate::assert_logical(allow_thousands, len = 1)
+   checkmate::assert_logical(label_thousands, len = 1)
    checkmate::assert_logical(verbose, len = 1)
 
-   if(allow_thousands & verbose) warning("'thousands' magnitude is not Lancet-valid")
+   if(label_thousands & verbose) warning("'thousands' magnitude is not Lancet-valid")
 
    # vector of magnitudes
    if(is.null(mag)){
@@ -44,7 +44,7 @@ set_magnitude <- function(
       mag <- unlist(lapply(x, function(x_i){
          if      (abs(x_i) >= 1e9)                    mag <- "b"
          else if (abs(x_i) >= 1e6)                    mag <- "m"
-         else if (abs(x_i) >= 1e3 && allow_thousands) mag <- "t"  # not Lancet-valid
+         else if (abs(x_i) >= 1e3 && label_thousands) mag <- "t"  # not Lancet-valid
          else mag <- "" # default
       }))
 

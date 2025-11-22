@@ -38,9 +38,9 @@ get_style_schema <- function(){
       , neg_str_mean            = "character"
       , UI_only                  = "logical"
       , UI_text                  = "character"
-      , assert_clu_relationships = "logical"
+      , assert_clu_order = "logical"
       , is_lancet                = "logical"
-      , allow_thousands          = "logical"
+      , label_thousands          = "logical"
    )
 }
 
@@ -66,9 +66,9 @@ get_style_schema <- function(){
 #'       , neg_str_mean            = "a decrease of"
 #'       , UI_only                  = FALSE
 #'       , UI_text                  = ""
-#'       , assert_clu_relationships = TRUE
+#'       , assert_clu_order = TRUE
 #'       , is_lancet                = FALSE
-#'       , allow_thousands          = FALSE
+#'       , label_thousands          = FALSE
 #'    )
 #' )
 set_style <- function(style_name, style_entry){
@@ -91,9 +91,9 @@ set_style <- function(style_name, style_entry){
 #' @param neg_str_mean [chr] text to use when describing negative mean differences
 #' @param UI_only [lgl] whether to format for UI only
 #' @param UI_text [chr] text to use for UI formatting
-#' @param assert_clu_relationships [lgl] whether to assert CLU relationships (ensure lower < central < upper)
+#' @param assert_clu_order [lgl] whether to assert CLU relationships (ensure lower < central < upper)
 #' @param is_lancet [lgl] whether the style is for Lancet formatting - controls specific edge-case behaviors
-#' @param allow_thousands [lgl] whether format counts as e.g. 10,000 as '10 thousand'
+#' @param label_thousands [lgl] whether format counts as e.g. 10,000 as '10 thousand'
 #'
 #' @returns [chr] invisible vector of input objects, to allow easier un-locking
 #' @export
@@ -111,9 +111,9 @@ set_style <- function(style_name, style_entry){
 #'   , neg_str_mean            = "a decrease of"
 #'   , UI_only                  = FALSE
 #'   , UI_text                  = ""
-#'   , assert_clu_relationships = TRUE
+#'   , assert_clu_order = TRUE
 #'   , is_lancet                = FALSE
-#'   , allow_thousands          = FALSE
+#'   , label_thousands          = FALSE
 #' )
 new_style <- function(
       style_name
@@ -126,9 +126,9 @@ new_style <- function(
       , neg_str_mean
       , UI_only
       , UI_text
-      , assert_clu_relationships
+      , assert_clu_order
       , is_lancet
-      , allow_thousands
+      , label_thousands
 ){
    set_style(
       style_name    = style_name
@@ -142,9 +142,9 @@ new_style <- function(
          , neg_str_mean            = neg_str_mean
          , UI_only                  = UI_only
          , UI_text                  = UI_text
-         , assert_clu_relationships = assert_clu_relationships
+         , assert_clu_order = assert_clu_order
          , is_lancet                = is_lancet
-         , allow_thousands          = allow_thousands
+         , label_thousands          = label_thousands
       )
    )
 }
@@ -176,9 +176,9 @@ style_nature <- function(){
          , neg_str_mean            = "-"
          , UI_only                  = FALSE
          , UI_text                  = ""
-         , assert_clu_relationships = TRUE
+         , assert_clu_order = TRUE
          , is_lancet                = FALSE
-         , allow_thousands          = FALSE
+         , label_thousands          = FALSE
       )
    )
 }
@@ -205,9 +205,9 @@ style_lancet <- function(){
          , neg_str_mean            = "a decrease of "
          , UI_only                  = FALSE
          , UI_text                  = ""
-         , assert_clu_relationships = TRUE
+         , assert_clu_order = TRUE
          , is_lancet                = TRUE
-         , allow_thousands          = FALSE
+         , label_thousands          = FALSE
       )
    )
 }
