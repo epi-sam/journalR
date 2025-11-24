@@ -4,7 +4,10 @@
 \alias{flush_df_mag_state}
 \title{Flush df_mag state}
 \usage{
-flush_df_mag_state()
+flush_df_mag_state(env = get_dict_formats())
+}
+\arguments{
+\item{env}{[env: default get_dict_formats()] Environment to flush state from (defaults to package environment)}
 }
 \value{
 The df_mag data.frame that was stored (before clearing), or NULL

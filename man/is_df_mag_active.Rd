@@ -4,7 +4,10 @@
 \alias{is_df_mag_active}
 \title{Check if df_mag state is active}
 \usage{
-is_df_mag_active()
+is_df_mag_active(env = get_dict_formats())
+}
+\arguments{
+\item{env}{[env: default get_dict_formats()] Environment to check state in (defaults to package environment)}
 }
 \value{
 Logical

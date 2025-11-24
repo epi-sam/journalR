@@ -4,16 +4,24 @@
 \alias{update_df_mag_state}
 \title{Update df_mag state at specific index}
 \usage{
-update_df_mag_state(idx, mag = NULL, mag_label = NULL, denom = NULL)
+update_df_mag_state(
+  idx,
+  mag = NULL,
+  mag_label = NULL,
+  denom = NULL,
+  env = get_dict_formats()
+)
 }
 \arguments{
-\item{idx}{Integer. The row index (1-based) to update.}
+\item{idx}{[int] Integer. The row index (1-based) to update.}
 
-\item{mag}{Character. Magnitude code: "", "t", "m", or "b".}
+\item{mag}{[chr: default NULL] Character. Magnitude code: "", "t", "m", or "b".}
 
-\item{mag_label}{Character. Printable label with trailing space.}
+\item{mag_label}{[chr: default NULL] Character. Printable label with trailing space.}
 
-\item{denom}{Numeric. Denominator for scaling (1, 1e3, 1e6, 1e9).}
+\item{denom}{[num: default NULL] Numeric. Denominator for scaling (1, 1e3, 1e6, 1e9).}
+
+\item{env}{[env: default get_dict_formats()] Environment to store state in (defaults to package environment)}
 }
 \value{
 NULL invisibly

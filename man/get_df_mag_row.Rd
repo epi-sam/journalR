@@ -4,10 +4,12 @@
 \alias{get_df_mag_row}
 \title{Get a single row from df_mag state}
 \usage{
-get_df_mag_row(idx)
+get_df_mag_row(idx, env = get_dict_formats())
 }
 \arguments{
-\item{idx}{Row index (1-based)}
+\item{idx}{[int] Row index (1-based)}
+
+\item{env}{[env: default get_dict_formats()] Environment to get state from (defaults to package environment)}
 }
 \value{
 Single-row data.frame

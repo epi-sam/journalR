@@ -4,10 +4,12 @@
 \alias{init_df_mag_state}
 \title{Initialize df_mag state}
 \usage{
-init_df_mag_state(n)
+init_df_mag_state(n, env = get_dict_formats())
 }
 \arguments{
-\item{n}{Number of rows (triplets) to process}
+\item{n}{[int] Number of rows (triplets) to process}
+
+\item{env}{[env: default get_dict_formats()] Environment to store state in (defaults to package environment)}
 }
 \value{
 NULL invisibly

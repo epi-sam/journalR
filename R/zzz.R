@@ -117,8 +117,8 @@ set_dict_format <- function(dict_name, dict_entry) {
 NULL
 
 #' Initialize df_mag state
-#' @param n Number of rows (triplets) to process
-#' @param env Environment to store state in (defaults to package environment)
+#' @param n [int] Number of rows (triplets) to process
+#' @param env [env: default get_dict_formats()] Environment to store state in (defaults to package environment)
 #' @return NULL invisibly
 #' @keywords internal
 init_df_mag_state <- function(n, env = get_dict_formats()) {
@@ -148,8 +148,8 @@ init_df_mag_state <- function(n, env = get_dict_formats()) {
 }
 
 #' Store a complete df_mag data.frame in state
-#' @param df_mag data.frame as returned by set_magnitude()
-#' @param env Environment to store state in (defaults to package environment)
+#' @param df_mag [data.frame] data.frame as returned by set_magnitude()
+#' @param env [env: default get_dict_formats()] Environment to store state in (defaults to package environment)
 #' @return NULL invisibly
 #' @keywords internal
 set_df_mag_state <- function(df_mag, env = get_dict_formats()) {
@@ -163,7 +163,7 @@ set_df_mag_state <- function(df_mag, env = get_dict_formats()) {
 }
 
 #' Check if df_mag state is active
-#' @param env Environment to check state in (defaults to package environment)
+#' @param env [env: default get_dict_formats()] Environment to check state in (defaults to package environment)
 #' @return Logical
 #' @keywords internal
 is_df_mag_active <- function(env = get_dict_formats()) {
@@ -171,7 +171,7 @@ is_df_mag_active <- function(env = get_dict_formats()) {
 }
 
 #' Get current df_mag state
-#' @param env Environment to get state from (defaults to package environment)
+#' @param env [env: default get_dict_formats()] Environment to get state from (defaults to package environment)
 #' @return df_mag data.frame or NULL
 #' @keywords internal
 get_df_mag_state <- function(env = get_dict_formats()) {
@@ -182,8 +182,8 @@ get_df_mag_state <- function(env = get_dict_formats()) {
 }
 
 #' Get a single row from df_mag state
-#' @param idx Row index (1-based)
-#' @param env Environment to get state from (defaults to package environment)
+#' @param idx [int] Row index (1-based)
+#' @param env [env: default get_dict_formats()] Environment to get state from (defaults to package environment)
 #' @return Single-row data.frame
 #' @keywords internal
 get_df_mag_row <- function(idx, env = get_dict_formats()) {
@@ -203,10 +203,11 @@ get_df_mag_row <- function(idx, env = get_dict_formats()) {
 #' Called by fround_count() when magnitude edge case is detected.
 #' Field names match set_magnitude() output: mag, mag_label, denom.
 #'
-#' @param idx Integer. The row index (1-based) to update.
-#' @param mag Character. Magnitude code: "", "t", "m", or "b".
-#' @param mag_label Character. Printable label with trailing space.
-#' @param denom Numeric. Denominator for scaling (1, 1e3, 1e6, 1e9).
+#' @param idx [int] Integer. The row index (1-based) to update.
+#' @param mag [chr: default NULL] Character. Magnitude code: "", "t", "m", or "b".
+#' @param mag_label [chr: default NULL] Character. Printable label with trailing space.
+#' @param denom [num: default NULL] Numeric. Denominator for scaling (1, 1e3, 1e6, 1e9).
+#' @param env [env: default get_dict_formats()] Environment to store state in (defaults to package environment)
 #' @return NULL invisibly
 #' @keywords internal
 update_df_mag_state <- function(idx,
@@ -248,7 +249,7 @@ update_df_mag_state <- function(idx,
 }
 
 #' Flush df_mag state
-#' @param env Environment to flush state from (defaults to package environment)
+#' @param env [env: default get_dict_formats()] Environment to flush state from (defaults to package environment)
 #' @return The df_mag data.frame that was stored (before clearing), or NULL
 #' @keywords internal
 flush_df_mag_state <- function(env = get_dict_formats()) {
