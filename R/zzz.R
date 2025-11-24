@@ -118,12 +118,11 @@ NULL
 
 #' Initialize df_mag state
 #' @param n Number of rows (triplets) to process
+#' @param env Environment to store state in (defaults to package environment)
 #' @return NULL invisibly
 #' @keywords internal
-init_df_mag_state <- function(n) {
+init_df_mag_state <- function(n, env = get_dict_formats()) {
   stopifnot(is.numeric(n), length(n) == 1, n > 0, n == floor(n))
-  
-  env <- .dict_formats
   
   # Warn if overwriting active state (indicates nesting bug)
   if (isTRUE(env[["df_mag_active"]])) {
@@ -150,12 +149,12 @@ init_df_mag_state <- function(n) {
 
 #' Store a complete df_mag data.frame in state
 #' @param df_mag data.frame as returned by set_magnitude()
+#' @param env Environment to store state in (defaults to package environment)
 #' @return NULL invisibly
 #' @keywords internal
-set_df_mag_state <- function(df_mag) {
+set_df_mag_state <- function(df_mag, env = get_dict_formats()) {
   checkmate::assert_data_frame(df_mag)
-  env <- .dict_formats
-  if (!is_df_mag_active()) {
+  if (!is_df_mag_active(env)) {
     stop("Cannot set df_mag state: not initialized. Call init_df_mag_state() first.",
          call. = FALSE)
   }
@@ -164,19 +163,19 @@ set_df_mag_state <- function(df_mag) {
 }
 
 #' Check if df_mag state is active
+#' @param env Environment to check state in (defaults to package environment)
 #' @return Logical
 #' @keywords internal
-is_df_mag_active <- function() {
-  env <- .dict_formats
+is_df_mag_active <- function(env = get_dict_formats()) {
   isTRUE(env[["df_mag_active"]])
 }
 
 #' Get current df_mag state
+#' @param env Environment to get state from (defaults to package environment)
 #' @return df_mag data.frame or NULL
 #' @keywords internal
-get_df_mag_state <- function() {
-  env <- .dict_formats
-  if (is_df_mag_active()) {
+get_df_mag_state <- function(env = get_dict_formats()) {
+  if (is_df_mag_active(env)) {
     return(env[["df_mag"]])
   }
   NULL
@@ -184,13 +183,13 @@ get_df_mag_state <- function() {
 
 #' Get a single row from df_mag state
 #' @param idx Row index (1-based)
+#' @param env Environment to get state from (defaults to package environment)
 #' @return Single-row data.frame
 #' @keywords internal
-get_df_mag_row <- function(idx) {
-  if (!is_df_mag_active()) {
+get_df_mag_row <- function(idx, env = get_dict_formats()) {
+  if (!is_df_mag_active(env)) {
     stop("df_mag state not active", call. = FALSE)
   }
-  env <- .dict_formats
   n_rows <- nrow(env[["df_mag"]])
   if (!is.numeric(idx) || length(idx) != 1 || idx < 1 || idx > n_rows) {
     stop(sprintf("idx must be in range [1, %d], got: %s", n_rows, idx),
@@ -213,12 +212,11 @@ get_df_mag_row <- function(idx) {
 update_df_mag_state <- function(idx,
                                  mag = NULL,
                                  mag_label = NULL,
-                                 denom = NULL) {
-  
-  env <- .dict_formats
+                                 denom = NULL,
+                                 env = get_dict_formats()) {
   
   # Validate state is active
-  if (!is_df_mag_active()) {
+  if (!is_df_mag_active(env)) {
     stop(
       "Cannot update df_mag state: state not initialized. ",
       "Call init_df_mag_state() first.",
@@ -250,10 +248,10 @@ update_df_mag_state <- function(idx,
 }
 
 #' Flush df_mag state
+#' @param env Environment to flush state from (defaults to package environment)
 #' @return The df_mag data.frame that was stored (before clearing), or NULL
 #' @keywords internal
-flush_df_mag_state <- function() {
-  env <- .dict_formats
+flush_df_mag_state <- function(env = get_dict_formats()) {
   
   # Capture current state
   result <- env[["df_mag"]]
