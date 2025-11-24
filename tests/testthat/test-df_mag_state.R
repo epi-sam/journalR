@@ -1,6 +1,8 @@
 # Tests for df_mag state management functions
 # These functions manage state during vectorized count formatting in format_journal_clu()
 
+# ---- Unit Tests -----------------------------------------------------------------
+
 test_that("init_df_mag_state creates correct structure", {
 
   # Clean slate

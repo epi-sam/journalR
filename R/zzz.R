@@ -102,11 +102,7 @@ get_dict_format <- function(dict_name) {
 #' }
 set_dict_format <- function(dict_name, dict_entry) {
    checkmate::assert_string(dict_name)
-   # done within schema validation, keep this one as general as possible
-   # checkmate::assert_list(dict_entry, names = "named")
-   # unlock_some_bindings(objs = dict_name, env = .dict_formats)
    .dict_formats[[dict_name]] <- dict_entry
-   # lock_some_bindings(dict_name, .dict_formats)
 }
 
 
@@ -235,7 +231,6 @@ update_df_mag_state <- function(
   # Validate index
   n_rows <- nrow(env[["df_mag"]])
   checkmate::assert_integerish(idx, len = 1, lower = 1)
-  # if (!checkmate::check_integerish(idx) || length(idx) != 1 || idx != as.integer(idx) || idx < 1 || idx > n_rows) {
   if (idx > n_rows) {
     stop(
       sprintf("idx must be integer in range [1, %d], got: %s", n_rows, idx),
