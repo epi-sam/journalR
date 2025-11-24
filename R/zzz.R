@@ -126,7 +126,7 @@ NULL
 #' @return [NULL] invisibly
 #' @keywords internal
 init_df_mag_state <- function(n, env = get_dict_formats()) {
-  stopifnot(is.numeric(n), length(n) == 1, n > 0, n == floor(n))
+  checkmate::assert_integerish(n, lower = 1, len = 1)
 
   # Warn if overwriting active state (indicates nesting bug)
   if (isTRUE(env[["df_mag_active"]])) {
@@ -195,7 +195,8 @@ get_df_mag_row <- function(idx, env = get_dict_formats()) {
     stop("df_mag state not active", call. = FALSE)
   }
   n_rows <- nrow(env[["df_mag"]])
-  if (!is.numeric(idx) || length(idx) != 1 || idx < 1 || idx > n_rows) {
+  checkmate::assert_integerish(idx, lower = 1, len = 1)
+  if (idx > n_rows) {
     stop(sprintf("idx must be in range [1, %d], got: %s", n_rows, idx),
          call. = FALSE)
   }
@@ -214,11 +215,13 @@ get_df_mag_row <- function(idx, env = get_dict_formats()) {
 #' @param env [env: default get_dict_formats()] Environment to store state in (defaults to package environment)
 #' @return [NULL] invisibly
 #' @keywords internal
-update_df_mag_state <- function(idx,
-                                 mag = NULL,
-                                 mag_label = NULL,
-                                 denom = NULL,
-                                 env = get_dict_formats()) {
+update_df_mag_state <- function(
+    idx,
+    mag       = NULL,
+    mag_label = NULL,
+    denom     = NULL,
+    env       = get_dict_formats()
+) {
 
   # Validate state is active
   if (!is_df_mag_active(env)) {
@@ -231,7 +234,9 @@ update_df_mag_state <- function(idx,
 
   # Validate index
   n_rows <- nrow(env[["df_mag"]])
-  if (!is.numeric(idx) || length(idx) != 1 || idx < 1 || idx > n_rows) {
+  checkmate::assert_integerish(idx, len = 1, lower = 1)
+  # if (!checkmate::check_integerish(idx) || length(idx) != 1 || idx != as.integer(idx) || idx < 1 || idx > n_rows) {
+  if (idx > n_rows) {
     stop(
       sprintf("idx must be integer in range [1, %d], got: %s", n_rows, idx),
       call. = FALSE
