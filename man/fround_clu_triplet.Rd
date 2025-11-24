@@ -50,3 +50,4 @@ Other styled_formats:
 \code{\link{new_style}()}
 }
 \concept{styled_formats}
+\keyword{internal}

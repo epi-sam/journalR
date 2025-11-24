@@ -10,7 +10,7 @@ get_df_mag_state(env = get_dict_formats())
 \item{env}{[env: default get_dict_formats()] Environment to get state from (defaults to package environment)}
 }
 \value{
-df_mag data.frame or NULL
+df_mag [data.frame or NULL]
 }
 \description{
 Get current df_mag state

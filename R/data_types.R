@@ -16,6 +16,8 @@ get_data_types <- function(){
    )
 }
 
+# Internal helper function for get_data_type_labels
+# @keywords internal
 return_data_type_labels <- function(){
    dtype_labels <- list(
         prop  = "%"
@@ -50,6 +52,7 @@ get_data_type_labels <- function(d_type){
 #' @param d_type [chr] a valid data type
 #'
 #' @returns [scalar] some style item, type may vary
+#' @keywords internal
 get_style_item_by_data_type <- function(style_name, style_item, d_type){
 
    style  <- get_style(style_name)

@@ -21,3 +21,4 @@ dictionary environment.
 get_dict_format("lancet")
 }
 }
+\keyword{internal}

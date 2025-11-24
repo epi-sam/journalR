@@ -24,7 +24,7 @@ update_df_mag_state(
 \item{env}{[env: default get_dict_formats()] Environment to store state in (defaults to package environment)}
 }
 \value{
-NULL invisibly
+[NULL] invisibly
 }
 \description{
 Called by fround_count() when magnitude edge case is detected.

@@ -36,3 +36,4 @@ Other vector_formats:
 \code{\link{fround_dtype_lancet}()}
 }
 \concept{vector_formats}
+\keyword{internal}

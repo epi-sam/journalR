@@ -18,3 +18,4 @@ lock_some_bindings(objs, env = globalenv())
 Safely tries to lock the specified object bindings in the given environment.
 }
 \concept{bindings}
+\keyword{internal}

@@ -16,6 +16,7 @@
 #' @param assert_clu_order [lgl: default TRUE] assert that central, lower, upper relationships are valid
 #'
 #' @returns [num matrix] matrix with rows 'central', 'lower', 'upper' and columns for each triplet set
+#' @keywords internal
 #'
 #' @examples
 #' \dontrun{
@@ -99,6 +100,7 @@ process_clu_triplet_negatives <- function(
 #'
 #' @returns [chr] formatted string
 #' @family vector_formats
+#' @keywords internal
 #'
 #' @examples
 #' \dontrun{
@@ -132,6 +134,7 @@ fround_props <- function(
 #'
 #' @returns [chr] formatted string vector
 #' @family vector_formats
+#' @keywords internal
 #'
 #' @examples
 #' \dontrun{
@@ -358,6 +361,7 @@ fround_count <- function(
 #'   formatting.
 #' @return [chr] formatted string (vectorized)
 #' @family styled_formats
+#' @keywords internal
 #'
 #' @examples
 #' \dontrun{

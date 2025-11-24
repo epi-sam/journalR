@@ -12,7 +12,7 @@ init_df_mag_state(n, env = get_dict_formats())
 \item{env}{[env: default get_dict_formats()] Environment to store state in (defaults to package environment)}
 }
 \value{
-NULL invisibly
+[NULL] invisibly
 }
 \description{
 Initialize df_mag state

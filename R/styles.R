@@ -38,6 +38,7 @@ get_style_schema <- function(){
 #' @param style_entry [list] named list representing a style entry
 #'
 #' @returns [list] invisible validated style_entry
+#' @keywords internal
 #' @family assertions
 #' @family styles
 assert_style_schema <- function(style_entry){

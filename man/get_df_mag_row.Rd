@@ -12,7 +12,7 @@ get_df_mag_row(idx, env = get_dict_formats())
 \item{env}{[env: default get_dict_formats()] Environment to get state from (defaults to package environment)}
 }
 \value{
-Single-row data.frame
+[data.frame] Single-row
 }
 \description{
 Get a single row from df_mag state

@@ -33,3 +33,4 @@ Other assertions:
 \code{\link{assert_x_not_in_y}()}
 }
 \concept{assertions}
+\keyword{internal}

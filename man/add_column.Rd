@@ -41,3 +41,4 @@ Other column_mods:
 \code{\link{drop_columns}()}
 }
 \concept{column_mods}
+\keyword{internal}

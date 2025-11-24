@@ -35,3 +35,4 @@ Other vector_formats:
 \code{\link{fround_props}()}
 }
 \concept{vector_formats}
+\keyword{internal}
