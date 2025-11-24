@@ -29,6 +29,10 @@
 #' @return [chr] formatted string vector
 #' @export
 #' @family styled_formats
+#' @note This function uses package-level state for magnitude tracking.
+#'   Thread safety is handled automatically when data.table is loaded,
+#'   but avoid calling from other parallel contexts (e.g., `parallel::mclapply`,
+#'   `future`). Use `format_journal_df()` for standard usage.
 #'
 #' @examples
 #' format_journal_clu(
@@ -77,6 +81,17 @@ format_journal_clu <- function(
    # === NEW: Initialize state management ===
    init_df_mag_state(n)
    on.exit(flush_df_mag_state(), add = TRUE)
+   
+   # Thread safety: disable data.table parallelism during state management
+   # Required because format_journal_clu() is exported and users may call it
+   # inside parallelized contexts (e.g., data.table by= groups)
+   if (requireNamespace("data.table", quietly = TRUE)) {
+      old_threads <- data.table::getDTthreads()
+      if (old_threads > 1) {
+         data.table::setDTthreads(1)
+         on.exit(data.table::setDTthreads(old_threads), add = TRUE)
+      }
+   }
 
    if(assert_clu_order == TRUE){
       assert_clu_relationship(
