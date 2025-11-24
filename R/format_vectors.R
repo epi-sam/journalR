@@ -177,23 +177,23 @@ fround_count <- function(
    # === NEW: Magnitude edge-case detection (SINGLE SOURCE OF TRUTH) ===
    # Check if rounding the central value pushes it across a magnitude boundary
    # e.g., 999,999 -> 1,000,000 should become "1.00 million" not "1,000,000"
-   
+
    central_val <- clu[1]
    if (round_5_up) {
       central_val <- central_val + 1e-9
    }
    central_scaled <- central_val / df_mag$denom
-   
+
    central_rounded <- switch_strict(
       method,
       "sigfig"  = signif(central_scaled, sigfig),
       "decimal" = round(central_scaled, digits = nsmall),
       "int"     = round(central_scaled, digits = 0)
    )
-   
+
    # Rescale to original units to check magnitude
    central_at_original_scale <- central_rounded * df_mag$denom
-   
+
    # Recalculate magnitude based on rounded value
    df_mag_new <- set_magnitude(
       x = central_at_original_scale,
@@ -201,7 +201,7 @@ fround_count <- function(
       label_thousands = label_thousands,
       verbose = FALSE
    )
-   
+
    # === NEW: Update state if magnitude changed ===
    if (is_df_mag_active() && !identical(df_mag$mag, df_mag_new$mag)) {
       update_df_mag_state(
@@ -365,11 +365,16 @@ fround_count <- function(
 #'
 #' @examples
 #' \dontrun{
-#' fround_clu_triplet(clu = c(central = 0.2, lower = 0.1, upper = 0.3), d_type = "prop")
-#' fround_clu_triplet(clu = c(central = 0.2, lower = -0.1, upper = 0.3), d_type = "pp")
-#' fround_clu_triplet(clu = c(central = 95e6, lower = 89e6, upper = 101e6), d_type = "count", idx = 1)
-#' fround_clu_triplet(clu = c(central = 95e6, lower = 1e5, upper = 101e9), d_type = "count", idx = 2)
-#' fround_clu_triplet(clu = c(central = 678901, lower = 123456, upper = 6e6), d_type = "count", idx = 3)
+#' fround_clu_triplet(clu = c(central = 0.2, lower = 0.1, upper = 0.3)
+#' , d_type = "prop")
+#' fround_clu_triplet(clu = c(central = 0.2, lower = -0.1, upper = 0.3)
+#' , d_type = "pp")
+#' fround_clu_triplet(clu = c(central = 95e6, lower = 89e6, upper = 101e6)
+#' , d_type = "count", idx = 1)
+#' fround_clu_triplet(clu = c(central = 95e6, lower = 1e5, upper = 101e9)
+#' , d_type = "count", idx = 2)
+#' fround_clu_triplet(clu = c(central = 678901, lower = 123456, upper = 6e6)
+#' , d_type = "count", idx = 3)
 #' }
 fround_clu_triplet <- function(
       clu
