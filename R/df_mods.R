@@ -15,6 +15,7 @@ NULL
 #'
 #' @returns [data.frame or data.table] input `x` with new column added
 #' @family column_mods
+#' @keywords internal
 #'
 #' @examples
 #'\dontrun{
@@ -50,6 +51,7 @@ add_column <- function(x, varname, vec, overwrite = FALSE){
 #'
 #' @returns [data.frame or data.table] input `x` with column dropped
 #' @family column_mods
+#' @keywords internal
 #'
 #' @examples
 #'\dontrun{
@@ -82,6 +84,7 @@ drop_column <- function(x, varname){
 #'
 #' @returns [data.frame or data.table] input `x` with columns dropped
 #' @family column_mods
+#' @keywords internal
 #'
 #' @examples
 #'\dontrun{
@@ -106,6 +109,7 @@ drop_columns <- function(x, varnames){
 #' @param ... [any] passed to `data.frame()`
 #'
 #' @returns [data.frame]
+#' @keywords internal
 df_strict <- function(...) {
    x <- list(...)
    lens <- lengths(x)

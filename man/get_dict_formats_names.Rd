@@ -17,3 +17,4 @@ Get all pre-assigned .dict_formats names
 get_dict_formats_names()
 }
 }
+\keyword{internal}

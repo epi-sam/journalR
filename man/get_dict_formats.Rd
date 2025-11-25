@@ -17,3 +17,4 @@ For internal use.
 get_dict_formats()
 }
 }
+\keyword{internal}

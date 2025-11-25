@@ -16,6 +16,7 @@
 #' @param assert_clu_order [lgl: default TRUE] assert that central, lower, upper relationships are valid
 #'
 #' @returns [num matrix] matrix with rows 'central', 'lower', 'upper' and columns for each triplet set
+#' @keywords internal
 #'
 #' @examples
 #' \dontrun{
@@ -99,6 +100,7 @@ process_clu_triplet_negatives <- function(
 #'
 #' @returns [chr] formatted string
 #' @family vector_formats
+#' @keywords internal
 #'
 #' @examples
 #' \dontrun{
@@ -128,24 +130,35 @@ fround_props <- function(
 #' @param clu [num] numeric triplet of counts (central, lower, upper)
 #' @param style_name [chr] style name - controls rounding and
 #'   formatting.
-#' @param df_mag [data.frame] magnitude df as returned by `set_magnitude()`
+#' @param idx [int] row index when called from format_journal_clu(), NULL for standalone
 #'
 #' @returns [chr] formatted string vector
 #' @family vector_formats
+#' @keywords internal
 #'
 #' @examples
 #' \dontrun{
-#' fround_countish(clu = c(12345, 67890, 6.6666e6),
-#' df_mag = set_magnitude(12345), style_name = 'nature')
+#' fround_count(clu = c(12345, 67890, 6.6666e6), style_name = 'nature', idx = 1)
 #' }
 fround_count <- function(
       clu,
       style_name,
-      df_mag
+      idx = NULL
 ) {
 
    if(any(clu < 0))
       stop("Counts < 0 not yet supported: ", toString(clu))
+
+   # === NEW: Get df_mag from state or compute standalone ===
+   if (is_df_mag_active()) {
+      if (is.null(idx)) {
+         stop("idx required when df_mag state is active", call. = FALSE)
+      }
+      df_mag <- get_df_mag_row(idx)
+   } else {
+      # Standalone mode: compute magnitude from central value
+      df_mag <- set_magnitude(clu[1])  # clu[1] is central
+   }
 
    checkmate::assert_data_frame(df_mag, nrows = 1)
 
@@ -159,25 +172,50 @@ fround_count <- function(
    decimal.mark  <- style[["decimal.mark"]]
    round_5_up    <- style[["round_5_up"]]
    is_lancet     <- style[["is_lancet"]]
+   label_thousands <- style[["label_thousands"]]
+
+   # === NEW: Magnitude edge-case detection (SINGLE SOURCE OF TRUTH) ===
+   # Check if rounding the central value pushes it across a magnitude boundary
+   # e.g., 999,999 -> 1,000,000 should become "1.00 million" not "1,000,000"
+
+   central_val <- clu[1]
+   if (round_5_up) {
+      central_val <- central_val + 1e-9
+   }
+   central_scaled <- central_val / df_mag$denom
+
+   central_rounded <- switch_strict(
+      method,
+      "sigfig"  = signif(central_scaled, sigfig),
+      "decimal" = round(central_scaled, digits = nsmall),
+      "int"     = round(central_scaled, digits = 0)
+   )
+
+   # Rescale to original units to check magnitude
+   central_at_original_scale <- central_rounded * df_mag$denom
+
+   # Recalculate magnitude based on rounded value
+   df_mag_new <- set_magnitude(
+      x = central_at_original_scale,
+      mag = NULL,
+      label_thousands = label_thousands,
+      verbose = FALSE
+   )
+
+   # === NEW: Update state if magnitude changed ===
+   if (is_df_mag_active() && !identical(df_mag$mag, df_mag_new$mag)) {
+      update_df_mag_state(
+         idx = idx,
+         mag = df_mag_new$mag,
+         mag_label = df_mag_new$mag_label,
+         denom = df_mag_new$denom
+      )
+      # Use the new magnitude for formatting
+      df_mag <- df_mag_new
+   }
 
 
-   # Counts edge case - magnitude boundaries
-   #
-   # Before we do any formatting, we need to re-check the scale of the central
-   # value as it would round given the user's count method. This must be done
-   # up higher at the formatting level because it affects the final
-   # formatting label. This creates an undesireable repeated logic with
-   # `fround_count()` & `format_journal_clu()` but I see no current way around
-   # it, as there's no good mechanism to pass re-calculated, vectorized
-   # magnitude information back up the stack.
-   #
-   # Must maintain matching 'rounding' logic here and within `format_journal_clu()`
-   #
-   # - fround_count(c(999999, 888888, 2222222)) produces:
-   #   - c("1,000,000", "800,000", "2,000,000")
-   # - but we want:
-   #   - c("1.00 million", "0.80 million", "2.00 million")
-
+   # Use the (possibly updated) df_mag for the actual formatting
    format_one_count <- function(x) {
 
       # --- 0 guard against Lancet edge case
@@ -318,27 +356,31 @@ fround_count <- function(
 #'   order.
 #' @param d_type [chr c('prop', 'pp', or 'count')] data type - proportion,
 #'   percentage point or count
-#' @param df_mag [named list] output from `set_magnitude()` - must be based on
-#'   central value of a central/lower/upper set - central and all UI values
-#'   inherit the same scale as the central tendency.
+#' @param idx [int] row index when called from format_journal_clu(), NULL for standalone
 #' @param style_name [chr: default 'nature'] style name - controls rounding and
 #'   formatting.
 #' @return [chr] formatted string (vectorized)
 #' @family styled_formats
+#' @keywords internal
 #'
 #' @examples
 #' \dontrun{
-#' fround_clu_triplet(clu = c(central = 0.2, lower = 0.1, upper = 0.3), d_type = "prop")
-#' fround_clu_triplet(clu = c(central = 0.2, lower = -0.1, upper = 0.3), d_type = "pp")
-#' fround_clu_triplet(clu = c(central = 95e6, lower = 89e6, upper = 101e6), d_type = "count")
-#' fround_clu_triplet(clu = c(central = 95e6, lower = 1e5, upper = 101e9), d_type = "count")
-#' fround_clu_triplet(clu = c(central = 678901, lower = 123456, upper = 6e6), d_type = "count")
+#' fround_clu_triplet(clu = c(central = 0.2, lower = 0.1, upper = 0.3)
+#' , d_type = "prop")
+#' fround_clu_triplet(clu = c(central = 0.2, lower = -0.1, upper = 0.3)
+#' , d_type = "pp")
+#' fround_clu_triplet(clu = c(central = 95e6, lower = 89e6, upper = 101e6)
+#' , d_type = "count", idx = 1)
+#' fround_clu_triplet(clu = c(central = 95e6, lower = 1e5, upper = 101e9)
+#' , d_type = "count", idx = 2)
+#' fround_clu_triplet(clu = c(central = 678901, lower = 123456, upper = 6e6)
+#' , d_type = "count", idx = 3)
 #' }
 fround_clu_triplet <- function(
       clu
       , d_type
       , style_name = "nature"
-      , df_mag     = set_magnitude(clu[1]) # assuming central is in first position
+      , idx        = NULL
 ) {
 
    style  <- get_style(style_name)
@@ -354,7 +396,7 @@ fround_clu_triplet <- function(
       d_type
       , "prop"  = fround_props(clu = clu, style_name = style_name)
       , "pp"    = fround_props(clu = clu, style_name = style_name)
-      , "count" = fround_count(clu = clu, style_name = style_name, df_mag = df_mag)
+      , "count" = fround_count(clu = clu, style_name = style_name, idx = idx)
    )
 
    names(clu_fmt) <- names(clu)

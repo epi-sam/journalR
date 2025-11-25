@@ -29,3 +29,4 @@ Other column_mods:
 \code{\link{drop_column}()}
 }
 \concept{column_mods}
+\keyword{internal}

@@ -37,6 +37,12 @@ Transform c(central = 0.994, lower = 0.984, upper = 0.998) to "99.4%
 Accounts for negative values, and UIs that cross zero.  Checks if
 central, lower, upper values are in the correct order.
 }
+\note{
+This function uses package-level state for magnitude tracking.
+  Thread safety is handled automatically when data.table is loaded,
+  but avoid calling from other parallel contexts (e.g., `parallel::mclapply`,
+  `future`). Use `format_journal_df()` for standard usage.
+}
 \examples{
 format_journal_clu(
  central = c(0.994, -0.994)

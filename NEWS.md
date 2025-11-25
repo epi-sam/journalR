@@ -1,3 +1,7 @@
+# journalR 0.3.0
+
+Internal state management improvements.  No changes to user interface.
+
 # journalR 0.2.0
 
 Ready for CRAN submission.

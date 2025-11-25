@@ -12,6 +12,8 @@
 #' @param .default [any: default NULL] value to return if no match is found - NULL allows no defaults (strict)
 #'
 #' @returns [any] the value of the matched option
+#' @keywords internal
+#' @keywords internal
 #'
 #' @examples
 #' \dontrun{

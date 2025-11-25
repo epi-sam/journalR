@@ -19,3 +19,4 @@ get_style_item_by_data_type(style_name, style_item, d_type)
 \description{
 Helper for `format_means_df()`, perhaps others
 }
+\keyword{internal}

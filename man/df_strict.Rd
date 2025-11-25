@@ -15,3 +15,4 @@ df_strict(...)
 \description{
 Forbids vector length 1 recycling
 }
+\keyword{internal}

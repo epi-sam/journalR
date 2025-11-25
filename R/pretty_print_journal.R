@@ -29,6 +29,10 @@
 #' @return [chr] formatted string vector
 #' @export
 #' @family styled_formats
+#' @note This function uses package-level state for magnitude tracking.
+#'   Thread safety is handled automatically when data.table is loaded,
+#'   but avoid calling from other parallel contexts (e.g., `parallel::mclapply`,
+#'   `future`). Use `format_journal_df()` for standard usage.
 #'
 #' @examples
 #' format_journal_clu(
@@ -72,6 +76,23 @@ format_journal_clu <- function(
       , upper = upper
    )
 
+   n <- nrow(clu)
+   
+   # === NEW: Initialize state management ===
+   init_df_mag_state(n)
+   on.exit(flush_df_mag_state(), add = TRUE)
+   
+   # Thread safety: disable data.table parallelism during state management
+   # Required because format_journal_clu() is exported and users may call it
+   # inside parallelized contexts (e.g., data.table by= groups)
+   if (requireNamespace("data.table", quietly = TRUE)) {
+      old_threads <- data.table::getDTthreads()
+      if (old_threads > 1) {
+         data.table::setDTthreads(1)
+         on.exit(data.table::setDTthreads(old_threads), add = TRUE)
+      }
+   }
+
    if(assert_clu_order == TRUE){
       assert_clu_relationship(
          central = clu$central
@@ -91,7 +112,9 @@ format_journal_clu <- function(
       , label_thousands = label_thousands
       , verbose         = FALSE
    )
-   # mag_label_vec <- df_mag$mag_label
+   
+   # === NEW: Store in environment for fround_count to access/modify ===
+   set_df_mag_state(df_mag)
 
    # Capture numeric info before character conversion
    # Does UI cross zero? Decide which UI separator to use.
@@ -124,45 +147,7 @@ format_journal_clu <- function(
       , assert_clu_order = assert_clu_order
    )
 
-   # Counts edge case - magnitude boundaries
-   #
-   # Before we do any formatting, we need to re-check the scale of the central
-   # value as it would round given the user's count method. This must be done
-   # here at the formatting level because it affects the final formatting label.
-   # This creates an undesireable repeated logic with `fround_count()` &
-   # `format_journal_clu()` but I see no current way around it, as there's no
-   # good mechanism to pass re-calculated, vectorized magnitude information back
-   # up the stack.
-   #
-   # Must maintain matching 'rounding' logic here and within `fround_count()`
-   #
-   # - fround_count(c(999999, 888888, 2222222)) produces:
-   #   - c("1,000,000", "800,000", "2,000,000")
-   # - but we want:
-   #   - c("1.00 million", "0.80 million", "2.00 million")
-   if(d_type == "count") {
-      central_vals <- clu[["central"]]
-      central_fmts <- NULL
-      if (round_5_up) {
-         central_vals <- central_vals + 1e-9
-      }
-      central_sc <- central_vals / df_mag$denom
-
-      central_fmts <- switch_strict(
-         style[["count_method"]]
-         , "sigfig"  = signif(central_sc, style[["count_digits_sigfig"]])
-         , "decimal" = round(central_sc, digits = style[["count_nsmall"]])
-         , "int"     = round(central_sc, digits = 0)
-      )
-
-      #  re-calc magnitude at original scale, post rounding
-      df_mag <- set_magnitude(
-         x                 = central_fmts * df_mag$denom
-         , mag             = NULL
-         , label_thousands = label_thousands
-         , verbose         = FALSE
-         )
-   }
+   # NOTE: Magnitude edge-case detection moved to fround_count() as single source of truth
 
    # Where the magic happens
    # - Negative signs are styled internally
@@ -171,13 +156,16 @@ format_journal_clu <- function(
          clu          = triplets_neg_processed[, idx]
          , d_type     = d_type
          , style_name = style_name
-         , df_mag     = df_mag[idx, ]
+         , idx        = idx   # NEW: pass index instead of df_mag[idx, ]
       )
       # These should be retained, but let's use belt and suspenders
       names(triplet_fmt) <- c("central", "lower", "upper")
       triplet_fmt
    })
 
+   # === NEW: Retrieve final (possibly updated) df_mag for string assembly ===
+   df_mag <- get_df_mag_state()
+   
    d_type_label <- get_data_type_labels(d_type)
 
    str_vec <- unlist(lapply(seq_along(triplets_fmt), function(i){

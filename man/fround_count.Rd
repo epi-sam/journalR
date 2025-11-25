@@ -4,7 +4,7 @@
 \alias{fround_count}
 \title{Format and round count-ish number}
 \usage{
-fround_count(clu, style_name, df_mag)
+fround_count(clu, style_name, idx = NULL)
 }
 \arguments{
 \item{clu}{[num] numeric triplet of counts (central, lower, upper)}
@@ -12,7 +12,7 @@ fround_count(clu, style_name, df_mag)
 \item{style_name}{[chr] style name - controls rounding and
 formatting.}
 
-\item{df_mag}{[data.frame] magnitude df as returned by `set_magnitude()`}
+\item{idx}{[int] row index when called from format_journal_clu(), NULL for standalone}
 }
 \value{
 [chr] formatted string vector
@@ -22,8 +22,7 @@ non-exported helper
 }
 \examples{
 \dontrun{
-fround_countish(clu = c(12345, 67890, 6.6666e6),
-df_mag = set_magnitude(12345), style_name = 'nature')
+fround_count(clu = c(12345, 67890, 6.6666e6), style_name = 'nature', idx = 1)
 }
 }
 \seealso{
@@ -36,3 +35,4 @@ Other vector_formats:
 \code{\link{fround_props}()}
 }
 \concept{vector_formats}
+\keyword{internal}

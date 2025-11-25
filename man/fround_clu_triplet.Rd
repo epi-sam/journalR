@@ -4,12 +4,7 @@
 \alias{fround_clu_triplet}
 \title{Format and round central/lower/upper value sets by magnitude without units.}
 \usage{
-fround_clu_triplet(
-  clu,
-  d_type,
-  style_name = "nature",
-  df_mag = set_magnitude(clu[1])
-)
+fround_clu_triplet(clu, d_type, style_name = "nature", idx = NULL)
 }
 \arguments{
 \item{clu}{[num] a numeric triplet of three values in central/lower/upper
@@ -21,9 +16,7 @@ percentage point or count}
 \item{style_name}{[chr: default 'nature'] style name - controls rounding and
 formatting.}
 
-\item{df_mag}{[named list] output from `set_magnitude()` - must be based on
-central value of a central/lower/upper set - central and all UI values
-inherit the same scale as the central tendency.}
+\item{idx}{[int] row index when called from format_journal_clu(), NULL for standalone}
 }
 \value{
 [chr] formatted string (vectorized)
@@ -38,11 +31,16 @@ Format and round without unit labeling
 }
 \examples{
 \dontrun{
-fround_clu_triplet(clu = c(central = 0.2, lower = 0.1, upper = 0.3), d_type = "prop")
-fround_clu_triplet(clu = c(central = 0.2, lower = -0.1, upper = 0.3), d_type = "pp")
-fround_clu_triplet(clu = c(central = 95e6, lower = 89e6, upper = 101e6), d_type = "count")
-fround_clu_triplet(clu = c(central = 95e6, lower = 1e5, upper = 101e9), d_type = "count")
-fround_clu_triplet(clu = c(central = 678901, lower = 123456, upper = 6e6), d_type = "count")
+fround_clu_triplet(clu = c(central = 0.2, lower = 0.1, upper = 0.3)
+, d_type = "prop")
+fround_clu_triplet(clu = c(central = 0.2, lower = -0.1, upper = 0.3)
+, d_type = "pp")
+fround_clu_triplet(clu = c(central = 95e6, lower = 89e6, upper = 101e6)
+, d_type = "count", idx = 1)
+fround_clu_triplet(clu = c(central = 95e6, lower = 1e5, upper = 101e9)
+, d_type = "count", idx = 2)
+fround_clu_triplet(clu = c(central = 678901, lower = 123456, upper = 6e6)
+, d_type = "count", idx = 3)
 }
 }
 \seealso{
@@ -57,3 +55,4 @@ Other styled_formats:
 \code{\link{new_style}()}
 }
 \concept{styled_formats}
+\keyword{internal}

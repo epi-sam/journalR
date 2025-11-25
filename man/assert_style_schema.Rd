@@ -35,3 +35,4 @@ Other styles:
 }
 \concept{assertions}
 \concept{styles}
+\keyword{internal}

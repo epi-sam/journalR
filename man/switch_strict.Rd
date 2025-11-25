@@ -31,3 +31,4 @@ switch_strict("b",
 )
 }
 }
+\keyword{internal}
