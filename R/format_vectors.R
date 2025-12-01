@@ -547,8 +547,10 @@ fround_dtype <- function(
 #' @param d_type [chr] data type: "prop", "pp", "count", "rate" (required)
 #' @param digits [int: default 1L] passed to `round()`
 #' @param nsmall [int: default 1L] passed to `format()`
-#' @param mag [chr c("b", "m", "t")] magnitude (billion, million,
-#'   thousand) passed to set_magnitude()
+#' @param mag [chr: default NULL] magnitude override
+#'   - For counts: "t" (thousand), "m" (million), "b" (billion)
+#'   - For rates: "per10", "per100", "per1k", ..., "per10b"
+#'   - For props/pp: "as-is" (no scaling, use values as provided)
 #' @param label_thousands [lgl: default FALSE] allow thousands magnitude?  Not
 #'   Lancet-valid. Passed to `set_magnitude()`
 #' @param decimal.mark [chr: default "."] decimal mark passed to `format()`

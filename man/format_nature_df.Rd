@@ -11,13 +11,14 @@ format_nature_df(
   central_var = "mean",
   lower_var = "lower",
   upper_var = "upper",
-  remove_clu_columns = TRUE
+  remove_clu_columns = TRUE,
+  mag = NULL
 )
 }
 \arguments{
 \item{df}{[data.table]}
 
-\item{d_type}{[chr c('prop', 'pp', or 'count')] a single data type}
+\item{d_type}{[chr c('prop', 'pp', 'count', 'rate')] a single data type}
 
 \item{new_var}{[chr: default 'clu_fmt'] name of new formatted column}
 
@@ -27,8 +28,13 @@ format_nature_df(
 
 \item{upper_var}{[chr: default 'upper'] name of upper bound variable}
 
-\item{remove_clu_columns}{[lgl: default TRUE] remove central, lower, upper variables
-after}
+\item{remove_clu_columns}{[lgl: default TRUE] remove central, lower, upper
+variables after formatting?}
+
+\item{mag}{[chr: default NULL] magnitude override (NULL = auto-detect)
+- For counts: "t" (thousand), "m" (million), "b" (billion)
+- For rates: "per10", "per100", "per1k", ..., "per10b"
+- For props/pp: "as-is" (no scaling, use values as provided)}
 }
 \value{
 [data.table] copy of input data.table with new 'clu_fmt' column

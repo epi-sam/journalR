@@ -8,7 +8,7 @@ test_that("set_magnitude_prop scales correctly", {
    expect_equal(result$denom, rep(0.01, 3))
    # user-override as-is handling
    result2 <- set_magnitude_prop(c(50, 75, 25), mag = "as-is")
-   expect_equal(result2$mag, "")
+   expect_equal(result2$mag, rep("",3))
    expect_equal(result2$denom, rep(1,3))
    expect_error(set_magnitude_prop(50, 'raw'), "Invalid mag for proportions")
    expect_error(set_magnitude_prop(50), "Proportion values must be between -1 and \\+1")

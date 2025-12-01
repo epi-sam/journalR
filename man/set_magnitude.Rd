@@ -2,42 +2,50 @@
 % Please edit documentation in R/set_magnitude.R
 \name{set_magnitude}
 \alias{set_magnitude}
-\title{Define magnitude, magnitude label and denominator for a vector of numeric
-values.}
+\title{Define magnitude, magnitude label and denominator for a vector of numeric values}
 \usage{
-set_magnitude(x, mag = NULL, label_thousands = FALSE, verbose = TRUE)
+set_magnitude(x, d_type, mag = NULL, label_thousands = FALSE, verbose = TRUE)
 }
 \arguments{
 \item{x}{[num] numeric vector}
 
-\item{mag}{[chr: default NULL c(NULL, "T", "B", "M")] NULL (auto-detect),
-otherwise user-override (not recommended) - (M)illions or (B)illions or
-(T)housands (thousands are not Lancet-valid)}
+\item{d_type}{[chr] data type: "prop", "pp", "count", "rate" (required)}
 
-\item{label_thousands}{[lgl: default FALSE] allow (T)housands magnitude?  Not
-Lancet-valid.}
+\item{mag}{[chr: default NULL] magnitude override (NULL = auto-detect)
+- For counts: "t", "m", "b"
+- For rates: "per10", "per100", "per1k", ..., "per10b"
+- For props/pp: "as-is" (no scaling, use values as provided)}
 
-\item{verbose}{[lgl: default TRUE] warn if label_thousands is TRUE}
+\item{label_thousands}{[lgl: default FALSE] allow "thousands" magnitude for counts?
+Not Lancet-valid.}
+
+\item{verbose}{[lgl: default TRUE] show warnings?}
 }
 \value{
-[data.frame] with vector elements: mag, mag_label, and denom Each vector
-  element has one item per length(x)
+[data.frame] with columns: mag, mag_label, denom
 }
 \description{
-Support function used on _central_ (e.g. mean) values for later formatting
-functions.
-}
-\details{
-'Thousands' label is not a Lancet-valid, which uses ddd<narrow-space>ddd
-format.  See `fround_count()` for details.
+Support function used on _central_ (e.g. mean) values for later formatting.
+Routes to appropriate helper based on data type.
 }
 \examples{
-set_magnitude(c(1e-6, 1, 1e3, 1e6, 1e9))
+# Counts
+set_magnitude(c(1e3, 1e6, 1e9), d_type = "count")
+
+# Rates
+set_magnitude(c(0.0000123, 0.0000456), d_type = "rate")
+
+# Proportions (no scaling)
+set_magnitude(c(0.5, 0.75), d_type = "prop")
+
+# All calls require d_type
+set_magnitude(c(1e6, 1e9), d_type = "count")
 }
 \seealso{
-[fround_count()]
-
 Other magnitudes: 
-\code{\link{fmt_magnitude}()}
+\code{\link{fmt_magnitude}()},
+\code{\link{set_magnitude_count}()},
+\code{\link{set_magnitude_prop}()},
+\code{\link{set_magnitude_rate}()}
 }
 \concept{magnitudes}

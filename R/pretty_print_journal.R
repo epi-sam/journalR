@@ -17,21 +17,26 @@
 #' Transform c(central = 0.994, lower = 0.984, upper = 0.998) to "99.4%
 #' (98.4–99.8)"
 #'
-#' Accounts for negative values, and UIs that cross zero.  Checks if
-#' central, lower, upper values are in the correct order.
+#' Accounts for negative values, and UIs that cross zero.  Checks if central,
+#' lower, upper values are in the correct order.
 #'
 #' @param central [num] central, point_estimate value vector
 #' @param lower [num] lower bound vector
 #' @param upper [num] upper bound vector
-#' @param d_type [chr c(prop, pp, count)] data type - proportion, percentage
+#' @param d_type [chr c(prop, pp, count, rate)] data type - proportion,
+#'   percentage point, count, or rate
+#' @param mag [chr: default NULL] magnitude override (NULL = auto-detect)
+#'   - For counts: "t" (thousand), "m" (million), "b" (billion)
+#'   - For rates: "per10", "per100", "per1k", ..., "per10b"
+#'   - For props/pp: "as-is" (no scaling, use values as provided)
 #' @param style_name [chr: default 'nature'] style name - controls rounding and
-#'  formatting.
+#'   formatting.
 #' @return [chr] formatted string vector
 #' @export
 #' @family styled_formats
-#' @note This function uses package-level state for magnitude tracking.
-#'   Thread safety is handled automatically when data.table is loaded,
-#'   but avoid calling from other parallel contexts (e.g., `parallel::mclapply`,
+#' @note This function uses package-level state for magnitude tracking. Thread
+#'   safety is handled automatically when data.table is loaded, but avoid
+#'   calling from other parallel contexts (e.g., `parallel::mclapply`,
 #'   `future`). Use `format_journal_df()` for standard usage.
 #'
 #' @examples
@@ -203,11 +208,16 @@ format_journal_clu <- function(
 #' @param central_var [chr: default 'mean'] name of central tendency variable
 #' @param lower_var [chr: default 'lower'] name of lower bound variable
 #' @param upper_var [chr: default 'upper'] name of upper bound variable
-#' @param remove_clu_columns [lgl: default TRUE] remove central, lower, upper variables after
-#'  formatting?
+#' @param remove_clu_columns [lgl: default TRUE] remove central, lower, upper
+#'   variables after formatting?
 #' @param style_name [chr: default 'nature'] style name - controls rounding and
-#'   formatting.
+#' @param d_type [chr] data type: "prop", "pp", "count", "rate"
+#' @param mag [chr: default NULL] magnitude override (NULL = auto-detect)
+#'   - For counts: "t" (thousand), "m" (million), "b" (billion)
+#'   - For rates: "per10", "per100", "per1k", ..., "per10b"
+#'   - For props/pp: "as-is" (no scaling, use values as provided)
 #' @param new_var [chr: default 'clu_fmt'] name of new formatted column
+#'
 #' @returns [data.frame] data.frame, data.table with new 'clu_fmt' column
 #' @export
 #' @family styled_formats
@@ -272,8 +282,8 @@ format_journal_df <- function(
 #' Format one or more 'mean_' columns by magnitude, data_type, and style.
 #'
 #' BEWARE: Does not have sophisticated count-type data handling like
-#' `format_journal_clu()`.  This is a simple formatter for multiple mean columns.
-#' Use with caution.
+#' `format_journal_clu()`.  This is a simple formatter for multiple mean
+#' columns. Use with caution.
 #'
 #' @param df [data.table] input data.table with one or more 'mean_' columns
 #' @param d_type [chr c('prop', 'pp', or 'count')] a single data type
@@ -281,7 +291,7 @@ format_journal_df <- function(
 #'   format.  Implemented as e.g. "^mean[_]*" to capture 'mean', 'mean_1990',
 #'   'mean_2000', etc.
 #' @param style_name [chr: default 'nature'] style name - controls rounding and
-#'  formatting.
+#'   formatting.
 #'
 #' @returns [data.table] copy of input data.table with formatted mean column(s)
 #' @export
@@ -355,7 +365,12 @@ format_means_df <- function(
 #' @param central [num] central, point_estimate value vector
 #' @param lower [num] lower bound vector
 #' @param upper [num] upper bound vector
-#' @param d_type [chr c(prop, pp, count)] data type - proportion, percentage
+#' @param d_type [chr c(prop, pp, count, rate)] data type - proportion,
+#'   percentage point, count, or rate
+#' @param mag [chr: default NULL] magnitude override (NULL = auto-detect)
+#'   - For counts: "t" (thousand), "m" (million), "b" (billion)
+#'   - For rates: "per10", "per100", "per1k", ..., "per10b"
+#'   - For props/pp: "as-is" (no scaling, use values as provided)
 #'
 #' @returns [chr] formatted string vector
 #' @export
@@ -391,14 +406,19 @@ format_lancet_clu <- function(
 #' 'count')
 #'
 #' @param df [data.table] with central, lower, upper columns
-#' @param d_type [chr c(prop', 'pp', 'count')] data type - proportion, percentage
-#'   point or count
+#' @param d_type [chr c('prop', 'pp', 'count', 'rate')] data type - proportion,
+#'   percentage point, count, or rate
 #' @param central_var [chr: default 'mean'] name of central tendency e.g.
 #'   'point_estimate'
 #' @param lower_var [chr: default 'lower']
 #' @param upper_var [chr: default 'upper']
 #' @param new_var [chr: default 'clu_fmt'] name of new formatted column
-#' @param remove_clu_columns [lgl: default TRUE] remove central, lower, upper columns?
+#' @param remove_clu_columns [lgl: default TRUE] remove central, lower, upper
+#'   columns after formatting?
+#' @param mag [chr: default NULL] magnitude override (NULL = auto-detect)
+#'   - For counts: "t" (thousand), "m" (million), "b" (billion)
+#'   - For rates: "per10", "per100", "per1k", ..., "per10b"
+#'   - For props/pp: "as-is" (no scaling, use values as provided)
 #'
 #' @returns [data.frame, data.table] with mean_95_UI_formatted column, and
 #'   central, lower, upper columns removed (if specified)
@@ -447,7 +467,12 @@ format_lancet_df <- function(
 #' @param central [num] central, point_estimate value vector
 #' @param lower [num] lower bound vector
 #' @param upper [num] upper bound vector
-#' @param d_type [chr c(prop, pp, count)] data type - proportion, percentage
+#' @param d_type [chr c(prop, pp, count, rate)] data type - proportion,
+#'   percentage point, count, or rate
+#' @param mag [chr: default NULL] magnitude override (NULL = auto-detect)
+#'   - For counts: "t" (thousand), "m" (million), "b" (billion)
+#'   - For rates: "per10", "per100", "per1k", ..., "per10b"
+#'   - For props/pp: "as-is" (no scaling, use values as provided)
 #'
 #' @returns [chr] formatted string vector
 #' @export
@@ -480,13 +505,17 @@ format_nature_clu <- function(
 #' Return a table with formatted central, lower, upper for Nature journal
 #'
 #' @param df [data.table]
-#' @param d_type [chr c('prop', 'pp', or 'count')] a single data type
+#' @param d_type [chr c('prop', 'pp', 'count', 'rate')] a single data type
 #' @param new_var [chr: default 'clu_fmt'] name of new formatted column
 #' @param central_var [chr: default 'mean'] name of central tendency variable
 #' @param lower_var [chr: default 'lower'] name of lower bound variable
 #' @param upper_var [chr: default 'upper'] name of upper bound variable
-#' @param remove_clu_columns [lgl: default TRUE] remove central, lower, upper variables
-#'   after
+#' @param remove_clu_columns [lgl: default TRUE] remove central, lower, upper
+#'   variables after formatting?
+#' @param mag [chr: default NULL] magnitude override (NULL = auto-detect)
+#'   - For counts: "t" (thousand), "m" (million), "b" (billion)
+#'   - For rates: "per10", "per100", "per1k", ..., "per10b"
+#'   - For props/pp: "as-is" (no scaling, use values as provided)
 #' @returns [data.table] copy of input data.table with new 'clu_fmt' column
 #' @export
 #' @family styled_formats

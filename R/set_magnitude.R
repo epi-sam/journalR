@@ -270,7 +270,7 @@ set_magnitude_rate <- function(x, mag = NULL, verbose = TRUE) {
 #' @param mag [chr: default NULL] magnitude override (NULL = auto-detect)
 #'   - For counts: "t", "m", "b"
 #'   - For rates: "per10", "per100", "per1k", ..., "per10b"
-#'   - For props: ignored (no magnitude scaling)
+#'   - For props/pp: "as-is" (no scaling, use values as provided)
 #' @param label_thousands [lgl: default FALSE] allow "thousands" magnitude for counts?
 #'   Not Lancet-valid.
 #' @param verbose [lgl: default TRUE] show warnings?

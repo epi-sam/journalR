@@ -2,7 +2,8 @@
 % Please edit documentation in R/format_vectors.R
 \name{fround_clu_triplet}
 \alias{fround_clu_triplet}
-\title{Format and round central/lower/upper value sets by magnitude without units.}
+\title{Format and round a single central/lower/upper value set by magnitude without
+units.}
 \usage{
 fround_clu_triplet(clu, d_type, style_name = "nature", idx = NULL)
 }

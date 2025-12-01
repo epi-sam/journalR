@@ -6,6 +6,7 @@
 \usage{
 fmt_magnitude(
   x,
+  d_type,
   digits = 1,
   nsmall = 1,
   decimal.mark = ".",
@@ -16,14 +17,18 @@ fmt_magnitude(
 \arguments{
 \item{x}{[num] numeric vector}
 
+\item{d_type}{[chr] data type: "prop", "pp", "count", "rate" (required)}
+
 \item{digits}{[int: default 1L] passed to `round()`}
 
 \item{nsmall}{[int: default 1L] passed to `format()`}
 
 \item{decimal.mark}{[chr: default "."] decimal mark passed to `format()`}
 
-\item{mag}{[chr c("b", "m", "t")] magnitude (billion, million,
-thousand) passed to set_magnitude()}
+\item{mag}{[chr: default NULL] magnitude override
+- For counts: "t" (thousand), "m" (million), "b" (billion)
+- For rates: "per10", "per100", "per1k", ..., "per10b"
+- For props/pp: "as-is" (no scaling, use values as provided)}
 
 \item{label_thousands}{[lgl: default FALSE] allow thousands magnitude?  Not
 Lancet-valid. Passed to `set_magnitude()`}
@@ -41,7 +46,7 @@ Unaware of schema, just a hard-coded git-er-done function.
 Caution - thousands magnitude is not Lancet compliant.
 }
 \examples{
-fmt_magnitude(123456789)
+fmt_magnitude(123456789, d_type = "count")
 }
 \seealso{
 Other vector_formats: 
@@ -53,7 +58,10 @@ Other vector_formats:
 \code{\link{fround_props}()}
 
 Other magnitudes: 
-\code{\link{set_magnitude}()}
+\code{\link{set_magnitude}()},
+\code{\link{set_magnitude_count}()},
+\code{\link{set_magnitude_prop}()},
+\code{\link{set_magnitude_rate}()}
 }
 \concept{magnitudes}
 \concept{vector_formats}

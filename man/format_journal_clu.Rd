@@ -4,7 +4,14 @@
 \alias{format_journal_clu}
 \title{Format central, lower, upper value triplets for journal presentation}
 \usage{
-format_journal_clu(central, lower, upper, d_type, style_name = "nature")
+format_journal_clu(
+  central,
+  lower,
+  upper,
+  d_type,
+  mag = NULL,
+  style_name = "nature"
+)
 }
 \arguments{
 \item{central}{[num] central, point_estimate value vector}
@@ -13,7 +20,13 @@ format_journal_clu(central, lower, upper, d_type, style_name = "nature")
 
 \item{upper}{[num] upper bound vector}
 
-\item{d_type}{[chr c(prop, pp, count)] data type - proportion, percentage}
+\item{d_type}{[chr c(prop, pp, count, rate)] data type - proportion,
+percentage point, count, or rate}
+
+\item{mag}{[chr: default NULL] magnitude override (NULL = auto-detect)
+- For counts: "t" (thousand), "m" (million), "b" (billion)
+- For rates: "per10", "per100", "per1k", ..., "per10b"
+- For props/pp: "as-is" (no scaling, use values as provided)}
 
 \item{style_name}{[chr: default 'nature'] style name - controls rounding and
 formatting.}
@@ -34,13 +47,13 @@ Takes three vectors as main arguments for data.table-friendly vectorization.
 Transform c(central = 0.994, lower = 0.984, upper = 0.998) to "99.4%
 (98.4–99.8)"
 
-Accounts for negative values, and UIs that cross zero.  Checks if
-central, lower, upper values are in the correct order.
+Accounts for negative values, and UIs that cross zero.  Checks if central,
+lower, upper values are in the correct order.
 }
 \note{
-This function uses package-level state for magnitude tracking.
-  Thread safety is handled automatically when data.table is loaded,
-  but avoid calling from other parallel contexts (e.g., `parallel::mclapply`,
+This function uses package-level state for magnitude tracking. Thread
+  safety is handled automatically when data.table is loaded, but avoid
+  calling from other parallel contexts (e.g., `parallel::mclapply`,
   `future`). Use `format_journal_df()` for standard usage.
 }
 \examples{

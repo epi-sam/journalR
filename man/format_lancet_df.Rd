@@ -11,14 +11,15 @@ format_lancet_df(
   central_var = "mean",
   lower_var = "lower",
   upper_var = "upper",
-  remove_clu_columns = TRUE
+  remove_clu_columns = TRUE,
+  mag = NULL
 )
 }
 \arguments{
 \item{df}{[data.table] with central, lower, upper columns}
 
-\item{d_type}{[chr c(prop', 'pp', 'count')] data type - proportion, percentage
-point or count}
+\item{d_type}{[chr c('prop', 'pp', 'count', 'rate')] data type - proportion,
+percentage point, count, or rate}
 
 \item{new_var}{[chr: default 'clu_fmt'] name of new formatted column}
 
@@ -29,7 +30,13 @@ point or count}
 
 \item{upper_var}{[chr: default 'upper']}
 
-\item{remove_clu_columns}{[lgl: default TRUE] remove central, lower, upper columns?}
+\item{remove_clu_columns}{[lgl: default TRUE] remove central, lower, upper
+columns after formatting?}
+
+\item{mag}{[chr: default NULL] magnitude override (NULL = auto-detect)
+- For counts: "t" (thousand), "m" (million), "b" (billion)
+- For rates: "per10", "per100", "per1k", ..., "per10b"
+- For props/pp: "as-is" (no scaling, use values as provided)}
 }
 \value{
 [data.frame, data.table] with mean_95_UI_formatted column, and

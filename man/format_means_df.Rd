@@ -26,8 +26,8 @@ Format one or more 'mean_' columns by magnitude, data_type, and style.
 }
 \details{
 BEWARE: Does not have sophisticated count-type data handling like
-`format_journal_clu()`.  This is a simple formatter for multiple mean columns.
-Use with caution.
+`format_journal_clu()`.  This is a simple formatter for multiple mean
+columns. Use with caution.
 }
 \examples{
 df <- data.frame(

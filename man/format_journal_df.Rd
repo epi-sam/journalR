@@ -12,18 +12,18 @@ format_journal_df(
   central_var = "mean",
   lower_var = "lower",
   upper_var = "upper",
-  remove_clu_columns = TRUE
+  remove_clu_columns = TRUE,
+  mag = NULL
 )
 }
 \arguments{
 \item{df}{[data.frame, data.table]}
 
-\item{d_type}{[chr c('prop', 'pp', or 'count')] a single data type}
+\item{d_type}{[chr] data type: "prop", "pp", "count", "rate"}
 
 \item{new_var}{[chr: default 'clu_fmt'] name of new formatted column}
 
-\item{style_name}{[chr: default 'nature'] style name - controls rounding and
-formatting.}
+\item{style_name}{[chr: default 'nature'] style name - controls rounding and}
 
 \item{central_var}{[chr: default 'mean'] name of central tendency variable}
 
@@ -31,8 +31,13 @@ formatting.}
 
 \item{upper_var}{[chr: default 'upper'] name of upper bound variable}
 
-\item{remove_clu_columns}{[lgl: default TRUE] remove central, lower, upper variables after
-formatting?}
+\item{remove_clu_columns}{[lgl: default TRUE] remove central, lower, upper
+variables after formatting?}
+
+\item{mag}{[chr: default NULL] magnitude override (NULL = auto-detect)
+- For counts: "t" (thousand), "m" (million), "b" (billion)
+- For rates: "per10", "per100", "per1k", ..., "per10b"
+- For props/pp: "as-is" (no scaling, use values as provided)}
 }
 \value{
 [data.frame] data.frame, data.table with new 'clu_fmt' column

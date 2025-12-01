@@ -4,7 +4,7 @@
 \alias{format_nature_clu}
 \title{Format central, lower, upper value triplets for Nature journal presentation}
 \usage{
-format_nature_clu(central, lower, upper, d_type)
+format_nature_clu(central, lower, upper, d_type, mag = NULL)
 }
 \arguments{
 \item{central}{[num] central, point_estimate value vector}
@@ -13,7 +13,13 @@ format_nature_clu(central, lower, upper, d_type)
 
 \item{upper}{[num] upper bound vector}
 
-\item{d_type}{[chr c(prop, pp, count)] data type - proportion, percentage}
+\item{d_type}{[chr c(prop, pp, count, rate)] data type - proportion,
+percentage point, count, or rate}
+
+\item{mag}{[chr: default NULL] magnitude override (NULL = auto-detect)
+- For counts: "t" (thousand), "m" (million), "b" (billion)
+- For rates: "per10", "per100", "per1k", ..., "per10b"
+- For props/pp: "as-is" (no scaling, use values as provided)}
 }
 \value{
 [chr] formatted string vector
