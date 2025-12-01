@@ -6,7 +6,7 @@
 #' Always returns empty magnitude codes.
 #'
 #' @param x [num] numeric vector
-#' @param mag [chr: default NULL] magnitude override (ignored for props, kept for API consistency)
+#' @param mag [chr: default NULL] magnitude override: NULL (auto: use percentage conversion), "raw" (no scaling, use as-is)
 #' @param verbose [lgl: default TRUE] verbose warnings
 #'
 #' @return [data.frame] with columns: mag, mag_label, denom
@@ -17,19 +17,35 @@ set_magnitude_prop <- function(x, mag = NULL, verbose = TRUE) {
    checkmate::assert_vector(x)
    checkmate::assert_logical(verbose, len = 1)
 
-   # Assert proportion values are between -1 and +1
-   if (any(abs(x) > 1)) {
-      .ex <- x[abs(x) > 1]
-      stop("Proportion values must be between -1 and +1. Found values outside range, e.g.: ", .ex[1], call. = FALSE)
+
+
+   # Handle magnitude override
+   if (is.null(mag)) {
+      if (any(abs(x) > 1)) {
+         .ex <- x[abs(x) > 1]
+         stop("Proportion values must be between -1 and +1. Found values outside range, e.g.: ", .ex[1], call. = FALSE)
+      }
+      # Default: convert proportions to percentages (multiply by 100, so divide by 1e-2)
+      denom_val <- 1e-2
+   } else {
+      mag <- tolower(mag)
+      if (mag == "as-is") {
+         if (any(abs(x) > 100)) {
+            .ex <- x[abs(x) > 100]
+            stop("Proportion values must be between -100 and +100. Found values outside range, e.g.: ", .ex[1], call. = FALSE)
+         }
+         # User override: use proportions as-is (no scaling)
+         denom_val <- 1
+      } else {
+         stop("Invalid mag for proportions. Use NULL (default percentage conversion) or 'as-is' (no scaling).", call. = FALSE)
+      }
    }
 
    n <- length(x)
-
-   # Proportions don't use magnitude scaling
    df_mag <- data.frame(
       mag                = rep("", n)
       , mag_label        = rep("", n)
-      , denom            = rep(1e-2, n)
+      , denom            = rep(denom_val, n)
       , stringsAsFactors = FALSE
    )
 

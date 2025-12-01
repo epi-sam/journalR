@@ -94,29 +94,46 @@ process_clu_triplet_negatives <- function(
 #'
 #' "well that was easy, how hard could counts be?"
 #'
+#' @param clu [num] numeric triplet of proportions (central, lower, upper)
 #' @param style_name [chr] style name - controls rounding and
 #'   formatting.
-#' @param clu [num] numeric vector
+#' @param idx [int] row index when called from format_journal_clu(), NULL for standalone
 #'
-#' @returns [chr] formatted string
+#' @returns [chr] formatted string vector
 #' @family vector_formats
 #' @keywords internal
 #'
 #' @examples
 #' \dontrun{
-#' fround_propish(0.123456789, 'nature')
+#' fround_props(c(0.123, 0.100, 0.150), 'nature')
 #' }
 fround_props <- function(
       clu
       , style_name
+      , idx = NULL
 ){
+
+   # === Get df_mag from state or compute standalone ===
+   if (is_df_mag_active()) {
+      if (is.null(idx)) {
+         stop("idx required when df_mag state is active", call. = FALSE)
+      }
+      df_mag <- get_df_mag_row(idx)
+   } else {
+      # Standalone mode: compute magnitude from central value
+      df_mag <- set_magnitude(clu[1], d_type = "prop")  # clu[1] is central
+   }
+
+   checkmate::assert_data_frame(df_mag, nrows = 1)
+
    style <- get_style(style_name)
 
    if (style$round_5_up) {
       clu <- clu + 1e-9
    }
 
-   clu <- clu * 100
+   # Use denominator from df_mag instead of hard-coded * 100
+   clu <- clu / df_mag$denom
 
    round(x = clu, digits = style$prop_digits_round) |>
       format(nsmall = style$prop_nsmall, decimal.mark = style$decimal.mark) |>
@@ -345,7 +362,8 @@ fround_count <- function(
 
 
 
-#' Format and round central/lower/upper value sets by magnitude without units.
+#' Format and round a single central/lower/upper value set by magnitude without
+#' units.
 #'
 #' `central` could be mean/median/point_estimate. `d_type` is required (count
 #' data requires nuanced logic), but labels are not returned.
@@ -395,8 +413,8 @@ fround_clu_triplet <- function(
 
    clu_fmt <- switch_strict(
       d_type
-      , "prop"  = fround_props(clu = clu, style_name = style_name)
-      , "pp"    = fround_props(clu = clu, style_name = style_name)
+      , "prop"  = fround_props(clu = clu, style_name = style_name, idx = idx)
+      , "pp"    = fround_props(clu = clu, style_name = style_name, idx = idx)
       , "count" = fround_count(clu = clu, style_name = style_name, idx = idx)
    )
 

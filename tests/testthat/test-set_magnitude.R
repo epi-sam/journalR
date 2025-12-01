@@ -1,15 +1,17 @@
 # Test Helper Functions Independently ----------------------------------------
 
-test_that("set_magnitude_prop returns no scaling", {
+test_that("set_magnitude_prop scales correctly", {
+   # default denom handling
    result <- set_magnitude_prop(c(0.5, 0.75, 0.25))
    expect_equal(result$mag, c("", "", ""))
    expect_equal(result$mag_label, c("", "", ""))
    expect_equal(result$denom, rep(0.01, 3))
-
-   # Test that mag parameter is ignored for props
-   result2 <- set_magnitude_prop(c(0.5), mag = "m")
+   # user-override as-is handling
+   result2 <- set_magnitude_prop(c(50, 75, 25), mag = "as-is")
    expect_equal(result2$mag, "")
-   expect_equal(result2$denom, 0.01)
+   expect_equal(result2$denom, rep(1,3))
+   expect_error(set_magnitude_prop(50, 'raw'), "Invalid mag for proportions")
+   expect_error(set_magnitude_prop(50), "Proportion values must be between -1 and \\+1")
 })
 
 test_that("set_magnitude_prop validates input range", {
