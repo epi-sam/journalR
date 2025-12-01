@@ -46,6 +46,7 @@ format_journal_clu <- function(
       , lower
       , upper
       , d_type
+      , mag        = NULL
       , style_name = "nature"
 ) {
 
@@ -77,11 +78,11 @@ format_journal_clu <- function(
    )
 
    n <- nrow(clu)
-   
+
    # === NEW: Initialize state management ===
    init_df_mag_state(n)
    on.exit(flush_df_mag_state(), add = TRUE)
-   
+
    # Thread safety: disable data.table parallelism during state management
    # Required because format_journal_clu() is exported and users may call it
    # inside parallelized contexts (e.g., data.table by= groups)
@@ -108,11 +109,12 @@ format_journal_clu <- function(
    df_mag  <- set_magnitude(
       # x                 = clu$central
       x                 = triplets["central", ]
-      , mag             = NULL
+      , d_type          = d_type
+      , mag             = mag
       , label_thousands = label_thousands
       , verbose         = FALSE
    )
-   
+
    # === NEW: Store in environment for fround_count to access/modify ===
    set_df_mag_state(df_mag)
 
@@ -165,7 +167,7 @@ format_journal_clu <- function(
 
    # === NEW: Retrieve final (possibly updated) df_mag for string assembly ===
    df_mag <- get_df_mag_state()
-   
+
    d_type_label <- get_data_type_labels(d_type)
 
    str_vec <- unlist(lapply(seq_along(triplets_fmt), function(i){
@@ -235,6 +237,7 @@ format_journal_df <- function(
       , lower_var          = "lower"
       , upper_var          = "upper"
       , remove_clu_columns = TRUE
+      , mag                = NULL
 ){
 
    d_type <- assert_data_type(d_type)
@@ -255,6 +258,7 @@ format_journal_df <- function(
          , upper      = df[[upper_var]]
          , d_type     = d_type
          , style_name = style_name
+         , mag        = mag
       )
    )
 
@@ -307,11 +311,6 @@ format_means_df <- function(
       , style_item = "digits"
       , d_type     = d_type
    )
-   scalar <- get_style_item_by_data_type(
-      style_name   = style_name
-      , style_item = "scalar"
-      , d_type     = d_type
-   )
    n_small <- get_style_item_by_data_type(
       style_name   = style_name
       , style_item = "n_small"
@@ -332,11 +331,12 @@ format_means_df <- function(
          , varname = varname
          , vec     = paste0(
             fmt_magnitude(
-               x                 = df[[varname]] * scalar
+               x                 = df[[varname]]
                , mag             = NULL
                , label_thousands = style[["label_thousands"]]
                , digits          = digits
                , nsmall          = n_small
+               , d_type          = d_type
             )
             , label
          )
@@ -373,6 +373,7 @@ format_lancet_clu <- function(
       , lower
       , upper
       , d_type
+      , mag = NULL
 ) {
    format_journal_clu(
       central      = central
@@ -380,6 +381,7 @@ format_lancet_clu <- function(
       , upper      = upper
       , d_type     = d_type
       , style_name = "lancet"
+      , mag        = mag
    )
 }
 
@@ -421,6 +423,7 @@ format_lancet_df <- function(
       , lower_var          = "lower"
       , upper_var          = "upper"
       , remove_clu_columns = TRUE
+      , mag                = NULL
 ){
    format_journal_df(
       df                   = df
@@ -431,6 +434,7 @@ format_lancet_df <- function(
       , upper_var          = upper_var
       , new_var            = new_var
       , remove_clu_columns = remove_clu_columns
+      , mag                = mag
    )
 }
 
@@ -461,6 +465,7 @@ format_nature_clu <- function(
       , lower
       , upper
       , d_type
+      , mag = NULL
 ) {
    format_journal_clu(
       central      = central
@@ -468,6 +473,7 @@ format_nature_clu <- function(
       , upper      = upper
       , d_type     = d_type
       , style_name = "nature"
+      , mag        = mag
    )
 }
 
@@ -503,6 +509,7 @@ format_nature_df <- function(
       , lower_var          = "lower"
       , upper_var          = "upper"
       , remove_clu_columns = TRUE
+      , mag                = NULL
 ){
    format_journal_df(
       df                   = df
@@ -513,5 +520,6 @@ format_nature_df <- function(
       , upper_var          = upper_var
       , new_var            = new_var
       , remove_clu_columns = remove_clu_columns
+      , mag                = mag
    )
 }

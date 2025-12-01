@@ -395,7 +395,7 @@ test_that("state functions use get_dict_formats() by default", {
   expect_true(is_df_mag_active())
 
   # Verify we can work with the actual package environment
-  test_df_mag <- set_magnitude(c(1e6, 1e9))
+  test_df_mag <- set_magnitude(c(1e6, 1e9), d_type = "count")
   set_df_mag_state(test_df_mag)
 
   retrieved <- get_df_mag_state()

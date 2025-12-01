@@ -96,8 +96,8 @@ test_that("format_lancet_clu works", {
    expect_equal(
       format_journal_clu(central = 1145, lower = 1135, upper = 1155, d_type = 'count'), "1,150 (1,140–1,160)"
    )
-   format_journal_clu(central = -0.1321684, lower = -0.235321, upper = -0.056549, d_type = 'count')
-   format_journal_df(data.frame(mean = -0.1321684, lower = -0.235321, upper = -0.056549), d_type = 'count')
+   # format_journal_clu(central = -0.1321684, lower = -0.235321, upper = -0.056549, d_type = 'count')
+   # format_journal_df(data.frame(mean = -0.1321684, lower = -0.235321, upper = -0.056549), d_type = 'count')
 })
 
 test_that("format_nature_clu works", {

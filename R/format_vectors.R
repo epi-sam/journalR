@@ -157,7 +157,7 @@ fround_count <- function(
       df_mag <- get_df_mag_row(idx)
    } else {
       # Standalone mode: compute magnitude from central value
-      df_mag <- set_magnitude(clu[1])  # clu[1] is central
+      df_mag <- set_magnitude(clu[1], d_type = "count")  # clu[1] is central
    }
 
    checkmate::assert_data_frame(df_mag, nrows = 1)
@@ -197,6 +197,7 @@ fround_count <- function(
    # Recalculate magnitude based on rounded value
    df_mag_new <- set_magnitude(
       x = central_at_original_scale,
+      d_type = "count",
       mag = NULL,
       label_thousands = label_thousands,
       verbose = FALSE
@@ -525,6 +526,7 @@ fround_dtype <- function(
 #' Caution - thousands magnitude is not Lancet compliant.
 #'
 #' @param x [num] numeric vector
+#' @param d_type [chr] data type: "prop", "pp", "count", "rate" (required)
 #' @param digits [int: default 1L] passed to `round()`
 #' @param nsmall [int: default 1L] passed to `format()`
 #' @param mag [chr c("b", "m", "t")] magnitude (billion, million,
@@ -539,9 +541,10 @@ fround_dtype <- function(
 #' @family magnitudes
 #'
 #' @examples
-#' fmt_magnitude(123456789)
+#' fmt_magnitude(123456789, d_type = "count")
 fmt_magnitude <- function(
       x
+      , d_type
       , digits          = 1
       , nsmall          = 1
       , decimal.mark    = "."
@@ -557,6 +560,7 @@ fmt_magnitude <- function(
 
    df_mag <- set_magnitude(
       x
+      , d_type          = d_type
       , mag             = mag
       , label_thousands = label_thousands
       , verbose         = FALSE

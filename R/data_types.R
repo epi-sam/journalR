@@ -13,6 +13,7 @@ get_data_types <- function(){
         "prop"
       , "pp"
       , "count"
+      , "rate"
    )
 }
 
@@ -23,6 +24,7 @@ return_data_type_labels <- function(){
         prop  = "%"
       , pp    = " pp"
       , count = ""
+      , rate  = ""
    )
    lapply(names(dtype_labels), assert_data_type)
    return(dtype_labels)
@@ -68,15 +70,6 @@ get_style_item_by_data_type <- function(style_name, style_item, d_type){
             , "prop"  = style[["prop_digits_round"]]
             , "pp"    = style[["prop_digits_round"]]
             , "count" = style[["count_digits_sigfig"]]
-         )
-      }
-
-      , "scalar" = {
-         switch_strict(
-            d_type
-            , "prop"  = 100
-            , "pp"    = 100
-            , "count" = 1
          )
       }
 

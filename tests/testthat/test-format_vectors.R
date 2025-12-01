@@ -14,7 +14,7 @@ test_that("fround_dtype works", {
 
 test_that("fmt_magnitude works", {
    #' fmt_magnitude(123456789) # "123.5 million"
-   expect_equal(fmt_magnitude(123456789), "123.5 million")
+   expect_equal(fmt_magnitude(123456789, 'count'), "123.5 million")
 })
 
 
