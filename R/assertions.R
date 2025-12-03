@@ -133,3 +133,28 @@ assert_clu_relationship <- function(central, lower, upper){
    assert_x_gte_y(x = central, y = lower)
    assert_x_gte_y(x = upper,   y = lower) # probably redundant
 }
+
+
+#' Assert rate unit parameter
+#'
+#' Validates that when d_type is "rate", rate_unit is provided and is a string.
+#' When d_type is not "rate", rate_unit is ignored.
+#'
+#' @param d_type [chr] data type
+#' @param rate_unit [chr or NULL] rate unit parameter
+#'
+#' @returns [none] stop if d_type is "rate" and rate_unit is missing/invalid
+#' @family assertions
+#' @keywords internal
+assert_rate_unit <- function(d_type, rate_unit) {
+   checkmate::assert_string(d_type)
+   
+   if (d_type == "rate") {
+      if (is.null(rate_unit)) {
+         stop("rate_unit is required when d_type = 'rate' (e.g., 'cases', 'deaths')", call. = FALSE)
+      }
+      checkmate::assert_string(rate_unit)
+   }
+   
+   invisible(NULL)
+}

@@ -57,14 +57,7 @@ format_journal_clu <- function(
 ) {
 
    d_type <- assert_data_type(d_type)
-
-   # Validate rate_unit parameter
-   if (d_type == "rate") {
-      if (is.null(rate_unit)) {
-         stop("rate_unit is required when d_type = 'rate' (e.g., 'cases', 'deaths')", call. = FALSE)
-      }
-      checkmate::assert_string(rate_unit)
-   }
+   assert_rate_unit(d_type, rate_unit)
 
    style                  <- get_style(style_name)
    neg_mark_mean          <- style[["neg_mark_mean"]]

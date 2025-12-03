@@ -727,6 +727,8 @@ fround_dtype <- function(
 #' @param count_label_thousands [lgl: default FALSE] allow thousands magnitude?  Not
 #'   Lancet-valid. Passed to `set_magnitude()`
 #' @param decimal.mark [chr: default "."] decimal mark passed to `format()`
+#' @param rate_unit [chr: default NULL] unit label for rates (e.g., "deaths", "cases").
+#'   Required when d_type = "rate", ignored otherwise.
 #'
 #' @return [chr] formatted string
 #' @export
@@ -735,6 +737,7 @@ fround_dtype <- function(
 #'
 #' @examples
 #' fmt_magnitude(123456789, d_type = "count")
+#' fmt_magnitude(0.0000123, d_type = "rate", rate_unit = "deaths")
 fmt_magnitude <- function(
       x
       , d_type
@@ -743,13 +746,19 @@ fmt_magnitude <- function(
       , decimal.mark          = "."
       , mag                   = NULL
       , count_label_thousands = FALSE
+      , rate_unit             = NULL
 ){
+
+   assert_rate_unit(d_type, rate_unit)
 
    checkmate::assert_numeric(x)
    checkmate::assert_vector(x)
    checkmate::assert_logical(count_label_thousands, len = 1)
    checkmate::assert_integerish(digits, len = 1, lower = 0)
    checkmate::assert_integerish(nsmall, len = 1, lower = 0)
+
+   # Define rate unit space for sprintf
+   rate_unit_fmt <- if (d_type == "rate" && !is.null(rate_unit)) sprintf(" %s", rate_unit) else ""
 
    df_mag <- set_magnitude(
       x
@@ -767,7 +776,7 @@ fmt_magnitude <- function(
       round(x / df_mag$denom, digits = digits) |>
       format(nsmall = nsmall, decimal.mark = decimal.mark) |>
       trimws()|>
-      sprintf("%s %s", ... = _, df_mag$mag_label) |>
+      sprintf("%s%s %s", ... = _, rate_unit_fmt, df_mag$mag_label) |>
       trimws()
 
    return(x_fmt)
