@@ -305,4 +305,28 @@ test_that("edge case rounding works with and without thousands label", {
    )
 })
 
+# ---- Rate Integration Tests ------------------------------------------------
+
+test_that("fround_clu_triplet works with rates", {
+   expect_equal(
+      fround_clu_triplet(style_name = 'nature', clu = c(central = 0.0000123, lower = 0.0000098, upper = 0.0000152), d_type = "rate"),
+      c(central = "12.3", lower = "9.80", upper = "15.2")
+   )
+   expect_equal(
+      fround_clu_triplet(style_name = 'lancet', clu = c(central = 0.0000123, lower = 0.0000098, upper = 0.0000152), d_type = "rate"),
+      c(central = "12·3", lower = "9·80", upper = "15·2")
+   )
+})
+
+test_that("format_journal_clu works with rates", {
+   expect_equal(
+      format_journal_clu(central = 0.0000123, lower = 0.0000098, upper = 0.0000152, d_type = "rate", rate_unit = "deaths"),
+      "12.3 deaths (9.80–15.2) per 1 million"
+   )
+   expect_equal(
+      format_lancet_clu(central = 0.0000123, lower = 0.0000098, upper = 0.0000152, d_type = "rate", rate_unit = "cases"),
+      "12·3 cases (9·80–15·2) per 1 million"
+   )
+})
+
 
