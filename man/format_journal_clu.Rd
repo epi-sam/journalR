@@ -10,7 +10,8 @@ format_journal_clu(
   upper,
   d_type,
   mag = NULL,
-  style_name = "nature"
+  style_name = "nature",
+  rate_unit = NULL
 )
 }
 \arguments{
@@ -30,6 +31,9 @@ percentage point, count, or rate}
 
 \item{style_name}{[chr: default 'nature'] style name - controls rounding and
 formatting.}
+
+\item{rate_unit}{[chr: default NULL] rate unit label (required when d_type = 'rate')
+- Examples: "deaths", "cases", "events", "births"}
 }
 \value{
 [chr] formatted string vector
@@ -62,6 +66,15 @@ format_journal_clu(
  , lower = c(0.984, -0.998)
  , upper = c(0.998, -0.984)
  , d_type = "prop"
+)
+
+# Rate formatting with rate_unit
+format_journal_clu(
+  central   = 0.0000123,
+  lower     = 0.0000098,
+  upper     = 0.0000152,
+  d_type    = "rate",
+  rate_unit = "deaths"
 )
 }
 \seealso{

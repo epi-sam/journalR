@@ -29,6 +29,7 @@ Other vector_formats:
 \code{\link{fround_count}()},
 \code{\link{fround_dtype}()},
 \code{\link{fround_dtype_lancet}()},
-\code{\link{fround_props}()}
+\code{\link{fround_props}()},
+\code{\link{fround_rate}()}
 }
 \concept{vector_formats}

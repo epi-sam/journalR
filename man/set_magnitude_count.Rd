@@ -4,14 +4,19 @@
 \alias{set_magnitude_count}
 \title{Set magnitude for count-space numbers}
 \usage{
-set_magnitude_count(x, mag = NULL, label_thousands = FALSE, verbose = TRUE)
+set_magnitude_count(
+  x,
+  mag = NULL,
+  count_label_thousands = FALSE,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{x}{[num] numeric vector}
 
 \item{mag}{[chr: default NULL] magnitude override: NULL (auto), "t", "m", "b"}
 
-\item{label_thousands}{[lgl: default FALSE] allow "thousands" magnitude (not Lancet-valid)}
+\item{count_label_thousands}{[lgl: default FALSE] allow "thousands" magnitude (not Lancet-valid)}
 
 \item{verbose}{[lgl: default TRUE] verbose warnings}
 }

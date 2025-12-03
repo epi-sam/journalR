@@ -58,7 +58,7 @@ test_that("set_magnitude_rate scales appropriately", {
    # Test per 100,000 scale
    result <- set_magnitude_rate(0.0000123)
    expect_equal(result$mag, "per1m")
-   expect_equal(result$mag_label, " per 1 million")
+   expect_equal(result$mag_label, "per 1 million")
    expect_equal(result$denom, 1e-6)
 
    # Verify scaling target is met

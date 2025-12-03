@@ -28,6 +28,7 @@ fround_dtype_lancet(
 }
 \description{
 Lancet-specific wrapper for `fround_dtype()`, using mid-dot as decimal mark.
+Retaining for legacy purposes (no Nature equivalent)
 }
 \examples{
 fround_dtype_lancet(0.123456789)
@@ -41,6 +42,7 @@ Other vector_formats:
 \code{\link{fround}()},
 \code{\link{fround_count}()},
 \code{\link{fround_dtype}()},
-\code{\link{fround_props}()}
+\code{\link{fround_props}()},
+\code{\link{fround_rate}()}
 }
 \concept{vector_formats}

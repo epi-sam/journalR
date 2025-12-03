@@ -31,6 +31,8 @@
 #'   - For props/pp: "as-is" (no scaling, use values as provided)
 #' @param style_name [chr: default 'nature'] style name - controls rounding and
 #'   formatting.
+#' @param rate_unit [chr: default NULL] rate unit label (required when d_type = 'rate')
+#'   - Examples: "deaths", "cases", "events", "births"
 #' @return [chr] formatted string vector
 #' @export
 #' @family styled_formats
@@ -45,6 +47,15 @@
 #'  , lower = c(0.984, -0.998)
 #'  , upper = c(0.998, -0.984)
 #'  , d_type = "prop"
+#' )
+#'
+#' # Rate formatting with rate_unit
+#' format_journal_clu(
+#'   central   = 0.0000123,
+#'   lower     = 0.0000098,
+#'   upper     = 0.0000152,
+#'   d_type    = "rate",
+#'   rate_unit = "deaths"
 #' )
 format_journal_clu <- function(
       central
@@ -188,12 +199,12 @@ format_journal_clu <- function(
 
       # Define rate-specific components (conditionally populated)
       if (is_rate_type) {
-         .rate_unit_space <- paste0(" ", rate_unit, " ")  # " deaths " or " cases "
-         .rate_mag_label  <- .mag_label                   # " per 100,000"
+         rate_unit_fmt    <- sprintf(" %s", rate_unit)   # " deaths " or " cases "
+         .rate_mag_label  <- sprintf(" %s", .mag_label)   # " per 100,000"
          .count_mag_label <- ""                           # empty for rates
          .type_label      <- ""                           # empty for rates
       } else {
-         .rate_unit_space <- ""                           # empty for non-rates
+         rate_unit_fmt    <- ""                           # empty for non-rates
          .rate_mag_label  <- ""                           # empty for non-rates
          .count_mag_label <- .mag_label                   # "million " for counts
          .type_label      <- d_type_label                 # "%" for props
@@ -201,12 +212,12 @@ format_journal_clu <- function(
 
       # Single glue template handles all types
       str <- glue::glue(
-         "{.mean_neg_txt}{.cen}{.rate_unit_space}{.type_label} {.count_mag_label}({UI_text}{.low}{.low_upp_sep}{.upp}){.rate_mag_label}"
+         "{.mean_neg_txt}{.cen}{rate_unit_fmt}{.type_label} {.count_mag_label}({UI_text}{.low}{.low_upp_sep}{.upp}){.rate_mag_label}"
       )
 
       if (UI_only) {
          str <- glue::glue(
-            "{UI_text}{.low}{.low_upp_sep}{.upp}{.rate_unit_space}{.count_mag_label}{.rate_mag_label}"
+            "{UI_text}{.low}{.low_upp_sep}{.upp}{rate_unit_fmt}{.count_mag_label}{.rate_mag_label}"
          )
       }
 
@@ -224,18 +235,20 @@ format_journal_clu <- function(
 #' 'count')
 #'
 #' @param df [data.frame, data.table]
-#' @param d_type [chr c('prop', 'pp', or 'count')] a single data type
+#' @param d_type [chr c('prop', 'pp', 'count', 'rate')] a single data type
 #' @param central_var [chr: default 'mean'] name of central tendency variable
 #' @param lower_var [chr: default 'lower'] name of lower bound variable
 #' @param upper_var [chr: default 'upper'] name of upper bound variable
 #' @param remove_clu_columns [lgl: default TRUE] remove central, lower, upper
 #'   variables after formatting?
 #' @param style_name [chr: default 'nature'] style name - controls rounding and
-#' @param d_type [chr] data type: "prop", "pp", "count", "rate"
+#'   formatting.
 #' @param mag [chr: default NULL] magnitude override (NULL = auto-detect)
 #'   - For counts: "t" (thousand), "m" (million), "b" (billion)
 #'   - For rates: "per10", "per100", "per1k", ..., "per10b"
 #'   - For props/pp: "as-is" (no scaling, use values as provided)
+#' @param rate_unit [chr: default NULL] rate unit label (required when d_type = 'rate')
+#'   - Examples: "deaths", "cases", "events", "births"
 #' @param new_var [chr: default 'clu_fmt'] name of new formatted column
 #'
 #' @returns [data.frame] data.frame, data.table with new 'clu_fmt' column
@@ -245,19 +258,20 @@ format_journal_clu <- function(
 #' @examples
 #' df <- data.frame(
 #'  location_id = c(1, 2, 3)
-#'  , mean = c(0.1234, 0, -0.3456)
-#'  , lower = c(0.1134, -0.2245, -0.4445)
-#'  , upper = c(0.1334, 0.2445, 0.3556)
+#'  , mean      = c(0.1234, 0, -0.3456)
+#'  , lower     = c(0.1134, -0.2245, -0.4445)
+#'  , upper     = c(0.1334, 0.2445, 0.3556)
 #' )
 #' format_journal_df(df, d_type = "prop")
 #'
-#' DF <- data.frame(
-#'  location_id = c(1, 2, 3)
-#'  , mean = c(0.1234, 0, -0.3456)
-#'  , lower = c(0.1134, -0.2245, -0.4445)
-#'  , upper = c(0.1334, 0.2445, 0.3556)
+#' # Rate formatting example
+#' rate_df <- data.frame(
+#'   location = c("Global", "USA"),
+#'   mean     = c(0.0000123, 0.0000456),
+#'   lower    = c(0.0000098, 0.0000401),
+#'   upper    = c(0.0000152, 0.0000512)
 #' )
-#' format_journal_df(DF, d_type = "prop")
+#' format_journal_df(rate_df, d_type = "rate", rate_unit = "deaths")
 format_journal_df <- function(
       df
       , d_type
@@ -393,6 +407,7 @@ format_means_df <- function(
 #'   - For counts: "t" (thousand), "m" (million), "b" (billion)
 #'   - For rates: "per10", "per100", "per1k", ..., "per10b"
 #'   - For props/pp: "as-is" (no scaling, use values as provided)
+#' @param rate_unit [chr: default NULL] rate unit label (required when d_type = 'rate')
 #'
 #' @returns [chr] formatted string vector
 #' @export
@@ -404,6 +419,15 @@ format_means_df <- function(
 #'    , lower  = c(0.984, -0.998)
 #'    , upper  = c(0.998, -0.984)
 #'    , d_type = "prop"
+#' )
+#'
+#' # Rate example with Lancet formatting
+#' format_lancet_clu(
+#'   central   = 0.0000123,
+#'   lower     = 0.0000098,
+#'   upper     = 0.0000152,
+#'   d_type    = "rate",
+#'   rate_unit = "deaths"
 #' )
 format_lancet_clu <- function(
       central
@@ -443,6 +467,7 @@ format_lancet_clu <- function(
 #'   - For counts: "t" (thousand), "m" (million), "b" (billion)
 #'   - For rates: "per10", "per100", "per1k", ..., "per10b"
 #'   - For props/pp: "as-is" (no scaling, use values as provided)
+#' @param rate_unit [chr: default NULL] rate unit label (required when d_type = 'rate')
 #'
 #' @returns [data.frame, data.table] with mean_95_UI_formatted column, and
 #'   central, lower, upper columns removed (if specified)
@@ -499,6 +524,7 @@ format_lancet_df <- function(
 #'   - For counts: "t" (thousand), "m" (million), "b" (billion)
 #'   - For rates: "per10", "per100", "per1k", ..., "per10b"
 #'   - For props/pp: "as-is" (no scaling, use values as provided)
+#' @param rate_unit [chr: default NULL] rate unit label (required when d_type = 'rate')
 #'
 #' @returns [chr] formatted string vector
 #' @export
@@ -510,6 +536,15 @@ format_lancet_df <- function(
 #'    , lower  = c(0.984, -0.998)
 #'    , upper  = c(0.998, -0.984)
 #'    , d_type = "prop"
+#' )
+#'
+#' # Rate example with Nature formatting
+#' format_nature_clu(
+#'   central   = 0.0000123,
+#'   lower     = 0.0000098,
+#'   upper     = 0.0000152,
+#'   d_type    = "rate",
+#'   rate_unit = "cases"
 #' )
 format_nature_clu <- function(
       central
@@ -544,6 +579,7 @@ format_nature_clu <- function(
 #'   - For counts: "t" (thousand), "m" (million), "b" (billion)
 #'   - For rates: "per10", "per100", "per1k", ..., "per10b"
 #'   - For props/pp: "as-is" (no scaling, use values as provided)
+#' @param rate_unit [chr: default NULL] rate unit label (required when d_type = 'rate')
 #' @returns [data.table] copy of input data.table with new 'clu_fmt' column
 #' @export
 #' @family styled_formats

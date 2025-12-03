@@ -375,7 +375,7 @@ fround_count <- function(
 #' @keywords internal
 #'
 #' @examples
-#' \\dontrun{
+#' \dontrun{
 #' fround_rate(clu = c(0.0000123, 0.0000098, 0.0000152), style_name = 'nature', idx = 1)
 #' }
 fround_rate <- function(

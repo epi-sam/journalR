@@ -12,7 +12,8 @@ format_lancet_df(
   lower_var = "lower",
   upper_var = "upper",
   remove_clu_columns = TRUE,
-  mag = NULL
+  mag = NULL,
+  rate_unit = NULL
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ columns after formatting?}
 - For counts: "t" (thousand), "m" (million), "b" (billion)
 - For rates: "per10", "per100", "per1k", ..., "per10b"
 - For props/pp: "as-is" (no scaling, use values as provided)}
+
+\item{rate_unit}{[chr: default NULL] rate unit label (required when d_type = 'rate')}
 }
 \value{
 [data.frame, data.table] with mean_95_UI_formatted column, and

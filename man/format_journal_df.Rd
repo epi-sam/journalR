@@ -13,17 +13,19 @@ format_journal_df(
   lower_var = "lower",
   upper_var = "upper",
   remove_clu_columns = TRUE,
-  mag = NULL
+  mag = NULL,
+  rate_unit = NULL
 )
 }
 \arguments{
 \item{df}{[data.frame, data.table]}
 
-\item{d_type}{[chr] data type: "prop", "pp", "count", "rate"}
+\item{d_type}{[chr c('prop', 'pp', 'count', 'rate')] a single data type}
 
 \item{new_var}{[chr: default 'clu_fmt'] name of new formatted column}
 
-\item{style_name}{[chr: default 'nature'] style name - controls rounding and}
+\item{style_name}{[chr: default 'nature'] style name - controls rounding and
+formatting.}
 
 \item{central_var}{[chr: default 'mean'] name of central tendency variable}
 
@@ -38,6 +40,9 @@ variables after formatting?}
 - For counts: "t" (thousand), "m" (million), "b" (billion)
 - For rates: "per10", "per100", "per1k", ..., "per10b"
 - For props/pp: "as-is" (no scaling, use values as provided)}
+
+\item{rate_unit}{[chr: default NULL] rate unit label (required when d_type = 'rate')
+- Examples: "deaths", "cases", "events", "births"}
 }
 \value{
 [data.frame] data.frame, data.table with new 'clu_fmt' column
@@ -49,19 +54,20 @@ Assumes a single data-type (d_type) for the whole table (e.g. 'prop', 'pp',
 \examples{
 df <- data.frame(
  location_id = c(1, 2, 3)
- , mean = c(0.1234, 0, -0.3456)
- , lower = c(0.1134, -0.2245, -0.4445)
- , upper = c(0.1334, 0.2445, 0.3556)
+ , mean      = c(0.1234, 0, -0.3456)
+ , lower     = c(0.1134, -0.2245, -0.4445)
+ , upper     = c(0.1334, 0.2445, 0.3556)
 )
 format_journal_df(df, d_type = "prop")
 
-DF <- data.frame(
- location_id = c(1, 2, 3)
- , mean = c(0.1234, 0, -0.3456)
- , lower = c(0.1134, -0.2245, -0.4445)
- , upper = c(0.1334, 0.2445, 0.3556)
+# Rate formatting example
+rate_df <- data.frame(
+  location = c("Global", "USA"),
+  mean     = c(0.0000123, 0.0000456),
+  lower    = c(0.0000098, 0.0000401),
+  upper    = c(0.0000152, 0.0000512)
 )
-format_journal_df(DF, d_type = "prop")
+format_journal_df(rate_df, d_type = "rate", rate_unit = "deaths")
 }
 \seealso{
 Other styled_formats: 

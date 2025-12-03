@@ -21,22 +21,26 @@ Set a new style by list
 set_style(
    style_name    = "my_style"
    , style_entry = list(
-      prop_digits_round     = 2
-      , count_digits_sigfig = 3
-      , count_method        = "sigfig"
-      , count_pad_sigfigs   = TRUE
-      , prop_nsmall         = 1
-      , count_nsmall        = 1
-      , decimal.mark        = "."
-      , neg_mark_UI         = "-"
-      , count_big.mark      = ","
-      , neg_mark_mean       = "a decrease of"
-      , UI_only             = FALSE
-      , UI_text             = ""
-      , assert_clu_order    = TRUE
-      , is_lancet           = FALSE
-      , label_thousands     = FALSE
-      , round_5_up          = TRUE
+      prop_digits_round       = 1
+      , prop_nsmall           = 1
+      , count_method          = "sigfig"
+      , count_digits_sigfig   = 3
+      , count_pad_sigfigs     = TRUE
+      , count_nsmall          = 1
+      , count_big.mark        = ","
+      , count_label_thousands = FALSE
+      , rate_method           = "sigfig"
+      , rate_digits_sigfig    = 3
+      , rate_pad_sigfigs      = TRUE
+      , rate_nsmall           = 1
+      , decimal.mark          = "."
+      , neg_mark_mean         = "-"
+      , neg_mark_UI           = "-"
+      , UI_only               = FALSE
+      , UI_text               = ""
+      , assert_clu_order      = TRUE
+      , is_lancet             = FALSE
+      , round_5_up            = TRUE
    )
 )
 }

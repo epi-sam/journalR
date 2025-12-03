@@ -11,7 +11,8 @@ fmt_magnitude(
   nsmall = 1,
   decimal.mark = ".",
   mag = NULL,
-  label_thousands = FALSE
+  count_label_thousands = FALSE,
+  rate_unit = NULL
 )
 }
 \arguments{
@@ -30,8 +31,11 @@ fmt_magnitude(
 - For rates: "per10", "per100", "per1k", ..., "per10b"
 - For props/pp: "as-is" (no scaling, use values as provided)}
 
-\item{label_thousands}{[lgl: default FALSE] allow thousands magnitude?  Not
+\item{count_label_thousands}{[lgl: default FALSE] allow thousands magnitude?  Not
 Lancet-valid. Passed to `set_magnitude()`}
+
+\item{rate_unit}{[chr: default NULL] unit label for rates (e.g., "deaths", "cases").
+Required when d_type = "rate", ignored otherwise.}
 }
 \value{
 [chr] formatted string
@@ -47,6 +51,7 @@ Caution - thousands magnitude is not Lancet compliant.
 }
 \examples{
 fmt_magnitude(123456789, d_type = "count")
+fmt_magnitude(0.0000123, d_type = "rate", rate_unit = "deaths")
 }
 \seealso{
 Other vector_formats: 
@@ -55,7 +60,8 @@ Other vector_formats:
 \code{\link{fround_count}()},
 \code{\link{fround_dtype}()},
 \code{\link{fround_dtype_lancet}()},
-\code{\link{fround_props}()}
+\code{\link{fround_props}()},
+\code{\link{fround_rate}()}
 
 Other magnitudes: 
 \code{\link{set_magnitude}()},

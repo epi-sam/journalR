@@ -4,7 +4,13 @@
 \alias{set_magnitude}
 \title{Define magnitude, magnitude label and denominator for a vector of numeric values}
 \usage{
-set_magnitude(x, d_type, mag = NULL, label_thousands = FALSE, verbose = TRUE)
+set_magnitude(
+  x,
+  d_type,
+  mag = NULL,
+  count_label_thousands = FALSE,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{x}{[num] numeric vector}
@@ -16,7 +22,7 @@ set_magnitude(x, d_type, mag = NULL, label_thousands = FALSE, verbose = TRUE)
 - For rates: "per10", "per100", "per1k", ..., "per10b"
 - For props/pp: "as-is" (no scaling, use values as provided)}
 
-\item{label_thousands}{[lgl: default FALSE] allow "thousands" magnitude for counts?
+\item{count_label_thousands}{[lgl: default FALSE] allow "thousands" magnitude for counts?
 Not Lancet-valid.}
 
 \item{verbose}{[lgl: default TRUE] show warnings?}

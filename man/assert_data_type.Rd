@@ -18,6 +18,7 @@ Validates that a given data type is among the allowed types.
 \seealso{
 Other assertions: 
 \code{\link{assert_clu_relationship}()},
+\code{\link{assert_rate_unit}()},
 \code{\link{assert_set_choice}()},
 \code{\link{assert_style_schema}()},
 \code{\link{assert_x_gte_y}()},

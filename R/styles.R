@@ -176,17 +176,21 @@ assert_style_schema <- function(style_entry){
 #' set_style(
 #'    style_name    = "my_style"
 #'    , style_entry = list(
-#'       prop_digits_round       = 2
-#'       , count_digits_sigfig   = 3
+#'       prop_digits_round       = 1
+#'       , prop_nsmall           = 1
 #'       , count_method          = "sigfig"
+#'       , count_digits_sigfig   = 3
 #'       , count_pad_sigfigs     = TRUE
 #'       , count_nsmall          = 1
 #'       , count_big.mark        = ","
 #'       , count_label_thousands = FALSE
-#'       , prop_nsmall           = 1
+#'       , rate_method           = "sigfig"
+#'       , rate_digits_sigfig    = 3
+#'       , rate_pad_sigfigs      = TRUE
+#'       , rate_nsmall           = 1
 #'       , decimal.mark          = "."
+#'       , neg_mark_mean         = "-"
 #'       , neg_mark_UI           = "-"
-#'       , neg_mark_mean         = "a decrease of"
 #'       , UI_only               = FALSE
 #'       , UI_text               = ""
 #'       , assert_clu_order      = TRUE
