@@ -168,12 +168,13 @@ test_that("backwards compatibility: fround_count works standalone", {
   # Clean slate
   if (is_df_mag_active()) flush_df_mag_state()
 
-  # Test that fround_count can still be called directly (standalone mode)
+  # Test that fround_count_rate can still be called directly (standalone mode)
   # without active state management
-  result <- fround_count(
+  result <- fround_count_rate(
     clu = c(1.5e6, 1.3e6, 1.7e6),
     style_name = "nature",
-    idx = NULL  # NULL idx should trigger standalone mode
+    idx = NULL,  # NULL idx should trigger standalone mode
+    d_type = "count"
   )
 
   expect_length(result, 3)
