@@ -27,7 +27,7 @@ update_df_mag_state(
 [NULL] invisibly
 }
 \description{
-Called by fround_count() when magnitude edge case is detected.
+Called by fround_count_rate() when magnitude edge case is detected.
 Field names match set_magnitude() output: mag, mag_label, denom.
 }
 \keyword{internal}

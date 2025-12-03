@@ -201,7 +201,7 @@ get_df_mag_row <- function(idx, env = get_dict_formats()) {
 
 #' Update df_mag state at specific index
 #'
-#' Called by fround_count() when magnitude edge case is detected.
+#' Called by fround_count_rate() when magnitude edge case is detected.
 #' Field names match set_magnitude() output: mag, mag_label, denom.
 #'
 #' @param idx [int] Integer. The row index (1-based) to update.

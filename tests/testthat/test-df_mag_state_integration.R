@@ -1,5 +1,5 @@
 # Integration tests for df_mag state management
-# Tests the full pipeline from format_journal_clu() through fround_count() to state updates
+# Tests the full pipeline from format_journal_clu() through fround_count_rate() to state updates
 
 # ---- Integration Tests -----------------------------------------------------------------
 

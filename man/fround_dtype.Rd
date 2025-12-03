@@ -34,9 +34,8 @@ Other vector_formats:
 \code{\link{fmt_magnitude}()},
 \code{\link{format_oxford_comma}()},
 \code{\link{fround}()},
-\code{\link{fround_count}()},
+\code{\link{fround_count_rate}()},
 \code{\link{fround_dtype_lancet}()},
-\code{\link{fround_props}()},
-\code{\link{fround_rate}()}
+\code{\link{fround_props}()}
 }
 \concept{vector_formats}

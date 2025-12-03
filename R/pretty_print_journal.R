@@ -166,7 +166,7 @@ format_journal_clu <- function(
       , assert_clu_order = assert_clu_order
    )
 
-   # NOTE: Magnitude edge-case detection moved to fround_count() as single source of truth
+   # NOTE: Magnitude edge-case detection moved to fround_count_rate() as single source of truth
 
    # Where the magic happens
    # - Negative signs are styled internally

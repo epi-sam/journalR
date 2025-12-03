@@ -11,8 +11,8 @@ fround_clu_triplet(clu, d_type, style_name = "nature", idx = NULL)
 \item{clu}{[num] a numeric triplet of three values in central/lower/upper
 order.}
 
-\item{d_type}{[chr c('prop', 'pp', or 'count')] data type - proportion,
-percentage point or count}
+\item{d_type}{[chr c('prop', 'pp', 'count', or 'rate')] data type - proportion,
+percentage point, count, or rate}
 
 \item{style_name}{[chr: default 'nature'] style name - controls rounding and
 formatting.}

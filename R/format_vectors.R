@@ -353,8 +353,10 @@ fround_props <- function(
 #'
 #' @examples
 #' \dontrun{
-#' fround_count_rate(clu = c(12345, 67890, 6.6666e6), style_name = 'nature', idx = 1, d_type = 'count')
-#' fround_count_rate(clu = c(0.0000123, 0.0000098, 0.0000152), style_name = 'nature', idx = 1, d_type = 'rate')
+#' fround_count_rate(clu = c(12345, 67890, 6.6666e6)
+#' , style_name = 'nature', idx = 1, d_type = 'count')
+#' fround_count_rate(clu = c(0.0000123, 0.0000098, 0.0000152)
+#' , style_name = 'nature', idx = 1, d_type = 'rate')
 #' }
 fround_count_rate <- function(
     clu,
@@ -682,23 +684,23 @@ fround_count_rate <- function(
 # ===== END OLD IMPLEMENTATION =====
 
 
-#' Format and round rate-space numbers
-#'
-#' Rates are values < 1 scaled by "per X" denominators (e.g., per 100,000).
-#' Uses identical logic to fround_count() but with rate-specific style parameters.
-#'
-#' @param clu [num] numeric triplet of rates (central, lower, upper)
-#' @param style_name [chr] style name - controls rounding and formatting
-#' @param idx [int] row index when called from format_journal_clu(), NULL for standalone
-#'
-#' @returns [chr] formatted string vector
-#' @family vector_formats
-#' @keywords internal
-#'
-#' @examples
-#' \dontrun{
-#' fround_rate(clu = c(0.0000123, 0.0000098, 0.0000152), style_name = 'nature', idx = 1)
-#' }
+# Format and round rate-space numbers
+#
+# Rates are values < 1 scaled by "per X" denominators (e.g., per 100,000).
+# Uses identical logic to fround_count() but with rate-specific style parameters.
+#
+# @param clu [num] numeric triplet of rates (central, lower, upper)
+# @param style_name [chr] style name - controls rounding and formatting
+# @param idx [int] row index when called from format_journal_clu(), NULL for standalone
+#
+# @returns [chr] formatted string vector
+# @family vector_formats
+# @keywords internal
+#
+# @examples
+# \dontrun{
+# fround_rate(clu = c(0.0000123, 0.0000098, 0.0000152), style_name = 'nature', idx = 1)
+# }
 # ===== OLD IMPLEMENTATION - KEPT FOR REFERENCE =====
 # Commented out: 2025-12-03
 # Reason: Replaced by fround_count_rate() for DRY refactoring
@@ -870,8 +872,8 @@ fround_count_rate <- function(
 #'
 #' @param clu [num] a numeric triplet of three values in central/lower/upper
 #'   order.
-#' @param d_type [chr c('prop', 'pp', or 'count')] data type - proportion,
-#'   percentage point or count
+#' @param d_type [chr c('prop', 'pp', 'count', or 'rate')] data type - proportion,
+#'   percentage point, count, or rate
 #' @param idx [int] row index when called from format_journal_clu(), NULL for standalone
 #' @param style_name [chr: default 'nature'] style name - controls rounding and
 #'   formatting.
