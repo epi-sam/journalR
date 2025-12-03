@@ -216,17 +216,17 @@ set_magnitude_rate <- function(x, mag = NULL, verbose = TRUE) {
    mag_label <- unlist(lapply(mag, function(mag_i) {
       switch_strict(
          mag_i
-         , "per10b"  = " per 10 billion"
-         , "per1b"   = " per 1 billion"
-         , "per100m" = " per 100 million"
-         , "per10m"  = " per 10 million"
-         , "per1m"   = " per 1 million"
-         , "per100k" = " per 100,000"
-         , "per10k"  = " per 10,000"
-         , "per1k"   = " per 1,000"
-         , "per100"  = " per 100"
-         , "per10"   = " per 10"
-         , .empty    = " per 1"
+         , "per10b"  = "per 10 billion"
+         , "per1b"   = "per 1 billion"
+         , "per100m" = "per 100 million"
+         , "per10m"  = "per 10 million"
+         , "per1m"   = "per 1 million"
+         , "per100k" = "per 100,000"
+         , "per10k"  = "per 10,000"
+         , "per1k"   = "per 1,000"
+         , "per100"  = "per 100"
+         , "per10"   = "per 10"
+         , .empty    = "per 1"
       )
    }))
 
