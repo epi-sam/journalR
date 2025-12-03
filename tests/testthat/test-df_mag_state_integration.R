@@ -70,7 +70,7 @@ test_that("magnitude edge case detection works in full pipeline", {
 
   # First, verify the initial magnitude classification before rounding
   # 999,999 should initially be classified as thousands (no magnitude label)
-  initial_mag <- set_magnitude(999999, d_type = "count", label_thousands = FALSE)
+  initial_mag <- set_magnitude(999999, d_type = "count", count_label_thousands = FALSE)
   expect_equal(initial_mag$mag, "")        # No magnitude initially
   expect_equal(initial_mag$mag_label, "") # No label initially
   expect_equal(initial_mag$denom, 1)      # No scaling initially

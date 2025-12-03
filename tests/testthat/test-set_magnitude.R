@@ -46,7 +46,7 @@ test_that("set_magnitude_count validates positive values", {
 test_that("set_magnitude_count respects label_thousands", {
    # Test warning
    expect_warning(
-      result <- set_magnitude_count(1e3, label_thousands = TRUE),
+      result <- set_magnitude_count(1e3, count_label_thousands = TRUE),
       "'thousands' magnitude is not Lancet-valid"
    )
    expect_equal(result$mag, "t")
@@ -126,7 +126,7 @@ test_that("set_magnitude validates d_type", {
 test_that("set_magnitude preserves other parameters", {
    # Test label_thousands is passed through
    expect_warning(
-      result <- set_magnitude(1e3, d_type = "count", label_thousands = TRUE)
+      result <- set_magnitude(1e3, d_type = "count", count_label_thousands = TRUE)
       , regexp = "'thousands' magnitude is not Lancet-valid"
 
    )

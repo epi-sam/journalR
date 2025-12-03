@@ -53,17 +53,26 @@ format_journal_clu <- function(
       , d_type
       , mag        = NULL
       , style_name = "nature"
+      , rate_unit  = NULL
 ) {
 
    d_type <- assert_data_type(d_type)
 
-   style            <- get_style(style_name)
-   neg_mark_mean    <- style[["neg_mark_mean"]]
-   UI_only          <- style[["UI_only"]]
-   UI_text          <- style[["UI_text"]]
-   assert_clu_order <- style[["assert_clu_order"]]
-   label_thousands  <- style[["label_thousands"]]
-   round_5_up       <- style[["round_5_up"]]
+   # Validate rate_unit parameter
+   if (d_type == "rate") {
+      if (is.null(rate_unit)) {
+         stop("rate_unit is required when d_type = 'rate' (e.g., 'cases', 'deaths')", call. = FALSE)
+      }
+      checkmate::assert_string(rate_unit)
+   }
+
+   style                  <- get_style(style_name)
+   neg_mark_mean          <- style[["neg_mark_mean"]]
+   UI_only                <- style[["UI_only"]]
+   UI_text                <- style[["UI_text"]]
+   assert_clu_order       <- style[["assert_clu_order"]]
+   count_label_thousands  <- style[["count_label_thousands"]]
+   round_5_up             <- style[["round_5_up"]]
 
    checkmate::assert_numeric(central, min.len = 1)
    checkmate::assert_numeric(lower)
@@ -112,12 +121,11 @@ format_journal_clu <- function(
    # Magnitude of triplets use raw central value
    # lower and upper inherit central value magnitude scaling
    df_mag  <- set_magnitude(
-      # x                 = clu$central
-      x                 = triplets["central", ]
-      , d_type          = d_type
-      , mag             = mag
-      , label_thousands = label_thousands
-      , verbose         = FALSE
+      x                       = triplets["central", ]
+      , d_type                = d_type
+      , mag                   = mag
+      , count_label_thousands = count_label_thousands
+      , verbose               = FALSE
    )
 
    # === NEW: Store in environment for fround_count to access/modify ===
@@ -163,17 +171,19 @@ format_journal_clu <- function(
          clu          = triplets_neg_processed[, idx]
          , d_type     = d_type
          , style_name = style_name
-         , idx        = idx   # NEW: pass index instead of df_mag[idx, ]
+         , idx        = idx   # pass index instead of df_mag[idx, ]
       )
       # These should be retained, but let's use belt and suspenders
       names(triplet_fmt) <- c("central", "lower", "upper")
       triplet_fmt
    })
 
-   # === NEW: Retrieve final (possibly updated) df_mag for string assembly ===
+   # Retrieve final (possibly updated) df_mag for string assembly
    df_mag <- get_df_mag_state()
 
    d_type_label <- get_data_type_labels(d_type)
+
+   is_rate_type <- (d_type == "rate")
 
    str_vec <- unlist(lapply(seq_along(triplets_fmt), function(i){
       .cen          <- triplets_fmt[[i]]['central']
@@ -183,11 +193,28 @@ format_journal_clu <- function(
       .mag_label    <- df_mag$mag_label[i]
       .low_upp_sep  <- sep_vec[i]
 
-      # Building blocks for final string
-      str <- glue::glue("{.mean_neg_txt}{.cen}{d_type_label} {.mag_label}({UI_text}{.low}{.low_upp_sep}{.upp})")
+      # Define rate-specific components (conditionally populated)
+      if (is_rate_type) {
+         .rate_unit_space <- paste0(" ", rate_unit, " ")  # " deaths " or " cases "
+         .rate_mag_label  <- .mag_label                   # " per 100,000"
+         .count_mag_label <- ""                           # empty for rates
+         .type_label      <- ""                           # empty for rates
+      } else {
+         .rate_unit_space <- ""                           # empty for non-rates
+         .rate_mag_label  <- ""                           # empty for non-rates
+         .count_mag_label <- .mag_label                   # "million " for counts
+         .type_label      <- d_type_label                 # "%" for props
+      }
+
+      # Single glue template handles all types
+      str <- glue::glue(
+         "{.mean_neg_txt}{.cen}{.rate_unit_space}{.type_label} {.count_mag_label}({UI_text}{.low}{.low_upp_sep}{.upp}){.rate_mag_label}"
+      )
 
       if (UI_only) {
-         str <- glue::glue("{UI_text}{.low}{.low_upp_sep}{.upp}{.mag_label}")
+         str <- glue::glue(
+            "{UI_text}{.low}{.low_upp_sep}{.upp}{.rate_unit_space}{.count_mag_label}{.rate_mag_label}"
+         )
       }
 
       return(str)
@@ -248,6 +275,7 @@ format_journal_df <- function(
       , upper_var          = "upper"
       , remove_clu_columns = TRUE
       , mag                = NULL
+      , rate_unit          = NULL
 ){
 
    d_type <- assert_data_type(d_type)
@@ -269,6 +297,7 @@ format_journal_df <- function(
          , d_type     = d_type
          , style_name = style_name
          , mag        = mag
+         , rate_unit  = rate_unit
       )
    )
 
@@ -341,12 +370,12 @@ format_means_df <- function(
          , varname = varname
          , vec     = paste0(
             fmt_magnitude(
-               x                 = df[[varname]]
-               , mag             = NULL
-               , label_thousands = style[["label_thousands"]]
-               , digits          = digits
-               , nsmall          = n_small
-               , d_type          = d_type
+               x                       = df[[varname]]
+               , mag                   = NULL
+               , count_label_thousands = style[["count_label_thousands"]]
+               , digits                = digits
+               , nsmall                = n_small
+               , d_type                = d_type
             )
             , label
          )
@@ -389,6 +418,7 @@ format_lancet_clu <- function(
       , upper
       , d_type
       , mag = NULL
+      , rate_unit = NULL
 ) {
    format_journal_clu(
       central      = central
@@ -397,6 +427,7 @@ format_lancet_clu <- function(
       , d_type     = d_type
       , style_name = "lancet"
       , mag        = mag
+      , rate_unit  = rate_unit
    )
 }
 
@@ -444,6 +475,7 @@ format_lancet_df <- function(
       , upper_var          = "upper"
       , remove_clu_columns = TRUE
       , mag                = NULL
+      , rate_unit          = NULL
 ){
    format_journal_df(
       df                   = df
@@ -455,6 +487,7 @@ format_lancet_df <- function(
       , new_var            = new_var
       , remove_clu_columns = remove_clu_columns
       , mag                = mag
+      , rate_unit          = rate_unit
    )
 }
 
@@ -491,6 +524,7 @@ format_nature_clu <- function(
       , upper
       , d_type
       , mag = NULL
+      , rate_unit = NULL
 ) {
    format_journal_clu(
       central      = central
@@ -499,6 +533,7 @@ format_nature_clu <- function(
       , d_type     = d_type
       , style_name = "nature"
       , mag        = mag
+      , rate_unit  = rate_unit
    )
 }
 
@@ -539,6 +574,7 @@ format_nature_df <- function(
       , upper_var          = "upper"
       , remove_clu_columns = TRUE
       , mag                = NULL
+      , rate_unit          = NULL
 ){
    format_journal_df(
       df                   = df
@@ -550,5 +586,6 @@ format_nature_df <- function(
       , new_var            = new_var
       , remove_clu_columns = remove_clu_columns
       , mag                = mag
+      , rate_unit          = rate_unit
    )
 }

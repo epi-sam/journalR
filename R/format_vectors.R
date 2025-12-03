@@ -181,15 +181,15 @@ fround_count <- function(
 
    style <- get_style(style_name)
 
-   method        <- style[["count_method"]]
-   sigfig        <- style[["count_digits_sigfig"]]
-   nsmall        <- style[["count_nsmall"]]
-   big.mark_base <- style[["count_big.mark"]]
-   force_trail   <- style[["count_pad_sigfigs"]]
-   decimal.mark  <- style[["decimal.mark"]]
-   round_5_up    <- style[["round_5_up"]]
-   is_lancet     <- style[["is_lancet"]]
-   label_thousands <- style[["label_thousands"]]
+   method                <- style[["count_method"]]
+   sigfig                <- style[["count_digits_sigfig"]]
+   nsmall                <- style[["count_nsmall"]]
+   big.mark_base         <- style[["count_big.mark"]]
+   force_trail           <- style[["count_pad_sigfigs"]]
+   decimal.mark          <- style[["decimal.mark"]]
+   round_5_up            <- style[["round_5_up"]]
+   is_lancet             <- style[["is_lancet"]]
+   count_label_thousands <- style[["count_label_thousands"]]
 
    # === NEW: Magnitude edge-case detection (SINGLE SOURCE OF TRUTH) ===
    # Check if rounding the central value pushes it across a magnitude boundary
@@ -213,20 +213,20 @@ fround_count <- function(
 
    # Recalculate magnitude based on rounded value
    df_mag_new <- set_magnitude(
-      x = central_at_original_scale,
-      d_type = "count",
-      mag = NULL,
-      label_thousands = label_thousands,
-      verbose = FALSE
+      x                     = central_at_original_scale,
+      d_type                = "count",
+      mag                   = NULL,
+      count_label_thousands = count_label_thousands,
+      verbose               = FALSE
    )
 
    # === NEW: Update state if magnitude changed ===
    if (is_df_mag_active() && !identical(df_mag$mag, df_mag_new$mag)) {
       update_df_mag_state(
-         idx = idx,
-         mag = df_mag_new$mag,
+         idx       = idx,
+         mag       = df_mag_new$mag,
          mag_label = df_mag_new$mag_label,
-         denom = df_mag_new$denom
+         denom     = df_mag_new$denom
       )
       # Use the new magnitude for formatting
       df_mag <- df_mag_new
@@ -361,6 +361,178 @@ fround_count <- function(
 }
 
 
+#' Format and round rate-space numbers
+#'
+#' Rates are values < 1 scaled by "per X" denominators (e.g., per 100,000).
+#' Uses identical logic to fround_count() but with rate-specific style parameters.
+#'
+#' @param clu [num] numeric triplet of rates (central, lower, upper)
+#' @param style_name [chr] style name - controls rounding and formatting
+#' @param idx [int] row index when called from format_journal_clu(), NULL for standalone
+#'
+#' @returns [chr] formatted string vector
+#' @family vector_formats
+#' @keywords internal
+#'
+#' @examples
+#' \\dontrun{
+#' fround_rate(clu = c(0.0000123, 0.0000098, 0.0000152), style_name = 'nature', idx = 1)
+#' }
+fround_rate <- function(
+      clu,
+      style_name,
+      idx = NULL
+) {
+   # Rates should be > 0 (validated in set_magnitude_rate)
+   if(any(clu <= 0))
+      stop("Rates <= 0 not supported: ", toString(clu), call. = FALSE)
+
+   # Get df_mag from state or compute standalone
+   if (is_df_mag_active()) {
+      if (is.null(idx)) {
+         stop("idx required when df_mag state is active", call. = FALSE)
+      }
+      df_mag <- get_df_mag_row(idx)
+   } else {
+      # Standalone mode: compute magnitude from central value
+      df_mag <- set_magnitude(clu[1], d_type = "rate")
+   }
+
+   checkmate::assert_data_frame(df_mag, nrows = 1)
+
+   style <- get_style(style_name)
+
+   # Use rate-specific style parameters
+   method        <- style[["rate_method"]]
+   sigfig        <- style[["rate_digits_sigfig"]]
+   nsmall        <- style[["rate_nsmall"]]
+   force_trail   <- style[["rate_pad_sigfigs"]]
+
+   # Shared parameters
+   big.mark_base <- style[["count_big.mark"]]  # Reuse count big.mark for rates
+   decimal.mark  <- style[["decimal.mark"]]
+   round_5_up    <- style[["round_5_up"]]
+   is_lancet     <- style[["is_lancet"]]
+
+   # === Magnitude edge-case detection ===
+   central_val <- clu[1]
+   if (round_5_up) {
+      central_val <- central_val + 1e-9
+   }
+   central_scaled <- central_val / df_mag$denom
+
+   central_rounded <- switch_strict(
+      method,
+      "sigfig"  = signif(central_scaled, sigfig),
+      "decimal" = round(central_scaled, digits = nsmall),
+      "int"     = round(central_scaled, digits = 0)
+   )
+
+   # Rescale to original units to check magnitude
+   central_at_original_scale <- central_rounded * df_mag$denom
+
+   # Recalculate magnitude based on rounded value
+   df_mag_new <- set_magnitude(
+      x       = central_at_original_scale,
+      d_type  = "rate",
+      mag     = NULL,
+      verbose = FALSE
+   )
+
+   # Update state if magnitude changed
+   if (is_df_mag_active() && !identical(df_mag$mag, df_mag_new$mag)) {
+      update_df_mag_state(
+         idx       = idx,
+         mag       = df_mag_new$mag,
+         mag_label = df_mag_new$mag_label,
+         denom     = df_mag_new$denom
+      )
+      df_mag <- df_mag_new
+   }
+
+   # Format each value in triplet (same logic as counts)
+   format_one_rate <- function(x) {
+      if (round_5_up) {
+         x <- x + 1e-9
+      }
+
+      # Scale by magnitude denom (same division as counts!)
+      x_sc <- x / df_mag$denom
+
+      # Rates don't use Lancet big.mark rules (those are count-specific)
+      big.mark <- big.mark_base
+
+      x_chr <- switch_strict(
+         method,
+
+         "sigfig" = {
+            x_fmt <- signif(x_sc, sigfig)
+
+            x_chr <- format(
+               x_fmt,
+               scientific   = FALSE,
+               decimal.mark = decimal.mark,
+               big.mark     = big.mark
+            )
+
+            # Zero-padding logic (same as counts)
+            if (force_trail) {
+               if (grepl(decimal.mark, x_chr, fixed = TRUE)) {
+                  parts <- strsplit(x_chr, decimal.mark, fixed = TRUE)[[1]]
+                  int_part <- parts[1]
+                  dec_part <- parts[2]
+               } else {
+                  int_part <- x_chr
+                  dec_part <- ""
+               }
+
+               numeric_clean <- gsub("[^0-9]", "", paste0(int_part, dec_part))
+               numeric_clean <- sub("^0+", "", numeric_clean)
+               current_sf <- nchar(numeric_clean)
+               needed <- max(sigfig - current_sf, 0)
+
+               if (needed > 0) {
+                  if (!grepl(decimal.mark, x_chr, fixed = TRUE)) {
+                     x_chr <- paste0(x_chr, decimal.mark)
+                  }
+                  x_chr <- paste0(x_chr, strrep("0", needed))
+               }
+            }
+
+            return(trimws(x_chr))
+         },
+
+         "decimal" = {
+            x_fmt <- round(x_sc, digits = nsmall)
+            x_chr <- format(
+               x_fmt,
+               nsmall       = nsmall,
+               decimal.mark = decimal.mark,
+               big.mark     = big.mark,
+               scientific   = FALSE
+            )
+            trimws(x_chr)
+         },
+
+         "int" = {
+            x_fmt <- round(x_sc, digits = 0)
+            x_chr <- format(
+               x_fmt,
+               decimal.mark = decimal.mark,
+               big.mark     = big.mark,
+               scientific   = FALSE
+            )
+            trimws(x_chr)
+         }
+      )
+
+      trimws(x_chr)
+   }
+
+   unname(vapply(clu, format_one_rate, FUN.VALUE = character(1)))
+}
+
+
 
 #' Format and round a single central/lower/upper value set by magnitude without
 #' units.
@@ -416,6 +588,7 @@ fround_clu_triplet <- function(
       , "prop"  = fround_props(clu = clu, style_name = style_name, idx = idx)
       , "pp"    = fround_props(clu = clu, style_name = style_name, idx = idx)
       , "count" = fround_count(clu = clu, style_name = style_name, idx = idx)
+      , "rate"  = fround_rate(clu = clu, style_name = style_name, idx = idx)
    )
 
    names(clu_fmt) <- names(clu)
@@ -551,7 +724,7 @@ fround_dtype <- function(
 #'   - For counts: "t" (thousand), "m" (million), "b" (billion)
 #'   - For rates: "per10", "per100", "per1k", ..., "per10b"
 #'   - For props/pp: "as-is" (no scaling, use values as provided)
-#' @param label_thousands [lgl: default FALSE] allow thousands magnitude?  Not
+#' @param count_label_thousands [lgl: default FALSE] allow thousands magnitude?  Not
 #'   Lancet-valid. Passed to `set_magnitude()`
 #' @param decimal.mark [chr: default "."] decimal mark passed to `format()`
 #'
@@ -565,25 +738,25 @@ fround_dtype <- function(
 fmt_magnitude <- function(
       x
       , d_type
-      , digits          = 1
-      , nsmall          = 1
-      , decimal.mark    = "."
-      , mag             = NULL
-      , label_thousands = FALSE
+      , digits                = 1
+      , nsmall                = 1
+      , decimal.mark          = "."
+      , mag                   = NULL
+      , count_label_thousands = FALSE
 ){
 
    checkmate::assert_numeric(x)
    checkmate::assert_vector(x)
-   checkmate::assert_logical(label_thousands, len = 1)
+   checkmate::assert_logical(count_label_thousands, len = 1)
    checkmate::assert_integerish(digits, len = 1, lower = 0)
    checkmate::assert_integerish(nsmall, len = 1, lower = 0)
 
    df_mag <- set_magnitude(
       x
-      , d_type          = d_type
-      , mag             = mag
-      , label_thousands = label_thousands
-      , verbose         = FALSE
+      , d_type                = d_type
+      , mag                   = mag
+      , count_label_thousands = count_label_thousands
+      , verbose               = FALSE
    )
 
    # hack for floating point rounding issues
@@ -607,6 +780,7 @@ fmt_magnitude <- function(
 #' Format and round with data-type suffix
 #'
 #' Lancet-specific wrapper for `fround_dtype()`, using mid-dot as decimal mark.
+#' Retaining for legacy purposes (no Nature equivalent)
 #'
 #' @param x [num] numeric value
 #' @param d_type [chr c('prop', 'pp', or 'count')] data type - proportion, percentage point or count

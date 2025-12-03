@@ -59,7 +59,7 @@ set_magnitude_prop <- function(x, mag = NULL, verbose = TRUE) {
 #'
 #' @param x [num] numeric vector
 #' @param mag [chr: default NULL] magnitude override: NULL (auto), "t", "m", "b"
-#' @param label_thousands [lgl: default FALSE] allow "thousands" magnitude (not Lancet-valid)
+#' @param count_label_thousands [lgl: default FALSE] allow "thousands" magnitude (not Lancet-valid)
 #' @param verbose [lgl: default TRUE] verbose warnings
 #'
 #' @return [data.frame] with columns: mag, mag_label, denom
@@ -70,11 +70,11 @@ set_magnitude_prop <- function(x, mag = NULL, verbose = TRUE) {
 #' \dontrun{
 #' set_magnitude_count(c(1e3, 1e6, 1e9))
 #' }
-set_magnitude_count <- function(x, mag = NULL, label_thousands = FALSE, verbose = TRUE) {
+set_magnitude_count <- function(x, mag = NULL, count_label_thousands = FALSE, verbose = TRUE) {
    checkmate::assert_numeric(x)
    checkmate::assert_vector(x)
    checkmate::assert_character(mag, len = 1, null.ok = TRUE)
-   checkmate::assert_logical(label_thousands, len = 1)
+   checkmate::assert_logical(count_label_thousands, len = 1)
    checkmate::assert_logical(verbose, len = 1)
 
    # Assert count values are greater than 0
@@ -83,16 +83,16 @@ set_magnitude_count <- function(x, mag = NULL, label_thousands = FALSE, verbose 
       stop("Count values must be greater than 0. Found non-positive values, e.g.: ", .ex[1], call. = FALSE)
    }
 
-   if (label_thousands && verbose) {
+   if (count_label_thousands && verbose) {
       warning("'thousands' magnitude is not Lancet-valid", call. = FALSE)
    }
 
    # Auto-detect or user override
    if (is.null(mag)) {
       mag <- unlist(lapply(x, function(x_i) {
-         if      (abs(x_i) >= 1e9)                    "b"
-         else if (abs(x_i) >= 1e6)                    "m"
-         else if (abs(x_i) >= 1e3 && label_thousands) "t"
+         if      (abs(x_i) >= 1e9)                          "b"
+         else if (abs(x_i) >= 1e6)                          "m"
+         else if (abs(x_i) >= 1e3 && count_label_thousands) "t"
          else ""
       }))
    } else {
@@ -271,7 +271,7 @@ set_magnitude_rate <- function(x, mag = NULL, verbose = TRUE) {
 #'   - For counts: "t", "m", "b"
 #'   - For rates: "per10", "per100", "per1k", ..., "per10b"
 #'   - For props/pp: "as-is" (no scaling, use values as provided)
-#' @param label_thousands [lgl: default FALSE] allow "thousands" magnitude for counts?
+#' @param count_label_thousands [lgl: default FALSE] allow "thousands" magnitude for counts?
 #'   Not Lancet-valid.
 #' @param verbose [lgl: default TRUE] show warnings?
 #'
@@ -294,15 +294,15 @@ set_magnitude_rate <- function(x, mag = NULL, verbose = TRUE) {
 set_magnitude <- function(
       x,
       d_type,
-      mag = NULL,
-      label_thousands = FALSE,
-      verbose = TRUE
+      mag                   = NULL,
+      count_label_thousands = FALSE,
+      verbose               = TRUE
 ) {
    checkmate::assert_vector(x)
    checkmate::assert_numeric(x, min.len = 1, any.missing = FALSE)
    checkmate::assert_string(d_type, na.ok = FALSE)
    checkmate::assert_character(mag, len = 1, null.ok = TRUE)
-   checkmate::assert_logical(label_thousands, len = 1)
+   checkmate::assert_logical(count_label_thousands, len = 1)
    checkmate::assert_logical(verbose, len = 1)
 
    # Validate and normalize d_type
@@ -327,10 +327,10 @@ set_magnitude <- function(
          , verbose = verbose
       )
       , "count" = set_magnitude_count(
-         x                 = x
-         , mag             = mag
-         , label_thousands = label_thousands
-         , verbose         = verbose
+         x                       = x
+         , mag                   = mag
+         , count_label_thousands = count_label_thousands
+         , verbose               = verbose
       )
    )
 

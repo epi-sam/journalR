@@ -240,7 +240,7 @@ test_that("edge case rounding works with and without thousands label", {
    )
 
 
-   new_style("lab_thou", label_thousands = TRUE)
+   new_style("lab_thou", count_label_thousands = TRUE)
    expect_equal(
       DF |> format_journal_df(d_type = "count", style_name = "lab_thou") # |> dput()
       , structure(list(
@@ -288,7 +288,7 @@ test_that("edge case rounding works with and without thousands label", {
       class = "data.frame")
    )
 
-   new_style("count_int_thou", count_method = 'int', count_nsmall = 2, label_thousands = TRUE)
+   new_style("count_int_thou", count_method = 'int', count_nsmall = 2, count_label_thousands = TRUE)
    expect_equal(
       DF |> format_journal_df(d_type = "count", style_name = "count_int_thou") # |> dput()
       , structure(list(
