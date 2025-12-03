@@ -1,5 +1,7 @@
 # journalR 0.4.0
 
+ added rate-space metric/d_type
+
 # journalR 0.3.0
 
 Internal state management improvements.  No changes to user interface.
