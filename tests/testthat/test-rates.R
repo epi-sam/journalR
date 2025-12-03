@@ -292,7 +292,7 @@ test_that("fround_rate handles different magnitudes correctly", {
       )
 
       # Check that formatting works and produces numeric strings
-      expect_true(all(grepl("^[0-9.]", result)))
+      expect_true(all(grepl("^[0-9.]", result$formatted)))
    }
 })
 
@@ -309,9 +309,9 @@ test_that("fround_rate respects rate-specific style parameters", {
    result_sigfig <- fround_clu_triplet(test_val, "rate", "rate_sigfig")
 
    # Results should be different based on method
-   expect_false(identical(result_decimal, result_int))
-   expect_false(identical(result_decimal, result_sigfig))
-   expect_false(identical(result_int, result_sigfig))
+   expect_false(identical(result_decimal$formatted, result_int$formatted))
+   expect_false(identical(result_decimal$formatted, result_sigfig$formatted))
+   expect_false(identical(result_int$formatted, result_sigfig$formatted))
 })
 
 # ---- Assertion Function Tests -----------------------------------------------
@@ -408,11 +408,11 @@ test_that("custom styles work with rates", {
    )
 
    result <- format_journal_clu(
-      central = 0.0000123,
-      lower = 0.0000098,
-      upper = 0.0000152,
-      d_type = "rate",
-      rate_unit = "events",
+      central    = 0.0000123,
+      lower      = 0.0000098,
+      upper      = 0.0000152,
+      d_type     = "rate",
+      rate_unit  = "events",
       style_name = "custom_rate"
    )
 

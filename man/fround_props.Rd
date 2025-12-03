@@ -4,18 +4,17 @@
 \alias{fround_props}
 \title{Format and round proportion-ish number}
 \usage{
-fround_props(clu, style_name, idx = NULL)
+fround_props(clu, style_name)
 }
 \arguments{
 \item{clu}{[num] numeric triplet of proportions (central, lower, upper)}
 
-\item{style_name}{[chr] style name - controls rounding and
-formatting.}
-
-\item{idx}{[int] row index when called from format_journal_clu(), NULL for standalone}
+\item{style_name}{[chr] style name - controls rounding and formatting}
 }
 \value{
-[chr] formatted string vector
+[list] with elements:
+  - formatted: chr[3] - formatted central, lower, upper values
+  - df_mag_row: data.frame[1,] - magnitude info (mag, mag_label, denom)
 }
 \description{
 non-exported helper
@@ -25,7 +24,9 @@ non-exported helper
 }
 \examples{
 \dontrun{
-fround_props(c(0.123, 0.100, 0.150), 'nature')
+result <- fround_props(c(0.123, 0.100, 0.150), 'nature')
+result$formatted  # chr[3]
+result$df_mag_row # df[1,]
 }
 }
 \seealso{

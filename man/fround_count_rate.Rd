@@ -4,33 +4,36 @@
 \alias{fround_count_rate}
 \title{Format and round count or rate numbers}
 \usage{
-fround_count_rate(clu, style_name, idx = NULL, d_type)
+fround_count_rate(clu, style_name, d_type)
 }
 \arguments{
 \item{clu}{[num] numeric triplet of counts/rates (central, lower, upper)}
 
 \item{style_name}{[chr] style name - controls rounding and formatting}
 
-\item{idx}{[int] row index when called from format_journal_clu(), NULL for standalone}
-
 \item{d_type}{[chr] data type: "count" or "rate"}
 }
 \value{
-[chr] formatted string vector
+[list] with elements:
+  - formatted: chr[3] - formatted central, lower, upper values
+  - df_mag_row: data.frame[1,] - magnitude info (mag, mag_label, denom)
 }
 \description{
 Unified formatting for counts and rates with magnitude scaling.
-Handles negatives, Lancet-specific rules, and magnitude crossovers.
+Computes magnitude based on trial-rounded central value.
 }
 \details{
 non-exported helper
 }
 \examples{
 \dontrun{
-fround_count_rate(clu = c(12345, 67890, 6.6666e6)
-, style_name = 'nature', idx = 1, d_type = 'count')
-fround_count_rate(clu = c(0.0000123, 0.0000098, 0.0000152)
-, style_name = 'nature', idx = 1, d_type = 'rate')
+result <- fround_count_rate(
+  clu = c(12345, 67890, 6.6666e6),
+  style_name = 'nature',
+  d_type = 'count'
+)
+result$formatted  # chr[3]
+result$df_mag_row # df[1,]
 }
 }
 \seealso{

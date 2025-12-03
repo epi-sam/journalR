@@ -26,36 +26,24 @@ test_that("format_mean_df works", {
 # Sprinkle in some default Nature styling as well
 
 test_that("fround_clu_triplet works", {
-   expect_equal(
-      fround_clu_triplet(style_name = 'lancet', clu = c(central = 0.2, lower = 0.1, upper = 0.3), d_type = "prop")
-      , c(central = "20·0", lower = "10·0", upper = "30·0")
-   )
-   expect_equal(
-      fround_clu_triplet(style_name = 'lancet', clu = c(central = -0.02, lower = -0.1, upper = 0.3), d_type = "pp")
-      , c(central = "–2·0", lower = "–10·0", upper = "30·0")
-   )
-   expect_equal(
-      fround_clu_triplet(style_name = 'lancet', clu = c(central = 9.5e6, lower = 8.9e6, upper = 101e6), d_type = "count")
-      , c(central = "9·50", lower = "8·90", upper = "101")
-   )
-   expect_equal(
-      fround_clu_triplet(style_name = 'lancet', clu = c(central = 95e6, lower = 94e6, upper = 97e6), d_type = "count")
-      , c(central = "95·0", lower = "94·0", upper = "97·0")
-   )
+   result1 <- fround_clu_triplet(style_name = 'lancet', clu = c(central = 0.2, lower = 0.1, upper = 0.3), d_type = "prop")
+   expect_type(result1, "list")
+   expect_named(result1, c("formatted", "df_mag_row"))
+   expect_equal(result1$formatted, c(central = "20·0", lower = "10·0", upper = "30·0"))
+   result2 <- fround_clu_triplet(style_name = 'lancet', clu = c(central = -0.02, lower = -0.1, upper = 0.3), d_type = "pp")
+   expect_equal(result2$formatted, c(central = "–2·0", lower = "–10·0", upper = "30·0"))
+   result3 <- fround_clu_triplet(style_name = 'lancet', clu = c(central = 9.5e6, lower = 8.9e6, upper = 101e6), d_type = "count")
+   expect_equal(result3$formatted, c(central = "9·50", lower = "8·90", upper = "101"))
+   result4 <- fround_clu_triplet(style_name = 'lancet', clu = c(central = 95e6, lower = 94e6, upper = 97e6), d_type = "count")
+   expect_equal(result4$formatted, c(central = "95·0", lower = "94·0", upper = "97·0"))
    # trickier cases - need sig figs even for small numbers
-   expect_equal(
-      fround_clu_triplet(style_name = 'lancet', clu = c(central = 1, lower = 0.2, upper = 2), d_type = "count")
-      , c(central = "1·00", lower = "0·200", upper = "2·00")
-   )
-   expect_equal(
-      fround_clu_triplet(style_name = 'lancet', clu = c(central = 10.5, lower = 0.2, upper = 20.3), d_type = "count")
-      , c(central = "10·5", lower = "0·200", upper = "20·3")
-   )
+   result5 <- fround_clu_triplet(style_name = 'lancet', clu = c(central = 1, lower = 0.2, upper = 2), d_type = "count")
+   expect_equal(result5$formatted, c(central = "1·00", lower = "0·200", upper = "2·00"))
+   result6 <- fround_clu_triplet(style_name = 'lancet', clu = c(central = 10.5, lower = 0.2, upper = 20.3), d_type = "count")
+   expect_equal(result6$formatted, c(central = "10·5", lower = "0·200", upper = "20·3"))
    # rounding edge case
-   expect_equal(
-      fround_clu_triplet(style_name = 'lancet', clu = c(central = 9995, lower = 9990, upper = 10100), d_type = 'count')
-      , c(central = "10 000", lower = "9990", upper = "10 100")
-   )
+   result7 <- fround_clu_triplet(style_name = 'lancet', clu = c(central = 9995, lower = 9990, upper = 10100), d_type = 'count')
+   expect_equal(result7$formatted, c(central = "10 000", lower = "9990", upper = "10 100"))
 })
 
 
@@ -308,14 +296,11 @@ test_that("edge case rounding works with and without thousands label", {
 # ---- Rate Integration Tests ------------------------------------------------
 
 test_that("fround_clu_triplet works with rates", {
-   expect_equal(
-      fround_clu_triplet(style_name = 'nature', clu = c(central = 0.0000123, lower = 0.0000098, upper = 0.0000152), d_type = "rate"),
-      c(central = "12.3", lower = "9.80", upper = "15.2")
-   )
-   expect_equal(
-      fround_clu_triplet(style_name = 'lancet', clu = c(central = 0.0000123, lower = 0.0000098, upper = 0.0000152), d_type = "rate"),
-      c(central = "12·3", lower = "9·80", upper = "15·2")
-   )
+   result1 <- fround_clu_triplet(style_name = 'nature', clu = c(central = 0.0000123, lower = 0.0000098, upper = 0.0000152), d_type = "rate")
+   expect_equal(result1$formatted, c(central = "12.3", lower = "9.80", upper = "15.2"))
+   
+   result2 <- fround_clu_triplet(style_name = 'lancet', clu = c(central = 0.0000123, lower = 0.0000098, upper = 0.0000152), d_type = "rate")
+   expect_equal(result2$formatted, c(central = "12·3", lower = "9·80", upper = "15·2"))
 })
 
 test_that("format_journal_clu works with rates", {

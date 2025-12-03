@@ -12,7 +12,6 @@ format_lancet_df(
   lower_var = "lower",
   upper_var = "upper",
   remove_clu_columns = TRUE,
-  mag = NULL,
   rate_unit = NULL
 )
 }
@@ -33,11 +32,6 @@ percentage point, count, or rate}
 
 \item{remove_clu_columns}{[lgl: default TRUE] remove central, lower, upper
 columns after formatting?}
-
-\item{mag}{[chr: default NULL] magnitude override (NULL = auto-detect)
-- For counts: "t" (thousand), "m" (million), "b" (billion)
-- For rates: "per10", "per100", "per1k", ..., "per10b"
-- For props/pp: "as-is" (no scaling, use values as provided)}
 
 \item{rate_unit}{[chr: default NULL] rate unit label (required when d_type = 'rate')}
 }

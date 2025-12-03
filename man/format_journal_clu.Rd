@@ -9,7 +9,6 @@ format_journal_clu(
   lower,
   upper,
   d_type,
-  mag = NULL,
   style_name = "nature",
   rate_unit = NULL
 )
@@ -23,11 +22,6 @@ format_journal_clu(
 
 \item{d_type}{[chr c(prop, pp, count, rate)] data type - proportion,
 percentage point, count, or rate}
-
-\item{mag}{[chr: default NULL] magnitude override (NULL = auto-detect)
-- For counts: "t" (thousand), "m" (million), "b" (billion)
-- For rates: "per10", "per100", "per1k", ..., "per10b"
-- For props/pp: "as-is" (no scaling, use values as provided)}
 
 \item{style_name}{[chr: default 'nature'] style name - controls rounding and
 formatting.}
@@ -53,12 +47,6 @@ Transform c(central = 0.994, lower = 0.984, upper = 0.998) to "99.4%
 
 Accounts for negative values, and UIs that cross zero.  Checks if central,
 lower, upper values are in the correct order.
-}
-\note{
-This function uses package-level state for magnitude tracking. Thread
-  safety is handled automatically when data.table is loaded, but avoid
-  calling from other parallel contexts (e.g., `parallel::mclapply`,
-  `future`). Use `format_journal_df()` for standard usage.
 }
 \examples{
 format_journal_clu(

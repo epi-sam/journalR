@@ -88,104 +88,83 @@ process_clu_triplet_negatives <- function(
 
 }
 
-#' Get or compute single-row df_mag based on state
+#' Validate fround helper return structure
+#'
+#' Ensures fround_props() and fround_count_rate() return the expected structure:
+#' list(formatted = chr[3], df_mag_row = data.frame[1,])
 #'
 #' non-exported helper
 #'
-#' @param clu [num] numeric triplet (central, lower, upper)
-#' @param d_type [chr] data type: "count" or "rate"
-#' @param idx [int] row index when called from format_journal_clu(), NULL for standalone
+#' @param result [list] Return value from fround_props() or fround_count_rate()
+#' @param context [chr] Function name for error message (e.g., "fround_props")
 #'
-#' @returns [data.frame] single-row df_mag with columns: mag, mag_label, denom
+#' @return [NULL] invisibly (stops on validation failure)
+#' @family assertions
 #' @keywords internal
-get_or_compute_df_mag_row <- function(clu, d_type, idx) {
+assert_fround_return_schema <- function(result, context = "fround helper") {
 
-  if (is_df_mag_active()) {
-    if (is.null(idx)) {
-      stop("idx required when df_mag state is active", call. = FALSE)
-    }
-    df_mag <- get_df_mag_row(idx)
-  } else {
-    # Standalone mode: compute magnitude from central value (clu[1])
-    df_mag <- set_magnitude(clu[1], d_type = d_type)
-  }
-
-  checkmate::assert_data_frame(df_mag, nrows = 1)
-
-  return(df_mag)
-}
-
-#' Handle magnitude crossover after rounding
-#'
-#' Checks if rounding pushes the central value across a magnitude boundary
-#' (e.g., 999,999 -> 1,000,000 should become "1.00 million" not "1,000,000")
-#'
-#' non-exported helper
-#'
-#' @param central_val [num] the central value (clu[1])
-#' @param df_mag [data.frame] current magnitude info
-#' @param method [chr] rounding method: "sigfig", "decimal", or "int"
-#' @param sigfig [int] significant figures (used if method = "sigfig")
-#' @param nsmall [int] decimal places (used if method = "decimal")
-#' @param round_5_up [lgl] whether to add epsilon before rounding
-#' @param d_type [chr] data type: "count" or "rate"
-#' @param idx [int] row index for state updates, NULL for standalone
-#' @param count_label_thousands [lgl] allow thousands magnitude? (counts only)
-#'
-#' @returns [data.frame] potentially updated df_mag
-#' @keywords internal
-handle_rounding_magnitude_crossover <- function(
-    central_val,
-    df_mag,
-    method,
-    sigfig,
-    nsmall,
-    round_5_up,
-    d_type,
-    idx,
-    count_label_thousands = FALSE
-) {
-
-  # Apply round-5-up rule if needed
-  if (round_5_up) {
-    central_val <- central_val + 1e-9
-  }
-
-  # Scale by current magnitude
-  central_scaled <- central_val / df_mag$denom
-
-  # Round according to method
-  central_rounded <- switch_strict(
-    method,
-    "sigfig"  = signif(central_scaled, sigfig),
-    "decimal" = round(central_scaled, digits = nsmall),
-    "int"     = round(central_scaled, digits = 0)
-  )
-
-  # Rescale to original units to check magnitude
-  central_at_original_scale <- central_rounded * df_mag$denom
-
-  # Recalculate magnitude based on rounded value
-  df_mag_new <- set_magnitude(
-    x                     = central_at_original_scale,
-    d_type                = d_type,
-    mag                   = NULL,
-    count_label_thousands = count_label_thousands,
-    verbose               = FALSE
-  )
-
-  # Update state if magnitude changed
-  if (is_df_mag_active() && !identical(df_mag$mag, df_mag_new$mag)) {
-    update_df_mag_state(
-      idx       = idx,
-      mag       = df_mag_new$mag,
-      mag_label = df_mag_new$mag_label,
-      denom     = df_mag_new$denom
+  # Check it's a list
+  if (!is.list(result)) {
+    stop(
+      sprintf("%s must return a list. Got: %s", context, class(result)[1]),
+      call. = FALSE
     )
-    df_mag <- df_mag_new
   }
 
-  return(df_mag)
+  # Check required names
+  required_names <- c("formatted", "df_mag_row")
+  if (!all(required_names %in% names(result))) {
+    stop(
+      sprintf(
+        "%s must return list with names: %s. Got: %s",
+        context,
+        toString(required_names),
+        toString(names(result))
+      ),
+      call. = FALSE
+    )
+  }
+
+  # Check formatted is chr[3]
+  if (!is.character(result$formatted) || length(result$formatted) != 3) {
+    stop(
+      sprintf(
+        "%s$formatted must be character vector of length 3. Got: %s[%d]",
+        context,
+        class(result$formatted)[1],
+        length(result$formatted)
+      ),
+      call. = FALSE
+    )
+  }
+
+  # Check df_mag_row is data.frame[1,] with correct columns
+  if (!is.data.frame(result$df_mag_row) || nrow(result$df_mag_row) != 1) {
+    stop(
+      sprintf(
+        "%s$df_mag_row must be single-row data.frame. Got: %s with %d rows",
+        context,
+        class(result$df_mag_row)[1],
+        nrow(result$df_mag_row)
+      ),
+      call. = FALSE
+    )
+  }
+
+  required_cols <- c("mag", "mag_label", "denom")
+  if (!all(required_cols %in% names(result$df_mag_row))) {
+    stop(
+      sprintf(
+        "%s$df_mag_row must have columns: %s. Got: %s",
+        context,
+        toString(required_cols),
+        toString(names(result$df_mag_row))
+      ),
+      call. = FALSE
+    )
+  }
+
+  invisible(NULL)
 }
 
 #' Apply zero-padding to maintain significant figures display
@@ -290,35 +269,24 @@ format_int <- function(x_sc, decimal.mark, big.mark) {
 #' "well that was easy, how hard could counts be?"
 #'
 #' @param clu [num] numeric triplet of proportions (central, lower, upper)
-#' @param style_name [chr] style name - controls rounding and
-#'   formatting.
-#' @param idx [int] row index when called from format_journal_clu(), NULL for standalone
+#' @param style_name [chr] style name - controls rounding and formatting
 #'
-#' @returns [chr] formatted string vector
+#' @returns [list] with elements:
+#'   - formatted: chr[3] - formatted central, lower, upper values
+#'   - df_mag_row: data.frame[1,] - magnitude info (mag, mag_label, denom)
 #' @family vector_formats
 #' @keywords internal
 #'
 #' @examples
 #' \dontrun{
-#' fround_props(c(0.123, 0.100, 0.150), 'nature')
+#' result <- fround_props(c(0.123, 0.100, 0.150), 'nature')
+#' result$formatted  # chr[3]
+#' result$df_mag_row # df[1,]
 #' }
-fround_props <- function(
-      clu
-      , style_name
-      , idx = NULL
-){
+fround_props <- function(clu, style_name) {
 
-   # === Get df_mag from state or compute standalone ===
-   if (is_df_mag_active()) {
-      if (is.null(idx)) {
-         stop("idx required when df_mag state is active", call. = FALSE)
-      }
-      df_mag <- get_df_mag_row(idx)
-   } else {
-      # Standalone mode: compute magnitude from central value
-      df_mag <- set_magnitude(clu[1], d_type = "prop")  # clu[1] is central
-   }
-
+   # Compute magnitude from central value
+   df_mag <- set_magnitude(clu[1], d_type = "prop")
    checkmate::assert_data_frame(df_mag, nrows = 1)
 
    style <- get_style(style_name)
@@ -327,43 +295,50 @@ fround_props <- function(
       clu <- clu + 1e-9
    }
 
-   # Use denominator from df_mag instead of hard-coded * 100
+   # Use denominator from df_mag
    clu <- clu / df_mag$denom
 
-   round(x = clu, digits = style$prop_digits_round) |>
+   formatted <- round(x = clu, digits = style$prop_digits_round) |>
       format(nsmall = style$prop_nsmall, decimal.mark = style$decimal.mark) |>
       trimws()
+
+   # Return both formatted values and magnitude info
+   result <- list(
+      formatted   = formatted,
+      df_mag_row  = df_mag
+   )
+
+   return(result)
 }
 
 #' Format and round count or rate numbers
 #'
 #' Unified formatting for counts and rates with magnitude scaling.
-#' Handles negatives, Lancet-specific rules, and magnitude crossovers.
+#' Computes magnitude based on trial-rounded central value.
 #'
 #' non-exported helper
 #'
 #' @param clu [num] numeric triplet of counts/rates (central, lower, upper)
 #' @param style_name [chr] style name - controls rounding and formatting
-#' @param idx [int] row index when called from format_journal_clu(), NULL for standalone
 #' @param d_type [chr] data type: "count" or "rate"
 #'
-#' @returns [chr] formatted string vector
+#' @returns [list] with elements:
+#'   - formatted: chr[3] - formatted central, lower, upper values
+#'   - df_mag_row: data.frame[1,] - magnitude info (mag, mag_label, denom)
 #' @family vector_formats
 #' @keywords internal
 #'
 #' @examples
 #' \dontrun{
-#' fround_count_rate(clu = c(12345, 67890, 6.6666e6)
-#' , style_name = 'nature', idx = 1, d_type = 'count')
-#' fround_count_rate(clu = c(0.0000123, 0.0000098, 0.0000152)
-#' , style_name = 'nature', idx = 1, d_type = 'rate')
+#' result <- fround_count_rate(
+#'   clu = c(12345, 67890, 6.6666e6),
+#'   style_name = 'nature',
+#'   d_type = 'count'
+#' )
+#' result$formatted  # chr[3]
+#' result$df_mag_row # df[1,]
 #' }
-fround_count_rate <- function(
-    clu,
-    style_name,
-    idx = NULL,
-    d_type
-) {
+fround_count_rate <- function(clu, style_name, d_type) {
 
   # === Input Validation ===
   if (d_type == "count" && any(clu < 0)) {
@@ -373,9 +348,6 @@ fround_count_rate <- function(
   if (d_type == "rate" && any(clu <= 0)) {
     stop("Rates <= 0 not supported: ", toString(clu), call. = FALSE)
   }
-
-  # === Get df_mag from state or compute standalone ===
-  df_mag <- get_or_compute_df_mag_row(clu, d_type, idx)
 
   # === Extract style parameters ===
   style <- get_style(style_name)
@@ -397,18 +369,39 @@ fround_count_rate <- function(
     FALSE
   }
 
-  # === Magnitude edge-case detection ===
-  df_mag <- handle_rounding_magnitude_crossover(
-    central_val           = clu[1],
-    df_mag                = df_mag,
-    method                = method,
-    sigfig                = sigfig,
-    nsmall                = nsmall,
-    round_5_up            = round_5_up,
+  # === Trial rounding to determine magnitude ===
+  # This replaces handle_rounding_magnitude_crossover() by computing
+  # magnitude based on what the central value will become after rounding
+
+  central_val <- clu[1]
+
+  # Apply round-5-up rule if needed
+  if (round_5_up) {
+    central_val <- central_val + 1e-9
+  }
+
+  # Do trial rounding with arbitrary magnitude (scale = 1)
+  central_trial_rounded <- if (d_type == "count"){
+     switch_strict(
+        method,
+        "sigfig"  = signif(central_val, sigfig),
+        "decimal" = round(central_val, digits = nsmall),
+        "int"     = round(central_val, digits = 0)
+     )
+  } else if (d_type == "rate"){
+     clu[1]
+  }
+
+  # Compute magnitude based on trial-rounded value
+  # This automatically handles boundary crossings (e.g., 999,999 -> 1,000,000)
+  df_mag <- set_magnitude(
+    x                     = central_trial_rounded,
     d_type                = d_type,
-    idx                   = idx,
-    count_label_thousands = count_label_thousands
+    count_label_thousands = count_label_thousands,
+    verbose               = FALSE
   )
+
+  checkmate::assert_data_frame(df_mag, nrows = 1)
 
   # === Format each value in the triplet ===
   format_one <- function(x) {
@@ -471,7 +464,15 @@ fround_count_rate <- function(
     trimws(x_chr)
   }
 
-  unname(vapply(clu, format_one, FUN.VALUE = character(1)))
+  formatted <- unname(vapply(clu, format_one, FUN.VALUE = character(1)))
+
+  # Return both formatted values and magnitude info
+  result <- list(
+    formatted  = formatted,
+    df_mag_row = df_mag
+  )
+
+  return(result)
 }
 
 # ===== OLD IMPLEMENTATION - KEPT FOR REFERENCE =====
@@ -861,8 +862,7 @@ fround_count_rate <- function(
 # ===== END OLD IMPLEMENTATION =====
 
 
-#' Format and round a single central/lower/upper value set by magnitude without
-#' units.
+#' Format and round a single central/lower/upper value set by magnitude without units
 #'
 #' `central` could be mean/median/point_estimate. `d_type` is required (count
 #' data requires nuanced logic), but labels are not returned.
@@ -870,36 +870,27 @@ fround_count_rate <- function(
 #' Format and round without unit labeling
 #' - Use `format_lancet_clu()` for unit labels
 #'
-#' @param clu [num] a numeric triplet of three values in central/lower/upper
-#'   order.
+#' @param clu [num] a numeric triplet of three values in central/lower/upper order
 #' @param d_type [chr c('prop', 'pp', 'count', or 'rate')] data type - proportion,
 #'   percentage point, count, or rate
-#' @param idx [int] row index when called from format_journal_clu(), NULL for standalone
-#' @param style_name [chr: default 'nature'] style name - controls rounding and
-#'   formatting.
-#' @return [chr] formatted string (vectorized)
+#' @param style_name [chr: default 'nature'] style name - controls rounding and formatting
+#'
+#' @return [list] with elements:
+#'   - formatted: chr[3] - formatted central, lower, upper values
+#'   - df_mag_row: data.frame[1,] - magnitude info (mag, mag_label, denom)
 #' @family styled_formats
 #' @keywords internal
 #'
 #' @examples
 #' \dontrun{
-#' fround_clu_triplet(clu = c(central = 0.2, lower = 0.1, upper = 0.3)
-#' , d_type = "prop")
-#' fround_clu_triplet(clu = c(central = 0.2, lower = -0.1, upper = 0.3)
-#' , d_type = "pp")
-#' fround_clu_triplet(clu = c(central = 95e6, lower = 89e6, upper = 101e6)
-#' , d_type = "count", idx = 1)
-#' fround_clu_triplet(clu = c(central = 95e6, lower = 1e5, upper = 101e9)
-#' , d_type = "count", idx = 2)
-#' fround_clu_triplet(clu = c(central = 678901, lower = 123456, upper = 6e6)
-#' , d_type = "count", idx = 3)
+#' result <- fround_clu_triplet(
+#'   clu = c(central = 0.2, lower = 0.1, upper = 0.3),
+#'   d_type = "prop"
+#' )
+#' result$formatted  # chr[3]
+#' result$df_mag_row # df[1,]
 #' }
-fround_clu_triplet <- function(
-      clu
-      , d_type
-      , style_name = "nature"
-      , idx        = NULL
-) {
+fround_clu_triplet <- function(clu, d_type, style_name = "nature") {
 
    style  <- get_style(style_name)
    d_type <- assert_data_type(d_type)
@@ -910,26 +901,33 @@ fround_clu_triplet <- function(
       assert_clu_relationship(clu[1], clu[2], clu[3])
    }
 
-   clu_fmt <- switch_strict(
-      d_type
-      , "prop"  = fround_props(clu = clu, style_name = style_name, idx = idx)
-      , "pp"    = fround_props(clu = clu, style_name = style_name, idx = idx)
-      , "count" = fround_count_rate(clu = clu, style_name = style_name, idx = idx, d_type = "count")
-      # , "count" = fround_count(clu = clu, style_name = style_name, idx = idx)  # OLD - kept for reference
-      , "rate"  = fround_count_rate(clu = clu, style_name = style_name, idx = idx, d_type = "rate")
-      # , "rate"  = fround_rate(clu = clu, style_name = style_name, idx = idx)  # OLD - kept for reference
+   # Call appropriate formatting helper
+   result <- switch_strict(
+      d_type,
+      "prop"  = fround_props(clu = clu, style_name = style_name),
+      "pp"    = fround_props(clu = clu, style_name = style_name),
+      "count" = fround_count_rate(clu = clu, style_name = style_name, d_type = "count"),
+      "rate"  = fround_count_rate(clu = clu, style_name = style_name, d_type = "rate")
    )
 
+   # Validate return schema
+   assert_fround_return_schema(result, context = sprintf("fround helper (d_type=%s)", d_type))
+
+   # Extract formatted values and apply negative sign styling
+   clu_fmt <- result$formatted
    names(clu_fmt) <- names(clu)
 
-   # replace negative sign
+   # Replace negative sign
    # - This needs to be done here, not in format_journal_clu() in case
    #   fround_clu_triplet() is called by the user
    clu_fmt <- unlist(lapply(clu_fmt, function(x_i_chr) {
       sub("^-", style$neg_mark_UI, x_i_chr)
    }))
 
-   return(clu_fmt)
+   # Update result with styled formatted values
+   result$formatted <- clu_fmt
+
+   return(result)
 }
 
 # ---- Public -----------------------------------------------------------------

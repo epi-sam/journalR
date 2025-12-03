@@ -4,7 +4,7 @@
 \alias{format_lancet_clu}
 \title{Format central, lower, upper value triplets for Lancet journal presentation}
 \usage{
-format_lancet_clu(central, lower, upper, d_type, mag = NULL, rate_unit = NULL)
+format_lancet_clu(central, lower, upper, d_type, rate_unit = NULL)
 }
 \arguments{
 \item{central}{[num] central, point_estimate value vector}
@@ -15,11 +15,6 @@ format_lancet_clu(central, lower, upper, d_type, mag = NULL, rate_unit = NULL)
 
 \item{d_type}{[chr c(prop, pp, count, rate)] data type - proportion,
 percentage point, count, or rate}
-
-\item{mag}{[chr: default NULL] magnitude override (NULL = auto-detect)
-- For counts: "t" (thousand), "m" (million), "b" (billion)
-- For rates: "per10", "per100", "per1k", ..., "per10b"
-- For props/pp: "as-is" (no scaling, use values as provided)}
 
 \item{rate_unit}{[chr: default NULL] rate unit label (required when d_type = 'rate')}
 }

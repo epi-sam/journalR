@@ -25,10 +25,6 @@
 #' @param upper [num] upper bound vector
 #' @param d_type [chr c(prop, pp, count, rate)] data type - proportion,
 #'   percentage point, count, or rate
-#' @param mag [chr: default NULL] magnitude override (NULL = auto-detect)
-#'   - For counts: "t" (thousand), "m" (million), "b" (billion)
-#'   - For rates: "per10", "per100", "per1k", ..., "per10b"
-#'   - For props/pp: "as-is" (no scaling, use values as provided)
 #' @param style_name [chr: default 'nature'] style name - controls rounding and
 #'   formatting.
 #' @param rate_unit [chr: default NULL] rate unit label (required when d_type = 'rate')
@@ -36,11 +32,6 @@
 #' @return [chr] formatted string vector
 #' @export
 #' @family styled_formats
-#' @note This function uses package-level state for magnitude tracking. Thread
-#'   safety is handled automatically when data.table is loaded, but avoid
-#'   calling from other parallel contexts (e.g., `parallel::mclapply`,
-#'   `future`). Use `format_journal_df()` for standard usage.
-#'
 #' @examples
 #' format_journal_clu(
 #'  central = c(0.994, -0.994)
@@ -62,7 +53,6 @@ format_journal_clu <- function(
       , lower
       , upper
       , d_type
-      , mag        = NULL
       , style_name = "nature"
       , rate_unit  = NULL
 ) {
@@ -97,20 +87,12 @@ format_journal_clu <- function(
 
    n <- nrow(clu)
 
-   # === NEW: Initialize state management ===
-   init_df_mag_state(n)
-   on.exit(flush_df_mag_state(), add = TRUE)
-
-   # Thread safety: disable data.table parallelism during state management
-   # Required because format_journal_clu() is exported and users may call it
-   # inside parallelized contexts (e.g., data.table by= groups)
-   if (requireNamespace("data.table", quietly = TRUE)) {
-      old_threads <- data.table::getDTthreads()
-      if (old_threads > 1) {
-         data.table::setDTthreads(1)
-         on.exit(data.table::setDTthreads(old_threads), add = TRUE)
-      }
-   }
+   # === REMOVED: All state management ===
+   # - init_df_mag_state(n)
+   # - on.exit(flush_df_mag_state(), add = TRUE)
+   # - Thread safety code (data.table::setDTthreads)
+   # - Initial set_magnitude() call
+   # - set_df_mag_state(df_mag)
 
    if(assert_clu_order == TRUE){
       assert_clu_relationship(
@@ -121,19 +103,6 @@ format_journal_clu <- function(
    }
 
    triplets <- t(clu) # transpose for easier processing
-
-   # Magnitude of triplets use raw central value
-   # lower and upper inherit central value magnitude scaling
-   df_mag  <- set_magnitude(
-      x                       = triplets["central", ]
-      , d_type                = d_type
-      , mag                   = mag
-      , count_label_thousands = count_label_thousands
-      , verbose               = FALSE
-   )
-
-   # === NEW: Store in environment for fround_count to access/modify ===
-   set_df_mag_state(df_mag)
 
    # Capture numeric info before character conversion
    # Does UI cross zero? Decide which UI separator to use.
@@ -166,24 +135,35 @@ format_journal_clu <- function(
       , assert_clu_order = assert_clu_order
    )
 
-   # NOTE: Magnitude edge-case detection moved to fround_count_rate() as single source of truth
-
-   # Where the magic happens
-   # - Negative signs are styled internally
-   triplets_fmt <- lapply(seq_len(ncol(triplets_neg_processed)), function(idx){
-      triplet_fmt <- fround_clu_triplet(
+   # === NEW: Format triplets and accumulate df_mag ===
+   # Each call returns list(formatted = chr[3], df_mag_row = df[1,])
+   results_list <- lapply(seq_len(ncol(triplets_neg_processed)), function(idx){
+      result <- fround_clu_triplet(
          clu          = triplets_neg_processed[, idx]
          , d_type     = d_type
          , style_name = style_name
-         , idx        = idx   # pass index instead of df_mag[idx, ]
       )
-      # These should be retained, but let's use belt and suspenders
-      names(triplet_fmt) <- c("central", "lower", "upper")
-      triplet_fmt
+
+      # Validate schema
+      assert_fround_return_schema(
+         result,
+         context = sprintf("fround_clu_triplet (triplet %d)", idx)
+      )
+
+      # Ensure names are present
+      names(result$formatted) <- c("central", "lower", "upper")
+
+      return(result)
    })
 
-   # Retrieve final (possibly updated) df_mag for string assembly
-   df_mag <- get_df_mag_state()
+   # Extract formatted values
+   triplets_fmt <- lapply(results_list, function(r) r$formatted)
+
+   # Accumulate df_mag rows
+   df_mag <- do.call(rbind, lapply(results_list, function(r) r$df_mag_row))
+   rownames(df_mag) <- NULL  # Clean up row names
+
+   # === END NEW ===
 
    d_type_label <- get_data_type_labels(d_type)
 
@@ -243,10 +223,6 @@ format_journal_clu <- function(
 #'   variables after formatting?
 #' @param style_name [chr: default 'nature'] style name - controls rounding and
 #'   formatting.
-#' @param mag [chr: default NULL] magnitude override (NULL = auto-detect)
-#'   - For counts: "t" (thousand), "m" (million), "b" (billion)
-#'   - For rates: "per10", "per100", "per1k", ..., "per10b"
-#'   - For props/pp: "as-is" (no scaling, use values as provided)
 #' @param rate_unit [chr: default NULL] rate unit label (required when d_type = 'rate')
 #'   - Examples: "deaths", "cases", "events", "births"
 #' @param new_var [chr: default 'clu_fmt'] name of new formatted column
@@ -281,7 +257,6 @@ format_journal_df <- function(
       , lower_var          = "lower"
       , upper_var          = "upper"
       , remove_clu_columns = TRUE
-      , mag                = NULL
       , rate_unit          = NULL
 ){
 
@@ -303,7 +278,6 @@ format_journal_df <- function(
          , upper      = df[[upper_var]]
          , d_type     = d_type
          , style_name = style_name
-         , mag        = mag
          , rate_unit  = rate_unit
       )
    )
@@ -403,10 +377,6 @@ format_means_df <- function(
 #' @param upper [num] upper bound vector
 #' @param d_type [chr c(prop, pp, count, rate)] data type - proportion,
 #'   percentage point, count, or rate
-#' @param mag [chr: default NULL] magnitude override (NULL = auto-detect)
-#'   - For counts: "t" (thousand), "m" (million), "b" (billion)
-#'   - For rates: "per10", "per100", "per1k", ..., "per10b"
-#'   - For props/pp: "as-is" (no scaling, use values as provided)
 #' @param rate_unit [chr: default NULL] rate unit label (required when d_type = 'rate')
 #'
 #' @returns [chr] formatted string vector
@@ -434,7 +404,6 @@ format_lancet_clu <- function(
       , lower
       , upper
       , d_type
-      , mag = NULL
       , rate_unit = NULL
 ) {
    format_journal_clu(
@@ -443,7 +412,6 @@ format_lancet_clu <- function(
       , upper      = upper
       , d_type     = d_type
       , style_name = "lancet"
-      , mag        = mag
       , rate_unit  = rate_unit
    )
 }
@@ -463,10 +431,6 @@ format_lancet_clu <- function(
 #' @param new_var [chr: default 'clu_fmt'] name of new formatted column
 #' @param remove_clu_columns [lgl: default TRUE] remove central, lower, upper
 #'   columns after formatting?
-#' @param mag [chr: default NULL] magnitude override (NULL = auto-detect)
-#'   - For counts: "t" (thousand), "m" (million), "b" (billion)
-#'   - For rates: "per10", "per100", "per1k", ..., "per10b"
-#'   - For props/pp: "as-is" (no scaling, use values as provided)
 #' @param rate_unit [chr: default NULL] rate unit label (required when d_type = 'rate')
 #'
 #' @returns [data.frame, data.table] with mean_95_UI_formatted column, and
@@ -492,7 +456,6 @@ format_lancet_df <- function(
       , lower_var          = "lower"
       , upper_var          = "upper"
       , remove_clu_columns = TRUE
-      , mag                = NULL
       , rate_unit          = NULL
 ){
    format_journal_df(
@@ -504,7 +467,6 @@ format_lancet_df <- function(
       , upper_var          = upper_var
       , new_var            = new_var
       , remove_clu_columns = remove_clu_columns
-      , mag                = mag
       , rate_unit          = rate_unit
    )
 }
@@ -520,10 +482,6 @@ format_lancet_df <- function(
 #' @param upper [num] upper bound vector
 #' @param d_type [chr c(prop, pp, count, rate)] data type - proportion,
 #'   percentage point, count, or rate
-#' @param mag [chr: default NULL] magnitude override (NULL = auto-detect)
-#'   - For counts: "t" (thousand), "m" (million), "b" (billion)
-#'   - For rates: "per10", "per100", "per1k", ..., "per10b"
-#'   - For props/pp: "as-is" (no scaling, use values as provided)
 #' @param rate_unit [chr: default NULL] rate unit label (required when d_type = 'rate')
 #'
 #' @returns [chr] formatted string vector
@@ -551,7 +509,6 @@ format_nature_clu <- function(
       , lower
       , upper
       , d_type
-      , mag = NULL
       , rate_unit = NULL
 ) {
    format_journal_clu(
@@ -560,7 +517,6 @@ format_nature_clu <- function(
       , upper      = upper
       , d_type     = d_type
       , style_name = "nature"
-      , mag        = mag
       , rate_unit  = rate_unit
    )
 }
@@ -574,11 +530,7 @@ format_nature_clu <- function(
 #' @param lower_var [chr: default 'lower'] name of lower bound variable
 #' @param upper_var [chr: default 'upper'] name of upper bound variable
 #' @param remove_clu_columns [lgl: default TRUE] remove central, lower, upper
-#'   variables after formatting?
-#' @param mag [chr: default NULL] magnitude override (NULL = auto-detect)
-#'   - For counts: "t" (thousand), "m" (million), "b" (billion)
-#'   - For rates: "per10", "per100", "per1k", ..., "per10b"
-#'   - For props/pp: "as-is" (no scaling, use values as provided)
+#'   columns after formatting?
 #' @param rate_unit [chr: default NULL] rate unit label (required when d_type = 'rate')
 #' @returns [data.table] copy of input data.table with new 'clu_fmt' column
 #' @export
@@ -602,7 +554,6 @@ format_nature_df <- function(
       , lower_var          = "lower"
       , upper_var          = "upper"
       , remove_clu_columns = TRUE
-      , mag                = NULL
       , rate_unit          = NULL
 ){
    format_journal_df(
@@ -614,7 +565,6 @@ format_nature_df <- function(
       , upper_var          = upper_var
       , new_var            = new_var
       , remove_clu_columns = remove_clu_columns
-      , mag                = mag
       , rate_unit          = rate_unit
    )
 }
