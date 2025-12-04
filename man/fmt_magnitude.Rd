@@ -55,6 +55,7 @@ fmt_magnitude(0.0000123, d_type = "rate", rate_unit = "deaths")
 }
 \seealso{
 Other vector_formats: 
+\code{\link{add_epsilon}()},
 \code{\link{format_oxford_comma}()},
 \code{\link{fround}()},
 \code{\link{fround_count_rate}()},

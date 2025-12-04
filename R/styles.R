@@ -11,32 +11,32 @@
 get_style_schema <- function(){
    list(
       # Proportion parameters
-      prop_digits_round     = "integer"
-      , prop_nsmall         = "integer"
+      prop_digits_round       = "integer"
+      , prop_nsmall           = "integer"
 
       # Count parameters
-      , count_method        = "character"
-      , count_digits_sigfig = "integer"
-      , count_pad_sigfigs   = "logical"
-      , count_nsmall        = "integer"
-      , count_big.mark      = "character"
+      , count_method          = "character"
+      , count_digits_sigfig   = "integer"
+      , count_pad_sigfigs     = "logical"
+      , count_nsmall          = "integer"
+      , count_big.mark        = "character"
       , count_label_thousands = "logical"
 
       # Rate parameters
-      , rate_method         = "character"
-      , rate_digits_sigfig  = "integer"
-      , rate_pad_sigfigs    = "logical"
-      , rate_nsmall         = "integer"
+      , rate_method           = "character"
+      , rate_digits_sigfig    = "integer"
+      , rate_pad_sigfigs      = "logical"
+      , rate_nsmall           = "integer"
 
       # Shared parameters
-      , decimal.mark        = "character"
-      , neg_mark_mean       = "character"
-      , neg_mark_UI         = "character"
-      , UI_text             = "character"
-      , UI_only             = "logical"
-      , assert_clu_order    = "logical"
-      , is_lancet           = "logical"
-      , round_5_up          = "logical"
+      , decimal.mark          = "character"
+      , neg_mark_mean         = "character"
+      , neg_mark_UI           = "character"
+      , UI_text               = "character"
+      , UI_only               = "logical"
+      , assert_clu_order      = "logical"
+      , is_lancet             = "logical"
+      , round_5_up            = "logical"
    )
 }
 

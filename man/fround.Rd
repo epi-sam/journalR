@@ -28,6 +28,7 @@ fround(0.123456789, digits = 3, nsmall = 4)
 }
 \seealso{
 Other vector_formats: 
+\code{\link{add_epsilon}()},
 \code{\link{fmt_magnitude}()},
 \code{\link{format_oxford_comma}()},
 \code{\link{fround_count_rate}()},

@@ -31,6 +31,7 @@ result$df_mag_row # df[1,]
 }
 \seealso{
 Other vector_formats: 
+\code{\link{add_epsilon}()},
 \code{\link{fmt_magnitude}()},
 \code{\link{format_oxford_comma}()},
 \code{\link{fround}()},

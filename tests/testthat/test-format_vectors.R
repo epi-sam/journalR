@@ -35,6 +35,110 @@ test_that("format_int produces integer format", {
   expect_match(result, "^124$")
 })
 
+# ---- add_epsilon Function Tests ------------------------------------------------
+
+test_that("add_epsilon adds epsilon to positive values", {
+  x <- c(1.0, 2.5, 10.0)
+  epsilon <- 1e-10
+  result <- add_epsilon(x, epsilon)
+  expect_true(all(result > x))
+  expect_equal(result, x + epsilon)
+})
+
+test_that("add_epsilon subtracts epsilon from negative values", {
+  x <- c(-1.0, -2.5, -10.0)
+  epsilon <- 1e-10
+  result <- add_epsilon(x, epsilon)
+  expect_true(all(result < x))
+  expect_equal(result, x - epsilon)
+})
+
+test_that("add_epsilon handles mixed positive and negative values", {
+  x <- c(-2.0, 1.0, -3.5, 4.2)
+  epsilon <- 1e-10
+  result <- add_epsilon(x, epsilon = epsilon)
+
+  # Positive values should increase
+  expect_equal(result[2], x[2] + epsilon)  # 1.0
+  expect_equal(result[4], x[4] + epsilon)  # 4.2
+
+  # Negative values should decrease (become more negative)
+  expect_equal(result[1], x[1] - epsilon)  # -2.0
+  expect_equal(result[3], x[3] - epsilon)  # -3.5
+})
+
+test_that("add_epsilon preserves zeros", {
+  x <- c(0.0, 1.0, 0.0, -1.0)
+  result <- add_epsilon(x, epsilon = 1e-10)
+
+  # Zeros should remain unchanged
+  expect_equal(result[1], 0.0)
+  expect_equal(result[3], 0.0)
+
+  # Non-zeros should be modified
+  expect_equal(result[2], 1.0 + 1e-10)
+  expect_equal(result[4], -1.0 - 1e-10)
+})
+
+test_that("add_epsilon warns when epsilon is too large", {
+  # Test with very small values where epsilon would be inappropriate
+  x <- c(1e-11, 2e-11)  # Very small values
+
+  # Use large epsilon that violates the 3-order-of-magnitude rule
+  expect_warning(
+    result <- add_epsilon(x, epsilon = 1e-9),
+    "epsilon.*must be 3 orders of magnitude smaller"
+  )
+
+  # Should set epsilon to 0 and return original values (except for sign handling)
+  expect_equal(result[1], x[1])  # Positive values with epsilon=0 unchanged
+  expect_equal(result[2], x[2])
+})
+
+test_that("add_epsilon works correctly with default epsilon", {
+  x <- c(1.0, -1.0, 0.0)
+  result <- add_epsilon(x)  # Uses default epsilon = 1e-12
+
+  expect_equal(result[1], 1.0 + 1e-12)
+  expect_equal(result[2], -1.0 - 1e-12)
+  expect_equal(result[3], 0.0)
+})
+
+test_that("add_epsilon handles edge case with all zeros", {
+  x <- c(0.0, 0.0, 0.0)
+  result <- add_epsilon(x, epsilon = 1e-10)
+
+  # All values should remain unchanged
+  expect_equal(result, x)
+})
+
+test_that("add_epsilon validates inputs", {
+  # Non-numeric x should error
+  expect_error(add_epsilon("not numeric"))
+
+  # Non-numeric epsilon should error
+  expect_error(add_epsilon(c(1, 2), epsilon = "not numeric"))
+})
+
+test_that("add_epsilon magnitude calculation is correct", {
+  # Test the magnitude calculation logic with known values
+  x <- c(1000, 500)  # Values around 1000
+  epsilon <- 1e-6    # Should be fine (3+ orders smaller than ~1000)
+
+  # Should not warn and should apply epsilon
+  expect_silent(result <- add_epsilon(x, epsilon = epsilon))
+  expect_equal(result, x + epsilon)
+})
+
+test_that("add_epsilon works with rate-scale values", {
+  # Test with rate-scale values (very small numbers)
+  x <- c(1.1e-11, 0.9e-11, 1.2e-11)  # ~10 per 1 billion scale
+  epsilon <- 1e-14  # Appropriate for this scale
+
+  expect_silent(result <- add_epsilon(x, epsilon = epsilon))
+  expect_equal(result, x + epsilon)
+})
+
 test_that("fround_count_rate handles counts correctly", {
   result <- fround_count_rate(
     clu = c(12345, 10000, 15000),

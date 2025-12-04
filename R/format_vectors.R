@@ -269,7 +269,7 @@ format_int <- function(x_sc, decimal.mark, big.mark) {
 #' @family vector_formats
 #' @keywords internal
 #'
-#' @returns
+#' @returns [numeric] x +/- epsilon (for pos/neg x)
 add_epsilon <- function(x, epsilon = 1e-12){
    checkmate::assert_numeric(x)
    checkmate::assert_numeric(epsilon)
@@ -286,7 +286,7 @@ add_epsilon <- function(x, epsilon = 1e-12){
    if(order_mag_epsilon - order_mag_small_x > -3){
       warning(
          sprintf(
-            "epsilon (%s - %s) must be 3 orders of magnitude smaller than the smallest supported magnitude unit (%s - %s) (see set_magnitude_rate()) - setting epsilon to 0, round_5_up may not work as expected."
+            "epsilon must be 3 orders of magnitude smaller (%s, %s) than the smallest supported magnitude unit (%s, %s) (see set_magnitude_rate()) - setting epsilon to 0, round_5_up may not work as expected."
             , epsilon, order_mag_epsilon, small_x, order_mag_small_x
          )
       )

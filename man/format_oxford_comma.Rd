@@ -24,6 +24,7 @@ format_oxford_comma(1:3, "or")
 }
 \seealso{
 Other vector_formats: 
+\code{\link{add_epsilon}()},
 \code{\link{fmt_magnitude}()},
 \code{\link{fround}()},
 \code{\link{fround_count_rate}()},

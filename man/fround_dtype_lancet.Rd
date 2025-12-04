@@ -37,6 +37,7 @@ fround_dtype_lancet(c(55.8346, 123.456789), 'count', 3, 4, ".")
 }
 \seealso{
 Other vector_formats: 
+\code{\link{add_epsilon}()},
 \code{\link{fmt_magnitude}()},
 \code{\link{format_oxford_comma}()},
 \code{\link{fround}()},
