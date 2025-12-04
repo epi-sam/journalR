@@ -1,8 +1,8 @@
-#' Get data types
+#' Get metrics
 #'
-#' Centrally managed definition for all allowed data types.
+#' Centrally managed definition for all allowed metrics.
 #'
-#' @returns [chr] vector of allowed data types
+#' @returns [chr] vector of allowed metrics
 #' @export
 #' @family metrics
 #'
@@ -30,13 +30,13 @@ return_metric_labels <- function(){
    return(metric_labels)
 }
 
-#' Get data type labels
+#' Get metric labels
 #'
-#' Centrally managed definition for all data type labels.
+#' Centrally managed definition for all metric labels.
 #'
 #' @param metric [chr]
 #'
-#' @returns [list] named list of data type labels
+#' @returns [list] named list of metric labels
 #' @export
 #' @family metrics
 #'

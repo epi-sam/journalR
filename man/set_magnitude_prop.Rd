@@ -2,7 +2,7 @@
 % Please edit documentation in R/set_magnitude.R
 \name{set_magnitude_prop}
 \alias{set_magnitude_prop}
-\title{Set magnitude for proportion-family data types}
+\title{Set magnitude for proportion-family metrics}
 \usage{
 set_magnitude_prop(x, mag = NULL, verbose = TRUE)
 }

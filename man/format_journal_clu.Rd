@@ -20,7 +20,7 @@ format_journal_clu(
 
 \item{upper}{[num] upper bound vector}
 
-\item{metric}{[chr c(prop, pp, count, rate)] data type - proportion,
+\item{metric}{[chr c(prop, pp, count, rate)] metric - proportion,
 percentage point, count, or rate}
 
 \item{style_name}{[chr: default 'nature'] style name - controls rounding and

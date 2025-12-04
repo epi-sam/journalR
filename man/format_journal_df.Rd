@@ -19,7 +19,7 @@ format_journal_df(
 \arguments{
 \item{df}{[data.frame, data.table]}
 
-\item{metric}{[chr c('prop', 'pp', 'count', 'rate')] a single data type}
+\item{metric}{[chr c('prop', 'pp', 'count', 'rate')] a single metric}
 
 \item{new_var}{[chr: default 'clu_fmt'] name of new formatted column}
 

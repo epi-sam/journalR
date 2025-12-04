@@ -92,7 +92,7 @@ assert_style_schema <- function(style_entry){
       }
    )
 
-   # Assert data types
+   # Assert metrics
    lapply(seq_along(style_entry), function(i){
       x              <- style_entry[[i]]
       xname          <- names(style_entry)[i]

@@ -77,9 +77,9 @@ assert_set_choice <- function(x, choices){
 }
 
 
-#' Assert data type
+#' Assert metric
 #'
-#' Validates that a given data type is among the allowed types.
+#' Validates that a given metric is among the allowed types.
 #'
 #' @param metric [chr] metric type to validate
 #'

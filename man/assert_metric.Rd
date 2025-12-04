@@ -2,7 +2,7 @@
 % Please edit documentation in R/assertions.R
 \name{assert_metric}
 \alias{assert_metric}
-\title{Assert data type}
+\title{Assert metric}
 \usage{
 assert_metric(metric)
 }
@@ -13,7 +13,7 @@ assert_metric(metric)
 [chr] invisible validated metric
 }
 \description{
-Validates that a given data type is among the allowed types.
+Validates that a given metric is among the allowed types.
 }
 \seealso{
 Other assertions: 

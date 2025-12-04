@@ -18,7 +18,7 @@ fmt_magnitude(
 \arguments{
 \item{x}{[num] numeric vector}
 
-\item{metric}{[chr] data type: "prop", "pp", "count", "rate" (required)}
+\item{metric}{[chr] metric: "prop", "pp", "count", "rate" (required)}
 
 \item{digits}{[int: default 1L] passed to `round()`}
 

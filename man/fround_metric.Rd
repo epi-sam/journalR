@@ -9,7 +9,7 @@ fround_metric(x, metric = "prop", digits = 1L, nsmall = 1L, decimal.mark = ".")
 \arguments{
 \item{x}{[num] numeric value}
 
-\item{metric}{[chr c('prop', 'pp', or 'count')] data type - proportion,
+\item{metric}{[chr c('prop', 'pp', or 'count')] metric - proportion,
 percentage point or count}
 
 \item{digits}{[integer: default 1L] passed to `round()`}

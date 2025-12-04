@@ -13,7 +13,7 @@ format_nature_clu(central, lower, upper, metric, rate_unit = NULL)
 
 \item{upper}{[num] upper bound vector}
 
-\item{metric}{[chr c(prop, pp, count, rate)] data type - proportion,
+\item{metric}{[chr c(prop, pp, count, rate)] metric - proportion,
 percentage point, count, or rate}
 
 \item{rate_unit}{[chr: default NULL] rate unit label (required when metric = 'rate')}

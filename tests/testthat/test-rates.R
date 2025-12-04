@@ -1,5 +1,5 @@
 # Rate Support Tests
-# Comprehensive tests for rate data type functionality
+# Comprehensive tests for rate metric functionality
 
 # ---- End-to-End Tests for All Data Types ----------------------------------------
 

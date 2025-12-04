@@ -18,7 +18,7 @@ format_lancet_df(
 \arguments{
 \item{df}{[data.table] with central, lower, upper columns}
 
-\item{metric}{[chr c('prop', 'pp', 'count', 'rate')] data type - proportion,
+\item{metric}{[chr c('prop', 'pp', 'count', 'rate')] metric - proportion,
 percentage point, count, or rate}
 
 \item{new_var}{[chr: default 'clu_fmt'] name of new formatted column}

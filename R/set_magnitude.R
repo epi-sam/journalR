@@ -1,6 +1,6 @@
 # ---- Helper Functions (Internal) --------------------------------------------
 
-#' Set magnitude for proportion-family data types
+#' Set magnitude for proportion-family metrics
 #'
 #' Proportions and percentage points don't use magnitude scaling.
 #' Always returns empty magnitude codes.
@@ -263,10 +263,10 @@ set_magnitude_rate <- function(x, mag = NULL, verbose = TRUE) {
 #' Define magnitude, magnitude label and denominator for a vector of numeric values
 #'
 #' Support function used on _central_ (e.g. mean) values for later formatting.
-#' Routes to appropriate helper based on data type.
+#' Routes to appropriate helper based on metric.
 #'
 #' @param x [num] numeric vector
-#' @param metric [chr] data type: "prop", "pp", "count", "rate" (required)
+#' @param metric [chr] metric: "prop", "pp", "count", "rate" (required)
 #' @param mag [chr: default NULL] magnitude override (NULL = auto-detect)
 #'   - For counts: "t", "m", "b"
 #'   - For rates: "per10", "per100", "per1k", ..., "per10b"

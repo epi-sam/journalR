@@ -1029,7 +1029,7 @@ fround <- function(x, digits = 1L, nsmall = 1L, decimal.mark = "."){
 #' Unaware of schema, just a hard-coded git-er-done function.
 #'
 #' @param x [num] numeric value
-#' @param metric [chr c('prop', 'pp', or 'count')] data type - proportion,
+#' @param metric [chr c('prop', 'pp', or 'count')] metric - proportion,
 #'   percentage point or count
 #' @param digits [integer: default 1L] passed to `round()`
 #' @param nsmall [integer: default 1L] passed to `format()`
@@ -1078,7 +1078,7 @@ fround_metric <- function(
 #' Caution - thousands magnitude is not Lancet compliant.
 #'
 #' @param x [num] numeric vector
-#' @param metric [chr] data type: "prop", "pp", "count", "rate" (required)
+#' @param metric [chr] metric: "prop", "pp", "count", "rate" (required)
 #' @param digits [int: default 1L] passed to `round()`
 #' @param nsmall [int: default 1L] passed to `format()`
 #' @param mag [chr: default NULL] magnitude override
@@ -1153,7 +1153,7 @@ fmt_magnitude <- function(
 #' Retaining for legacy purposes (no Nature equivalent)
 #'
 #' @param x [num] numeric value
-#' @param metric [chr c('prop', 'pp', or 'count')] data type - proportion, percentage point or count
+#' @param metric [chr c('prop', 'pp', or 'count')] metric - proportion, percentage point or count
 #' @param digits [integer: default 1L] passed to `round()`
 #' @param nsmall [integer: default 1L] passed to `format()`
 #' @param decimal.mark [chr: default mid_dot()] decimal mark passed to `format()`

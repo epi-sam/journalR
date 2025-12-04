@@ -23,7 +23,7 @@
 #' @param central [num] central, point_estimate value vector
 #' @param lower [num] lower bound vector
 #' @param upper [num] upper bound vector
-#' @param metric [chr c(prop, pp, count, rate)] data type - proportion,
+#' @param metric [chr c(prop, pp, count, rate)] metric - proportion,
 #'   percentage point, count, or rate
 #' @param style_name [chr: default 'nature'] style name - controls rounding and
 #'   formatting.
@@ -215,7 +215,7 @@ format_journal_clu <- function(
 #' 'count')
 #'
 #' @param df [data.frame, data.table]
-#' @param metric [chr c('prop', 'pp', 'count', 'rate')] a single data type
+#' @param metric [chr c('prop', 'pp', 'count', 'rate')] a single metric
 #' @param central_var [chr: default 'mean'] name of central tendency variable
 #' @param lower_var [chr: default 'lower'] name of lower bound variable
 #' @param upper_var [chr: default 'upper'] name of upper bound variable
@@ -287,7 +287,7 @@ format_journal_df <- function(
    return(df[]) # helps data.table printing
 }
 
-#' Format multiple data.frame 'mean_*' columns for presentation (by data type).
+#' Format multiple data.frame 'mean_*' columns for presentation (by metric).
 #'
 #' Format one or more 'mean_' columns by magnitude, metric, and style.
 #'
@@ -296,7 +296,7 @@ format_journal_df <- function(
 #' columns. Use with caution.
 #'
 #' @param df [data.table] input data.table with one or more 'mean_' columns
-#' @param metric [chr c('prop', 'pp', or 'count')] a single data type
+#' @param metric [chr c('prop', 'pp', or 'count')] a single metric
 #' @param central_var [chr: default 'mean'] prefix of mean variable names to
 #'   format.  Implemented as e.g. "^mean[_]*" to capture 'mean', 'mean_1990',
 #'   'mean_2000', etc.
@@ -375,7 +375,7 @@ format_means_df <- function(
 #' @param central [num] central, point_estimate value vector
 #' @param lower [num] lower bound vector
 #' @param upper [num] upper bound vector
-#' @param metric [chr c(prop, pp, count, rate)] data type - proportion,
+#' @param metric [chr c(prop, pp, count, rate)] metric - proportion,
 #'   percentage point, count, or rate
 #' @param rate_unit [chr: default NULL] rate unit label (required when metric = 'rate')
 #'
@@ -422,7 +422,7 @@ format_lancet_clu <- function(
 #' 'count')
 #'
 #' @param df [data.table] with central, lower, upper columns
-#' @param metric [chr c('prop', 'pp', 'count', 'rate')] data type - proportion,
+#' @param metric [chr c('prop', 'pp', 'count', 'rate')] metric - proportion,
 #'   percentage point, count, or rate
 #' @param central_var [chr: default 'mean'] name of central tendency e.g.
 #'   'point_estimate'
@@ -480,7 +480,7 @@ format_lancet_df <- function(
 #' @param central [num] central, point_estimate value vector
 #' @param lower [num] lower bound vector
 #' @param upper [num] upper bound vector
-#' @param metric [chr c(prop, pp, count, rate)] data type - proportion,
+#' @param metric [chr c(prop, pp, count, rate)] metric - proportion,
 #'   percentage point, count, or rate
 #' @param rate_unit [chr: default NULL] rate unit label (required when metric = 'rate')
 #'
@@ -524,7 +524,7 @@ format_nature_clu <- function(
 #' Return a table with formatted central, lower, upper for Nature journal
 #'
 #' @param df [data.table]
-#' @param metric [chr c('prop', 'pp', 'count', 'rate')] a single data type
+#' @param metric [chr c('prop', 'pp', 'count', 'rate')] a single metric
 #' @param new_var [chr: default 'clu_fmt'] name of new formatted column
 #' @param central_var [chr: default 'mean'] name of central tendency variable
 #' @param lower_var [chr: default 'lower'] name of lower bound variable

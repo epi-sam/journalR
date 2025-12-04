@@ -15,7 +15,7 @@ set_magnitude(
 \arguments{
 \item{x}{[num] numeric vector}
 
-\item{metric}{[chr] data type: "prop", "pp", "count", "rate" (required)}
+\item{metric}{[chr] metric: "prop", "pp", "count", "rate" (required)}
 
 \item{mag}{[chr: default NULL] magnitude override (NULL = auto-detect)
 - For counts: "t", "m", "b"
@@ -32,7 +32,7 @@ Not Lancet-valid.}
 }
 \description{
 Support function used on _central_ (e.g. mean) values for later formatting.
-Routes to appropriate helper based on data type.
+Routes to appropriate helper based on metric.
 }
 \examples{
 # Counts
