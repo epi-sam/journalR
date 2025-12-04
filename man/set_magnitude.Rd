@@ -6,7 +6,7 @@
 \usage{
 set_magnitude(
   x,
-  d_type,
+  metric,
   mag = NULL,
   count_label_thousands = FALSE,
   verbose = TRUE
@@ -15,7 +15,7 @@ set_magnitude(
 \arguments{
 \item{x}{[num] numeric vector}
 
-\item{d_type}{[chr] data type: "prop", "pp", "count", "rate" (required)}
+\item{metric}{[chr] data type: "prop", "pp", "count", "rate" (required)}
 
 \item{mag}{[chr: default NULL] magnitude override (NULL = auto-detect)
 - For counts: "t", "m", "b"
@@ -36,16 +36,16 @@ Routes to appropriate helper based on data type.
 }
 \examples{
 # Counts
-set_magnitude(c(1e3, 1e6, 1e9), d_type = "count")
+set_magnitude(c(1e3, 1e6, 1e9), metric = "count")
 
 # Rates
-set_magnitude(c(0.0000123, 0.0000456), d_type = "rate")
+set_magnitude(c(0.0000123, 0.0000456), metric = "rate")
 
 # Proportions (no scaling)
-set_magnitude(c(0.5, 0.75), d_type = "prop")
+set_magnitude(c(0.5, 0.75), metric = "prop")
 
-# All calls require d_type
-set_magnitude(c(1e6, 1e9), d_type = "count")
+# All calls require metric
+set_magnitude(c(1e6, 1e9), metric = "count")
 }
 \seealso{
 Other magnitudes: 

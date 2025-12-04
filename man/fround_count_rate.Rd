@@ -4,14 +4,14 @@
 \alias{fround_count_rate}
 \title{Format and round count or rate numbers}
 \usage{
-fround_count_rate(clu, style_name, d_type)
+fround_count_rate(clu, style_name, metric)
 }
 \arguments{
 \item{clu}{[num] numeric triplet of counts/rates (central, lower, upper)}
 
 \item{style_name}{[chr] style name - controls rounding and formatting}
 
-\item{d_type}{[chr] data type: "count" or "rate"}
+\item{metric}{[chr] metric type: "count" or "rate"}
 }
 \value{
 [list] with elements:
@@ -30,7 +30,7 @@ non-exported helper
 result <- fround_count_rate(
   clu = c(12345, 67890, 6.6666e6),
   style_name = 'nature',
-  d_type = 'count'
+  metric = 'count'
 )
 result$formatted  # chr[3]
 result$df_mag_row # df[1,]
@@ -42,8 +42,8 @@ Other vector_formats:
 \code{\link{fmt_magnitude}()},
 \code{\link{format_oxford_comma}()},
 \code{\link{fround}()},
-\code{\link{fround_dtype}()},
-\code{\link{fround_dtype_lancet}()},
+\code{\link{fround_metric}()},
+\code{\link{fround_metric_lancet}()},
 \code{\link{fround_props}()}
 }
 \concept{vector_formats}

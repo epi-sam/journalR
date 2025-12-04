@@ -6,7 +6,7 @@
 \usage{
 format_nature_df(
   df,
-  d_type,
+  metric,
   new_var = "clu_fmt",
   central_var = "mean",
   lower_var = "lower",
@@ -18,7 +18,7 @@ format_nature_df(
 \arguments{
 \item{df}{[data.table]}
 
-\item{d_type}{[chr c('prop', 'pp', 'count', 'rate')] a single data type}
+\item{metric}{[chr c('prop', 'pp', 'count', 'rate')] a single data type}
 
 \item{new_var}{[chr: default 'clu_fmt'] name of new formatted column}
 
@@ -31,7 +31,7 @@ format_nature_df(
 \item{remove_clu_columns}{[lgl: default TRUE] remove central, lower, upper
 columns after formatting?}
 
-\item{rate_unit}{[chr: default NULL] rate unit label (required when d_type = 'rate')}
+\item{rate_unit}{[chr: default NULL] rate unit label (required when metric = 'rate')}
 }
 \value{
 [data.table] copy of input data.table with new 'clu_fmt' column
@@ -48,7 +48,7 @@ df <- data.frame(
    , lower         = 50.7e6
    , upper         = 60.7e6
 )
-format_nature_df(df = df, d_type = "count", central_var = 'mean')
+format_nature_df(df = df, metric = "count", central_var = 'mean')
 }
 \seealso{
 Other styled_formats: 

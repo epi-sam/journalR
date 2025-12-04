@@ -7,7 +7,7 @@ test_that("format_mean_df works", {
       , mean_2000 = c(0.2234, 0.3345, 0.4456)
    )
 
-   DT_result <- format_means_df(DT_test, d_type = "prop")
+   DT_result <- format_means_df(DT_test, metric = "prop")
 
    DT_expected <- data.table::data.table(
       location_id = c(1, 2, 3)
@@ -26,23 +26,23 @@ test_that("format_mean_df works", {
 # Sprinkle in some default Nature styling as well
 
 test_that("fround_clu_triplet works", {
-   result1 <- fround_clu_triplet(style_name = 'lancet', clu = c(central = 0.2, lower = 0.1, upper = 0.3), d_type = "prop")
+   result1 <- fround_clu_triplet(style_name = 'lancet', clu = c(central = 0.2, lower = 0.1, upper = 0.3), metric = "prop")
    expect_type(result1, "list")
    expect_named(result1, c("formatted", "df_mag_row"))
    expect_equal(result1$formatted, c(central = "20·0", lower = "10·0", upper = "30·0"))
-   result2 <- fround_clu_triplet(style_name = 'lancet', clu = c(central = -0.02, lower = -0.1, upper = 0.3), d_type = "pp")
+   result2 <- fround_clu_triplet(style_name = 'lancet', clu = c(central = -0.02, lower = -0.1, upper = 0.3), metric = "pp")
    expect_equal(result2$formatted, c(central = "–2·0", lower = "–10·0", upper = "30·0"))
-   result3 <- fround_clu_triplet(style_name = 'lancet', clu = c(central = 9.5e6, lower = 8.9e6, upper = 101e6), d_type = "count")
+   result3 <- fround_clu_triplet(style_name = 'lancet', clu = c(central = 9.5e6, lower = 8.9e6, upper = 101e6), metric = "count")
    expect_equal(result3$formatted, c(central = "9·50", lower = "8·90", upper = "101"))
-   result4 <- fround_clu_triplet(style_name = 'lancet', clu = c(central = 95e6, lower = 94e6, upper = 97e6), d_type = "count")
+   result4 <- fround_clu_triplet(style_name = 'lancet', clu = c(central = 95e6, lower = 94e6, upper = 97e6), metric = "count")
    expect_equal(result4$formatted, c(central = "95·0", lower = "94·0", upper = "97·0"))
    # trickier cases - need sig figs even for small numbers
-   result5 <- fround_clu_triplet(style_name = 'lancet', clu = c(central = 1, lower = 0.2, upper = 2), d_type = "count")
+   result5 <- fround_clu_triplet(style_name = 'lancet', clu = c(central = 1, lower = 0.2, upper = 2), metric = "count")
    expect_equal(result5$formatted, c(central = "1·00", lower = "0·200", upper = "2·00"))
-   result6 <- fround_clu_triplet(style_name = 'lancet', clu = c(central = 10.5, lower = 0.2, upper = 20.3), d_type = "count")
+   result6 <- fround_clu_triplet(style_name = 'lancet', clu = c(central = 10.5, lower = 0.2, upper = 20.3), metric = "count")
    expect_equal(result6$formatted, c(central = "10·5", lower = "0·200", upper = "20·3"))
    # rounding edge case
-   result7 <- fround_clu_triplet(style_name = 'lancet', clu = c(central = 9995, lower = 9990, upper = 10100), d_type = 'count')
+   result7 <- fround_clu_triplet(style_name = 'lancet', clu = c(central = 9995, lower = 9990, upper = 10100), metric = 'count')
    expect_equal(result7$formatted, c(central = "10 000", lower = "9990", upper = "10 100"))
 })
 
@@ -50,51 +50,51 @@ test_that("fround_clu_triplet works", {
 # This is the beating heart of the machine - get these right
 test_that("format_lancet_clu works", {
    expect_equal(
-      format_lancet_clu(central = 0.994, lower = 0.984, upper = 0.998, d_type = "prop")
+      format_lancet_clu(central = 0.994, lower = 0.984, upper = 0.998, metric = "prop")
       , "99·4% (98·4–99·8)"
    )
    expect_equal(
-      format_lancet_clu(central = c(0.994, 0.994), lower = c(0.984, 0.984), upper = c(0.998, 0.998), d_type = "prop")
+      format_lancet_clu(central = c(0.994, 0.994), lower = c(0.984, 0.984), upper = c(0.998, 0.998), metric = "prop")
       , c("99·4% (98·4–99·8)", "99·4% (98·4–99·8)")
    )
    expect_equal(
-      format_lancet_clu(central = c(0.994, 0.994), lower = c(-0.15, 0.984), upper = c(0.998, 0.998), d_type = "prop")
+      format_lancet_clu(central = c(0.994, 0.994), lower = c(-0.15, 0.984), upper = c(0.998, 0.998), metric = "prop")
       , c("99·4% (–15·0 to 99·8)", "99·4% (98·4–99·8)")
    )
    expect_equal(
-      format_lancet_clu(central = c(-0.05, 0.994), lower = c(-0.15, 0.984), upper = c(0.998, 0.998), d_type = "pp")
+      format_lancet_clu(central = c(-0.05, 0.994), lower = c(-0.15, 0.984), upper = c(0.998, 0.998), metric = "pp")
       , c("a decrease of 5·0 pp (–15·0 to 99·8)", "99·4 pp (98·4–99·8)")
    )
    expect_equal(
-      format_lancet_clu(central = rep(2e6, 2), lower = rep(.5e6, 2), upper = rep(3e6, 2), d_type = "count")
+      format_lancet_clu(central = rep(2e6, 2), lower = rep(.5e6, 2), upper = rep(3e6, 2), metric = "count")
       , c("2·00 million (0·500–3·00)", "2·00 million (0·500–3·00)")
    )
    expect_equal(
-      format_lancet_clu(central = c(-0.994, -0.994), upper = c(-0.984, -0.984), lower = c(-0.998, -0.998), d_type = "prop")
+      format_lancet_clu(central = c(-0.994, -0.994), upper = c(-0.984, -0.984), lower = c(-0.998, -0.998), metric = "prop")
       , c("a decrease of 99·4% (98·4–99·8)", "a decrease of 99·4% (98·4–99·8)")
    )
    expect_equal(
-      format_lancet_clu(central = c(-0.994, -0.994), upper = c(-0.984, -0.984), lower = c(-0.998, -0.998), d_type = "prop")
+      format_lancet_clu(central = c(-0.994, -0.994), upper = c(-0.984, -0.984), lower = c(-0.998, -0.998), metric = "prop")
       , c("a decrease of 99·4% (98·4–99·8)", "a decrease of 99·4% (98·4–99·8)")
    )
    # rounding edge case
-   expect_equal(format_lancet_clu(central = 9995, lower = 9990, upper = 10100, d_type = 'count')
+   expect_equal(format_lancet_clu(central = 9995, lower = 9990, upper = 10100, metric = 'count')
                 , c("10 000 (9990–10 100)"))
    # round_5_up test
    expect_equal(
-      format_journal_clu(central = 1145, lower = 1135, upper = 1155, d_type = 'count'), "1,150 (1,140–1,160)"
+      format_journal_clu(central = 1145, lower = 1135, upper = 1155, metric = 'count'), "1,150 (1,140–1,160)"
    )
-   # format_journal_clu(central = -0.1321684, lower = -0.235321, upper = -0.056549, d_type = 'count')
-   # format_journal_df(data.frame(mean = -0.1321684, lower = -0.235321, upper = -0.056549), d_type = 'count')
+   # format_journal_clu(central = -0.1321684, lower = -0.235321, upper = -0.056549, metric = 'count')
+   # format_journal_df(data.frame(mean = -0.1321684, lower = -0.235321, upper = -0.056549), metric = 'count')
 })
 
 test_that("format_nature_clu works", {
    expect_equal(
-      format_nature_clu(central = 0.994, lower = 0.984, upper = 0.998, d_type = "prop")
+      format_nature_clu(central = 0.994, lower = 0.984, upper = 0.998, metric = "prop")
       , "99.4% (98.4–99.8)"
    )
    expect_equal(
-      format_nature_clu(central = 0.994, lower = -0.984, upper = 0.998, d_type = "prop")
+      format_nature_clu(central = 0.994, lower = -0.984, upper = 0.998, metric = "prop")
       , "99.4% (-98.4 to 99.8)"
    )
 })
@@ -102,15 +102,15 @@ test_that("format_nature_clu works", {
 
 test_that("format_lancet_clu errors correctly", {
    expect_error(
-      format_lancet_clu(central = c(0.994, 0.994), lower = c(0.984, 0.984), upper = c(0.998), d_type = "prop")
+      format_lancet_clu(central = c(0.994, 0.994), lower = c(0.984, 0.984), upper = c(0.998), metric = "prop")
       , "Column length mismatch:"
    )
    expect_error(
-      format_lancet_clu(central = c(0.994, 0.999), lower = c(0.984, 0.984), upper = c(0.998, 0.998), d_type = "prop")
+      format_lancet_clu(central = c(0.994, 0.999), lower = c(0.984, 0.984), upper = c(0.998, 0.998), metric = "prop")
       , "upper is less than/equal to central at index: 2 : \\(0.998 < 0.999\\)"
    )
    expect_error(
-      format_lancet_clu(central = c(0.994, 0.994), lower = c(0.984, 0.984), upper = c(0.998, 0.998), d_type = "propeller")
+      format_lancet_clu(central = c(0.994, 0.994), lower = c(0.984, 0.984), upper = c(0.998, 0.998), metric = "propeller")
       , "'propeller' is not a valid choice."
    )
 
@@ -131,7 +131,7 @@ test_that("format_lancet_df and format_nature_df work", {
    expect_equal(
       format_lancet_df(
          df          = DT_count,
-         d_type      = "count",
+         metric      = "count",
       )
       , structure(
          list(
@@ -148,7 +148,7 @@ test_that("format_lancet_df and format_nature_df work", {
    expect_equal(
       format_nature_df(
          df            = DT_count
-         , d_type      = "count"
+         , metric      = "count"
       )
       , structure(
          list(
@@ -176,7 +176,7 @@ test_that("format_lancet_df and format_nature_df work", {
    expect_equal(
       format_lancet_df(
          df          = DT_prop,
-         d_type      = "prop",
+         metric      = "prop",
          central_var = 'mean'
       )
       , structure(
@@ -213,7 +213,7 @@ test_that("edge case rounding works with and without thousands label", {
    )
 
    expect_equal(
-      DF |> format_journal_df(d_type = "count", style_name = "nature") # |> dput()
+      DF |> format_journal_df(metric = "count", style_name = "nature") # |> dput()
       , structure(list(
          data_space = c("thousands", "thousands_edge", "millions", "billions"),
          clu_fmt = c(
@@ -230,7 +230,7 @@ test_that("edge case rounding works with and without thousands label", {
 
    new_style("lab_thou", count_label_thousands = TRUE)
    expect_equal(
-      DF |> format_journal_df(d_type = "count", style_name = "lab_thou") # |> dput()
+      DF |> format_journal_df(metric = "count", style_name = "lab_thou") # |> dput()
       , structure(list(
          data_space = c("thousands", "thousands_edge", "millions", "billions"),
          clu_fmt = c(
@@ -246,7 +246,7 @@ test_that("edge case rounding works with and without thousands label", {
 
    new_style("count_dec", count_method = 'decimal', count_nsmall = 2)
    expect_equal(
-      DF |> format_journal_df(d_type = "count", style_name = "count_dec") # |> dput()
+      DF |> format_journal_df(metric = "count", style_name = "count_dec") # |> dput()
       , structure(list(
          data_space = c("thousands", "thousands_edge", "millions", "billions"),
          clu_fmt = c(
@@ -262,7 +262,7 @@ test_that("edge case rounding works with and without thousands label", {
 
    new_style("count_int", count_method = 'int', count_nsmall = 2) # nsmall and sigfig logic should be ignored
    expect_equal(
-      DF |> format_journal_df(d_type = "count", style_name = "count_int") # |> dput()
+      DF |> format_journal_df(metric = "count", style_name = "count_int") # |> dput()
       , structure(list(
          data_space = c("thousands", "thousands_edge", "millions", "billions"),
          clu_fmt = c(
@@ -278,7 +278,7 @@ test_that("edge case rounding works with and without thousands label", {
 
    new_style("count_int_thou", count_method = 'int', count_nsmall = 2, count_label_thousands = TRUE)
    expect_equal(
-      DF |> format_journal_df(d_type = "count", style_name = "count_int_thou") # |> dput()
+      DF |> format_journal_df(metric = "count", style_name = "count_int_thou") # |> dput()
       , structure(list(
          data_space = c("thousands", "thousands_edge", "millions", "billions"),
          clu_fmt = c(
@@ -296,20 +296,20 @@ test_that("edge case rounding works with and without thousands label", {
 # ---- Rate Integration Tests ------------------------------------------------
 
 test_that("fround_clu_triplet works with rates", {
-   result1 <- fround_clu_triplet(style_name = 'nature', clu = c(central = 0.0000123, lower = 0.0000098, upper = 0.0000152), d_type = "rate")
+   result1 <- fround_clu_triplet(style_name = 'nature', clu = c(central = 0.0000123, lower = 0.0000098, upper = 0.0000152), metric = "rate")
    expect_equal(result1$formatted, c(central = "12.3", lower = "9.80", upper = "15.2"))
 
-   result2 <- fround_clu_triplet(style_name = 'lancet', clu = c(central = 0.0000123, lower = 0.0000098, upper = 0.0000152), d_type = "rate")
+   result2 <- fround_clu_triplet(style_name = 'lancet', clu = c(central = 0.0000123, lower = 0.0000098, upper = 0.0000152), metric = "rate")
    expect_equal(result2$formatted, c(central = "12·3", lower = "9·80", upper = "15·2"))
 })
 
 test_that("format_journal_clu works with rates", {
    expect_equal(
-      format_journal_clu(central = 0.0000123, lower = 0.0000098, upper = 0.0000152, d_type = "rate", rate_unit = "deaths"),
+      format_journal_clu(central = 0.0000123, lower = 0.0000098, upper = 0.0000152, metric = "rate", rate_unit = "deaths"),
       "12.3 deaths (9.80–15.2) per 1 million"
    )
    expect_equal(
-      format_lancet_clu(central = 0.0000123, lower = 0.0000098, upper = 0.0000152, d_type = "rate", rate_unit = "cases"),
+      format_lancet_clu(central = 0.0000123, lower = 0.0000098, upper = 0.0000152, metric = "rate", rate_unit = "cases"),
       "12·3 cases (9·80–15·2) per 1 million"
    )
 })

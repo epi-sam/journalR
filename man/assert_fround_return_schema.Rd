@@ -24,7 +24,7 @@ non-exported helper
 \seealso{
 Other assertions: 
 \code{\link{assert_clu_relationship}()},
-\code{\link{assert_data_type}()},
+\code{\link{assert_metric}()},
 \code{\link{assert_rate_unit}()},
 \code{\link{assert_set_choice}()},
 \code{\link{assert_style_schema}()},

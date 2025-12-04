@@ -8,7 +8,7 @@ format_journal_clu(
   central,
   lower,
   upper,
-  d_type,
+  metric,
   style_name = "nature",
   rate_unit = NULL
 )
@@ -20,13 +20,13 @@ format_journal_clu(
 
 \item{upper}{[num] upper bound vector}
 
-\item{d_type}{[chr c(prop, pp, count, rate)] data type - proportion,
+\item{metric}{[chr c(prop, pp, count, rate)] data type - proportion,
 percentage point, count, or rate}
 
 \item{style_name}{[chr: default 'nature'] style name - controls rounding and
 formatting.}
 
-\item{rate_unit}{[chr: default NULL] rate unit label (required when d_type = 'rate')
+\item{rate_unit}{[chr: default NULL] rate unit label (required when metric = 'rate')
 - Examples: "deaths", "cases", "events", "births"}
 }
 \value{
@@ -53,7 +53,7 @@ format_journal_clu(
  central = c(0.994, -0.994)
  , lower = c(0.984, -0.998)
  , upper = c(0.998, -0.984)
- , d_type = "prop"
+ , metric = "prop"
 )
 
 # Rate formatting with rate_unit
@@ -61,7 +61,7 @@ format_journal_clu(
   central   = 0.0000123,
   lower     = 0.0000098,
   upper     = 0.0000152,
-  d_type    = "rate",
+  metric    = "rate",
   rate_unit = "deaths"
 )
 }

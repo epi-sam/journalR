@@ -11,7 +11,7 @@ test_that("end-to-end: proportions (backward compatibility)", {
       upper = c(0.607, 0.267, 0.821)
    )
 
-   result <- format_journal_df(df, d_type = "prop")
+   result <- format_journal_df(df, metric = "prop")
 
    expect_true("clu_fmt" %in% colnames(result))
    expect_equal(nrow(result), 3)
@@ -28,7 +28,7 @@ test_that("end-to-end: percentage points (backward compatibility)", {
       upper = c(0.156, -0.023)
    )
 
-   result <- format_journal_df(df, d_type = "pp")
+   result <- format_journal_df(df, metric = "pp")
 
    expect_true("clu_fmt" %in% colnames(result))
    expect_equal(result$clu_fmt[1], "12.3 pp (8.9–15.6)")
@@ -43,7 +43,7 @@ test_that("end-to-end: counts (backward compatibility)", {
       upper = c(60.7e6, 135.6e6, 6.23e9)
    )
 
-   result <- format_journal_df(df, d_type = "count")
+   result <- format_journal_df(df, metric = "count")
 
    expect_true("clu_fmt" %in% colnames(result))
    expect_equal(result$clu_fmt[1], "55.8 million (50.7–60.7)")
@@ -60,7 +60,7 @@ test_that("end-to-end: rates", {
       upper = c(0.0000152, 0.0000512, 0.0000923)
    )
 
-   result <- format_journal_df(df, d_type = "rate", rate_unit = "deaths")
+   result <- format_journal_df(df, metric = "rate", rate_unit = "deaths")
 
    expect_true("clu_fmt" %in% colnames(result))
    expect_equal(result$clu_fmt[1], "12.3 deaths (9.80–15.2) per 1 million")
@@ -77,7 +77,7 @@ test_that("end-to-end: rates with different magnitudes", {
       upper = c(0.0000152, 0.000000012, 0.000152)
    )
 
-   result <- format_journal_df(df, d_type = "rate", rate_unit = "cases")
+   result <- format_journal_df(df, metric = "rate", rate_unit = "cases")
 
    expect_equal(result$clu_fmt[1], "12.3 cases (9.80–15.2) per 1 million")
    expect_equal(result$clu_fmt[2], "10.0 cases (8.00–12.0) per 1 billion")
@@ -95,7 +95,7 @@ test_that("rate_unit required for rates", {
          central = 0.0000123,
          lower   = 0.0000098,
          upper   = 0.0000152,
-         d_type  = "rate"
+         metric  = "rate"
       ),
       "rate_unit is required"
    )
@@ -103,7 +103,7 @@ test_that("rate_unit required for rates", {
    expect_error(
       format_journal_df(
          data.frame(mean = 0.0000123, lower = 0.0000098, upper = 0.0000152),
-         d_type = "rate"
+         metric = "rate"
       ),
       "rate_unit is required"
    )
@@ -115,7 +115,7 @@ test_that("rate_unit ignored for non-rates", {
       central   = 0.5,
       lower     = 0.4,
       upper     = 0.6,
-      d_type    = "prop",
+      metric    = "prop",
       rate_unit = "ignored"
    )
    expect_false(grepl("ignored", result_prop))
@@ -125,7 +125,7 @@ test_that("rate_unit ignored for non-rates", {
       central   = 1000000,
       lower     = 900000,
       upper     = 1100000,
-      d_type    = "count",
+      metric    = "count",
       rate_unit = "ignored"
    )
    expect_false(grepl("ignored", result_count))
@@ -137,7 +137,7 @@ test_that("rate_unit validates as string", {
          central   = 0.0000123,
          lower     = 0.0000098,
          upper     = 0.0000152,
-         d_type    = "rate",
+         metric    = "rate",
          rate_unit = 123
       ),
       regexp = "Assertion on 'rate_unit' failed: Must be of type 'string', not 'double'."
@@ -151,7 +151,7 @@ test_that("rate formatting produces correct string structure", {
       central   = 0.0000123,
       lower     = 0.0000098,
       upper     = 0.0000152,
-      d_type    = "rate",
+      metric    = "rate",
       rate_unit = "deaths"
    )
 
@@ -167,7 +167,7 @@ test_that("rate formatting with different units", {
       central = 0.0000123,
       lower   = 0.0000098,
       upper   = 0.0000152,
-      d_type  = "rate"
+      metric  = "rate"
    )
 
    # Test different rate units
@@ -188,7 +188,7 @@ test_that("rates work with UI_only style", {
       central    = 0.0000123,
       lower      = 0.0000098,
       upper      = 0.0000152,
-      d_type     = "rate",
+      metric     = "rate",
       rate_unit  = "deaths",
       style_name = "ui_only_test"
    )
@@ -203,7 +203,7 @@ test_that("format_lancet_clu works with rates", {
       central   = 0.0000123,
       lower     = 0.0000098,
       upper     = 0.0000152,
-      d_type    = "rate",
+      metric    = "rate",
       rate_unit = "deaths"
    )
 
@@ -215,7 +215,7 @@ test_that("format_nature_clu works with rates", {
       central   = 0.0000123,
       lower     = 0.0000098,
       upper     = 0.0000152,
-      d_type    = "rate",
+      metric    = "rate",
       rate_unit = "cases"
    )
 
@@ -230,7 +230,7 @@ test_that("format_lancet_df works with rates", {
       upper    = 0.0000152
    )
 
-   result <- format_lancet_df(df, d_type = "rate", rate_unit = "deaths")
+   result <- format_lancet_df(df, metric = "rate", rate_unit = "deaths")
 
    expect_true("clu_fmt" %in% colnames(result))
    expect_equal(result$clu_fmt[1], "12·3 deaths (9·80–15·2) per 1 million")
@@ -244,7 +244,7 @@ test_that("format_nature_df works with rates", {
       upper    = 0.0000152
    )
 
-   result <- format_nature_df(df, d_type = "rate", rate_unit = "cases")
+   result <- format_nature_df(df, metric = "rate", rate_unit = "cases")
 
    expect_true("clu_fmt" %in% colnames(result))
    expect_equal(result$clu_fmt[1], "12.3 cases (9.80–15.2) per 1 million")
@@ -255,7 +255,7 @@ test_that("format_nature_df works with rates", {
 test_that("fmt_magnitude works with rates", {
    result <- fmt_magnitude(
       x         = 0.0000123,
-      d_type    = "rate",
+      metric    = "rate",
       rate_unit = "deaths"
    )
 
@@ -265,12 +265,12 @@ test_that("fmt_magnitude works with rates", {
 
 test_that("fmt_magnitude validates rate_unit", {
    expect_error(
-      fmt_magnitude(x = 0.0000123, d_type = "rate"),
+      fmt_magnitude(x = 0.0000123, metric = "rate"),
       "rate_unit is required"
    )
 
    # Should not error for non-rate types
-   result <- fmt_magnitude(x = 1000000, d_type = "count")
+   result <- fmt_magnitude(x = 1000000, metric = "count")
    expect_false(grepl("deaths|cases", result))
 })
 
@@ -287,7 +287,7 @@ test_that("fround_rate handles different magnitudes correctly", {
    for (case in test_cases) {
       result <- fround_clu_triplet(
          clu = c(case$val, case$val * 0.8, case$val * 1.2),
-         d_type = "rate",
+         metric = "rate",
          style_name = "nature"
       )
 
@@ -329,7 +329,7 @@ test_that("assert_rate_unit works correctly", {
    # Should error for rate without unit
    expect_error(
       assert_rate_unit("rate", NULL),
-      "rate_unit is required when d_type = 'rate'"
+      "rate_unit is required when metric = 'rate'"
    )
 
    # Should error for rate with non-string unit
@@ -349,7 +349,7 @@ test_that("existing prop/pp/count functionality unchanged", {
       central = c(0.558, 0.234),
       lower = c(0.507, 0.201),
       upper = c(0.607, 0.267),
-      d_type = "prop"
+      metric = "prop"
    )
    expect_equal(prop_result[1], "55.8% (50.7–60.7)")
    expect_equal(prop_result[2], "23.4% (20.1–26.7)")
@@ -359,7 +359,7 @@ test_that("existing prop/pp/count functionality unchanged", {
       central = c(55.8e6, 5.67e9),
       lower = c(50.7e6, 5.12e9),
       upper = c(60.7e6, 6.23e9),
-      d_type = "count"
+      metric = "count"
    )
    expect_equal(count_result[1], "55.8 million (50.7–60.7)")
    expect_equal(count_result[2], "5.67 billion (5.12–6.23)")
@@ -375,7 +375,7 @@ test_that("existing df formatting unchanged", {
       upper = c(0.607, 0.267)
    )
 
-   result <- format_journal_df(df_prop, d_type = "prop")
+   result <- format_journal_df(df_prop, metric = "prop")
    expect_equal(ncol(result), 1)  # Only clu_fmt column remains
    expect_equal(nrow(result), 2)
    expect_true("clu_fmt" %in% colnames(result))
@@ -411,7 +411,7 @@ test_that("custom styles work with rates", {
       central    = 0.0000123,
       lower      = 0.0000098,
       upper      = 0.0000152,
-      d_type     = "rate",
+      metric     = "rate",
       rate_unit  = "events",
       style_name = "custom_rate"
    )

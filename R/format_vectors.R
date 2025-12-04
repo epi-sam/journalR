@@ -323,7 +323,7 @@ add_epsilon <- function(x, epsilon = 1e-12){
 fround_props <- function(clu, style_name) {
 
    # Compute magnitude from central value
-   df_mag <- set_magnitude(clu[1], d_type = "prop")
+   df_mag <- set_magnitude(clu[1], metric = "prop")
    checkmate::assert_data_frame(df_mag, nrows = 1)
 
    style <- get_style(style_name)
@@ -355,7 +355,7 @@ fround_props <- function(clu, style_name) {
 #'
 #' @param clu [num] numeric triplet of counts/rates (central, lower, upper)
 #' @param style_name [chr] style name - controls rounding and formatting
-#' @param d_type [chr] data type: "count" or "rate"
+#' @param metric [chr] metric type: "count" or "rate"
 #'
 #' @returns [list] with elements:
 #'   - formatted: chr[3] - formatted central, lower, upper values
@@ -368,37 +368,37 @@ fround_props <- function(clu, style_name) {
 #' result <- fround_count_rate(
 #'   clu = c(12345, 67890, 6.6666e6),
 #'   style_name = 'nature',
-#'   d_type = 'count'
+#'   metric = 'count'
 #' )
 #' result$formatted  # chr[3]
 #' result$df_mag_row # df[1,]
 #' }
-fround_count_rate <- function(clu, style_name, d_type) {
+fround_count_rate <- function(clu, style_name, metric) {
 
   # === Input Validation ===
-  if (d_type == "count" && any(clu < 0)) {
+  if (metric == "count" && any(clu < 0)) {
     stop("Counts < 0 not yet supported: ", toString(clu))
   }
 
-  if (d_type == "rate" && any(clu <= 0)) {
+  if (metric == "rate" && any(clu <= 0)) {
     stop("Rates <= 0 not supported: ", toString(clu), call. = FALSE)
   }
 
   # === Extract style parameters ===
   style <- get_style(style_name)
 
-  # Use d_type as prefix for parameter names
-  method      <- style[[sprintf("%s_method", d_type)]]
-  sigfig      <- style[[sprintf("%s_digits_sigfig", d_type)]]
-  nsmall      <- style[[sprintf("%s_nsmall", d_type)]]
-  force_trail <- style[[sprintf("%s_pad_sigfigs", d_type)]]
+  # Use metric as prefix for parameter names
+  method      <- style[[sprintf("%s_method", metric)]]
+  sigfig      <- style[[sprintf("%s_digits_sigfig", metric)]]
+  nsmall      <- style[[sprintf("%s_nsmall", metric)]]
+  force_trail <- style[[sprintf("%s_pad_sigfigs", metric)]]
 
   # Shared parameters
   big.mark_base         <- style[["count_big.mark"]]
   decimal.mark          <- style[["decimal.mark"]]
   round_5_up            <- style[["round_5_up"]]
   is_lancet             <- style[["is_lancet"]]
-  count_label_thousands <- if (d_type == "count") {
+  count_label_thousands <- if (metric == "count") {
     style[["count_label_thousands"]]
   } else {
     FALSE
@@ -417,14 +417,14 @@ fround_count_rate <- function(clu, style_name, d_type) {
   }
 
   # Do trial rounding with arbitrary magnitude (scale = 1)
-  central_trial_rounded <- if (d_type == "count"){
+  central_trial_rounded <- if (metric == "count"){
      switch_strict(
         method,
         "sigfig"  = signif(central_val, sigfig),
         "decimal" = round(central_val, digits = nsmall),
         "int"     = round(central_val, digits = 0)
      )
-  } else if (d_type == "rate"){
+  } else if (metric == "rate"){
      central_val
   }
 
@@ -432,7 +432,7 @@ fround_count_rate <- function(clu, style_name, d_type) {
   # This automatically handles boundary crossings (e.g., 999,999 -> 1,000,000)
   df_mag <- set_magnitude(
     x                     = central_trial_rounded,
-    d_type                = d_type,
+    metric                = metric,
     count_label_thousands = count_label_thousands,
     verbose               = FALSE
   )
@@ -455,7 +455,7 @@ fround_count_rate <- function(clu, style_name, d_type) {
     big.mark <- big.mark_base
 
     # Apply Lancet rule (counts only, per-value)
-    if (d_type == "count" && is_lancet && abs(round(x, 0)) <= 9999) {
+    if (metric == "count" && is_lancet && abs(round(x, 0)) <= 9999) {
       big.mark <- ""
     }
 
@@ -467,7 +467,7 @@ fround_count_rate <- function(clu, style_name, d_type) {
         x_fmt <- signif(x_sc, sigfig)
 
         # Lancet edge case: if raw value <= 9999 but rounds to >= 10000
-        if (d_type == "count" && is_lancet && x_raw <= 9999 && x_fmt >= 10000) {
+        if (metric == "count" && is_lancet && x_raw <= 9999 && x_fmt >= 10000) {
           big.mark <- big.mark_base
         }
 
@@ -531,7 +531,7 @@ fround_count_rate <- function(clu, style_name, d_type) {
 #       df_mag <- get_df_mag_row(idx)
 #    } else {
 #       # Standalone mode: compute magnitude from central value
-#       df_mag <- set_magnitude(clu[1], d_type = "count")  # clu[1] is central
+#       df_mag <- set_magnitude(clu[1], metric = "count")  # clu[1] is central
 #    }
 #
 #    checkmate::assert_data_frame(df_mag, nrows = 1)
@@ -571,7 +571,7 @@ fround_count_rate <- function(clu, style_name, d_type) {
 #    # Recalculate magnitude based on rounded value
 #    df_mag_new <- set_magnitude(
 #       x                     = central_at_original_scale,
-#       d_type                = "count",
+#       metric                = "count",
 #       mag                   = NULL,
 #       count_label_thousands = count_label_thousands,
 #       verbose               = FALSE
@@ -758,7 +758,7 @@ fround_count_rate <- function(clu, style_name, d_type) {
 #       df_mag <- get_df_mag_row(idx)
 #    } else {
 #       # Standalone mode: compute magnitude from central value
-#       df_mag <- set_magnitude(clu[1], d_type = "rate")
+#       df_mag <- set_magnitude(clu[1], metric = "rate")
 #    }
 #
 #    style <- get_style(style_name)
@@ -795,7 +795,7 @@ fround_count_rate <- function(clu, style_name, d_type) {
 #    # Recalculate magnitude based on rounded value
 #    df_mag_new <- set_magnitude(
 #       x       = central_at_original_scale,
-#       d_type  = "rate",
+#       metric  = "rate",
 #       mag     = NULL,
 #       verbose = FALSE
 #    )
@@ -898,14 +898,14 @@ fround_count_rate <- function(clu, style_name, d_type) {
 
 #' Format and round a single central/lower/upper value set by magnitude without units
 #'
-#' `central` could be mean/median/point_estimate. `d_type` is required (count
+#' `central` could be mean/median/point_estimate. `metric` is required (count
 #' data requires nuanced logic), but labels are not returned.
 #'
 #' Format and round without unit labeling
 #' - Use `format_lancet_clu()` for unit labels
 #'
 #' @param clu [num] a numeric triplet of three values in central/lower/upper order
-#' @param d_type [chr c('prop', 'pp', 'count', or 'rate')] data type - proportion,
+#' @param metric [chr c('prop', 'pp', 'count', or 'rate')] metric type - proportion,
 #'   percentage point, count, or rate
 #' @param style_name [chr: default 'nature'] style name - controls rounding and formatting
 #'
@@ -919,15 +919,15 @@ fround_count_rate <- function(clu, style_name, d_type) {
 #' \dontrun{
 #' result <- fround_clu_triplet(
 #'   clu = c(central = 0.2, lower = 0.1, upper = 0.3),
-#'   d_type = "prop"
+#'   metric = "prop"
 #' )
 #' result$formatted  # chr[3]
 #' result$df_mag_row # df[1,]
 #' }
-fround_clu_triplet <- function(clu, d_type, style_name = "nature") {
+fround_clu_triplet <- function(clu, metric, style_name = "nature") {
 
    style  <- get_style(style_name)
-   d_type <- assert_data_type(d_type)
+   metric <- assert_metric(metric)
 
    checkmate::assert_vector(clu, len = 3)
    checkmate::assert_numeric(clu, len = 3)
@@ -937,15 +937,15 @@ fround_clu_triplet <- function(clu, d_type, style_name = "nature") {
 
    # Call appropriate formatting helper
    result <- switch_strict(
-      d_type,
+      metric,
       "prop"  = fround_props(clu = clu, style_name = style_name),
       "pp"    = fround_props(clu = clu, style_name = style_name),
-      "count" = fround_count_rate(clu = clu, style_name = style_name, d_type = "count"),
-      "rate"  = fround_count_rate(clu = clu, style_name = style_name, d_type = "rate")
+      "count" = fround_count_rate(clu = clu, style_name = style_name, metric = "count"),
+      "rate"  = fround_count_rate(clu = clu, style_name = style_name, metric = "rate")
    )
 
    # Validate return schema
-   assert_fround_return_schema(result, context = sprintf("fround helper (d_type=%s)", d_type))
+   assert_fround_return_schema(result, context = sprintf("fround helper (metric=%s)", metric))
 
    # Extract formatted values and apply negative sign styling
    clu_fmt <- result$formatted
@@ -1029,7 +1029,7 @@ fround <- function(x, digits = 1L, nsmall = 1L, decimal.mark = "."){
 #' Unaware of schema, just a hard-coded git-er-done function.
 #'
 #' @param x [num] numeric value
-#' @param d_type [chr c('prop', 'pp', or 'count')] data type - proportion,
+#' @param metric [chr c('prop', 'pp', or 'count')] data type - proportion,
 #'   percentage point or count
 #' @param digits [integer: default 1L] passed to `round()`
 #' @param nsmall [integer: default 1L] passed to `format()`
@@ -1040,12 +1040,12 @@ fround <- function(x, digits = 1L, nsmall = 1L, decimal.mark = "."){
 #' @family vector_formats
 #'
 #' @examples
-#' fround_dtype(0.123456789)
-#' fround_dtype(0.123456789, 'pp', 3, 4)
-#' fround_dtype(c(55.8346, 123.456789), 'count', 3, 4, ".")
-fround_dtype <- function(
+#' fround_metric(0.123456789)
+#' fround_metric(0.123456789, 'pp', 3, 4)
+#' fround_metric(c(55.8346, 123.456789), 'count', 3, 4, ".")
+fround_metric <- function(
       x
-      , d_type       = "prop"
+      , metric       = "prop"
       , digits       = 1L
       , nsmall       = 1L
       , decimal.mark = "."
@@ -1057,7 +1057,7 @@ fround_dtype <- function(
    checkmate::assert_character(decimal.mark, len = 1)
 
    # select data-type label
-   suffix <- get_data_type_labels(d_type)
+   suffix <- get_metric_labels(metric)
 
    # round and format
    x_fmt <- x  |>
@@ -1078,7 +1078,7 @@ fround_dtype <- function(
 #' Caution - thousands magnitude is not Lancet compliant.
 #'
 #' @param x [num] numeric vector
-#' @param d_type [chr] data type: "prop", "pp", "count", "rate" (required)
+#' @param metric [chr] data type: "prop", "pp", "count", "rate" (required)
 #' @param digits [int: default 1L] passed to `round()`
 #' @param nsmall [int: default 1L] passed to `format()`
 #' @param mag [chr: default NULL] magnitude override
@@ -1089,7 +1089,7 @@ fround_dtype <- function(
 #'   Lancet-valid. Passed to `set_magnitude()`
 #' @param decimal.mark [chr: default "."] decimal mark passed to `format()`
 #' @param rate_unit [chr: default NULL] unit label for rates (e.g., "deaths", "cases").
-#'   Required when d_type = "rate", ignored otherwise.
+#'   Required when metric = "rate", ignored otherwise.
 #'
 #' @return [chr] formatted string
 #' @export
@@ -1097,11 +1097,11 @@ fround_dtype <- function(
 #' @family magnitudes
 #'
 #' @examples
-#' fmt_magnitude(123456789, d_type = "count")
-#' fmt_magnitude(0.0000123, d_type = "rate", rate_unit = "deaths")
+#' fmt_magnitude(123456789, metric = "count")
+#' fmt_magnitude(0.0000123, metric = "rate", rate_unit = "deaths")
 fmt_magnitude <- function(
       x
-      , d_type
+      , metric
       , digits                = 1
       , nsmall                = 1
       , decimal.mark          = "."
@@ -1110,7 +1110,7 @@ fmt_magnitude <- function(
       , rate_unit             = NULL
 ){
 
-   assert_rate_unit(d_type, rate_unit)
+   assert_rate_unit(metric, rate_unit)
 
    checkmate::assert_numeric(x)
    checkmate::assert_vector(x)
@@ -1119,11 +1119,11 @@ fmt_magnitude <- function(
    checkmate::assert_integerish(nsmall, len = 1, lower = 0)
 
    # Define rate unit space for sprintf
-   rate_unit_fmt <- if (d_type == "rate" && !is.null(rate_unit)) sprintf(" %s", rate_unit) else ""
+   rate_unit_fmt <- if (metric == "rate" && !is.null(rate_unit)) sprintf(" %s", rate_unit) else ""
 
    df_mag <- set_magnitude(
       x
-      , d_type                = d_type
+      , metric                = metric
       , mag                   = mag
       , count_label_thousands = count_label_thousands
       , verbose               = FALSE
@@ -1149,11 +1149,11 @@ fmt_magnitude <- function(
 
 #' Format and round with data-type suffix
 #'
-#' Lancet-specific wrapper for `fround_dtype()`, using mid-dot as decimal mark.
+#' Lancet-specific wrapper for `fround_metric()`, using mid-dot as decimal mark.
 #' Retaining for legacy purposes (no Nature equivalent)
 #'
 #' @param x [num] numeric value
-#' @param d_type [chr c('prop', 'pp', or 'count')] data type - proportion, percentage point or count
+#' @param metric [chr c('prop', 'pp', or 'count')] data type - proportion, percentage point or count
 #' @param digits [integer: default 1L] passed to `round()`
 #' @param nsmall [integer: default 1L] passed to `format()`
 #' @param decimal.mark [chr: default mid_dot()] decimal mark passed to `format()`
@@ -1163,20 +1163,20 @@ fmt_magnitude <- function(
 #' @family vector_formats
 #'
 #' @examples
-#' fround_dtype_lancet(0.123456789)
-#' fround_dtype_lancet(0.123456789, 'pp', 3, 4)
-#' fround_dtype_lancet(c(55.8346, 123.456789), 'count', 3, 4, ".")
-fround_dtype_lancet <- function(
+#' fround_metric_lancet(0.123456789)
+#' fround_metric_lancet(0.123456789, 'pp', 3, 4)
+#' fround_metric_lancet(c(55.8346, 123.456789), 'count', 3, 4, ".")
+fround_metric_lancet <- function(
       x
-      , d_type       = "prop"
+      , metric       = "prop"
       , digits       = 1L
       , nsmall       = 1L
       , decimal.mark = mid_dot()
 ){
 
-   fround_dtype(
+   fround_metric(
       x              = x
-      , d_type       = d_type
+      , metric       = metric
       , digits       = digits
       , nsmall       = nsmall
       , decimal.mark = decimal.mark

@@ -6,7 +6,7 @@
 \usage{
 format_journal_df(
   df,
-  d_type,
+  metric,
   new_var = "clu_fmt",
   style_name = "nature",
   central_var = "mean",
@@ -19,7 +19,7 @@ format_journal_df(
 \arguments{
 \item{df}{[data.frame, data.table]}
 
-\item{d_type}{[chr c('prop', 'pp', 'count', 'rate')] a single data type}
+\item{metric}{[chr c('prop', 'pp', 'count', 'rate')] a single data type}
 
 \item{new_var}{[chr: default 'clu_fmt'] name of new formatted column}
 
@@ -35,14 +35,14 @@ formatting.}
 \item{remove_clu_columns}{[lgl: default TRUE] remove central, lower, upper
 variables after formatting?}
 
-\item{rate_unit}{[chr: default NULL] rate unit label (required when d_type = 'rate')
+\item{rate_unit}{[chr: default NULL] rate unit label (required when metric = 'rate')
 - Examples: "deaths", "cases", "events", "births"}
 }
 \value{
 [data.frame] data.frame, data.table with new 'clu_fmt' column
 }
 \description{
-Assumes a single data-type (d_type) for the whole table (e.g. 'prop', 'pp',
+Assumes a single data-type (metric) for the whole table (e.g. 'prop', 'pp',
 'count')
 }
 \examples{
@@ -52,7 +52,7 @@ df <- data.frame(
  , lower     = c(0.1134, -0.2245, -0.4445)
  , upper     = c(0.1334, 0.2445, 0.3556)
 )
-format_journal_df(df, d_type = "prop")
+format_journal_df(df, metric = "prop")
 
 # Rate formatting example
 rate_df <- data.frame(
@@ -61,7 +61,7 @@ rate_df <- data.frame(
   lower    = c(0.0000098, 0.0000401),
   upper    = c(0.0000152, 0.0000512)
 )
-format_journal_df(rate_df, d_type = "rate", rate_unit = "deaths")
+format_journal_df(rate_df, metric = "rate", rate_unit = "deaths")
 }
 \seealso{
 Other styled_formats: 

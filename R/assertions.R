@@ -81,15 +81,15 @@ assert_set_choice <- function(x, choices){
 #'
 #' Validates that a given data type is among the allowed types.
 #'
-#' @param d_type [chr] data type to validate
+#' @param metric [chr] metric type to validate
 #'
-#' @returns [chr] invisible validated d_type
+#' @returns [chr] invisible validated metric
 #' @family assertions
 #' @keywords internal
-assert_data_type <- function(d_type){
-   require_args(d_type)
-   assert_set_choice(x = d_type, choices = get_data_types())
-   invisible(d_type)
+assert_metric <- function(metric){
+   require_args(metric)
+   assert_set_choice(x = metric, choices = get_metrics())
+   invisible(metric)
 }
 
 
@@ -137,24 +137,24 @@ assert_clu_relationship <- function(central, lower, upper){
 
 #' Assert rate unit parameter
 #'
-#' Validates that when d_type is "rate", rate_unit is provided and is a string.
-#' When d_type is not "rate", rate_unit is ignored.
+#' Validates that when metric is "rate", rate_unit is provided and is a string.
+#' When metric is not "rate", rate_unit is ignored.
 #'
-#' @param d_type [chr] data type
+#' @param metric [chr] metric type
 #' @param rate_unit [chr or NULL] rate unit parameter
 #'
-#' @returns [none] stop if d_type is "rate" and rate_unit is missing/invalid
+#' @returns [none] stop if metric is "rate" and rate_unit is missing/invalid
 #' @family assertions
 #' @keywords internal
-assert_rate_unit <- function(d_type, rate_unit) {
-   checkmate::assert_string(d_type)
-   
-   if (d_type == "rate") {
+assert_rate_unit <- function(metric, rate_unit) {
+   checkmate::assert_string(metric)
+
+   if (metric == "rate") {
       if (is.null(rate_unit)) {
-         stop("rate_unit is required when d_type = 'rate' (e.g., 'cases', 'deaths')", call. = FALSE)
+         stop("rate_unit is required when metric = 'rate' (e.g., 'cases', 'deaths')", call. = FALSE)
       }
       checkmate::assert_string(rate_unit)
    }
-   
+
    invisible(NULL)
 }

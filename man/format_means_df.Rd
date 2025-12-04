@@ -4,12 +4,12 @@
 \alias{format_means_df}
 \title{Format multiple data.frame 'mean_*' columns for presentation (by data type).}
 \usage{
-format_means_df(df, d_type, central_var = "mean", style_name = "nature")
+format_means_df(df, metric, central_var = "mean", style_name = "nature")
 }
 \arguments{
 \item{df}{[data.table] input data.table with one or more 'mean_' columns}
 
-\item{d_type}{[chr c('prop', 'pp', or 'count')] a single data type}
+\item{metric}{[chr c('prop', 'pp', or 'count')] a single data type}
 
 \item{central_var}{[chr: default 'mean'] prefix of mean variable names to
 format.  Implemented as e.g. "^mean[_]*" to capture 'mean', 'mean_1990',
@@ -22,7 +22,7 @@ formatting.}
 [data.table] copy of input data.table with formatted mean column(s)
 }
 \description{
-Format one or more 'mean_' columns by magnitude, data_type, and style.
+Format one or more 'mean_' columns by magnitude, metric, and style.
 }
 \details{
 BEWARE: Does not have sophisticated count-type data handling like
@@ -35,7 +35,7 @@ df <- data.frame(
   , mean_1990 = c(100, 1e6, 1e9)
   , mean_2000 = c(200, 2e6, 2e-1)
  )
-format_means_df(df, d_type = "count")
+format_means_df(df, metric = "count")
 }
 \seealso{
 Other styled_formats: 

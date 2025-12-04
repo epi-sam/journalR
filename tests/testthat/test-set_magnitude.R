@@ -80,7 +80,7 @@ test_that("set_magnitude_rate validates positive values", {
 test_that("set_magnitude_rate warns for rates >= 1", {
    expect_warning(
       result <- set_magnitude_rate(1.5),
-      "Rate value >= 1.*Consider using d_type='count'"
+      "Rate value >= 1.*Consider using metric='count'"
    )
    expect_equal(result$mag, "")
 })
@@ -89,51 +89,51 @@ test_that("set_magnitude_rate warns for rates >= 1", {
 
 test_that("set_magnitude routes to correct helper", {
    # Prop
-   result_prop <- set_magnitude(0.5, d_type = "prop")
+   result_prop <- set_magnitude(0.5, metric = "prop")
    expect_equal(result_prop$mag, "")
    expect_equal(result_prop$denom, 0.01)
 
    # Count
-   result_count <- set_magnitude(1e6, d_type = "count")
+   result_count <- set_magnitude(1e6, metric = "count")
    expect_equal(result_count$mag, "m")
    expect_equal(result_count$denom, 1e6)
 
    # Rate
-   result_rate <- set_magnitude(0.0000123, d_type = "rate")
+   result_rate <- set_magnitude(0.0000123, metric = "rate")
    expect_equal(result_rate$mag, "per1m")
    expect_equal(result_rate$denom, 1e-6)
 
    # Percentage points
-   result_pp <- set_magnitude(0.05, d_type = "pp")
+   result_pp <- set_magnitude(0.05, metric = "pp")
    expect_equal(result_pp$mag, "")
    expect_equal(result_pp$denom, 0.01)
 })
 
-test_that("set_magnitude requires d_type", {
+test_that("set_magnitude requires metric", {
    expect_error(
       set_magnitude(1e6),
-      'argument "d_type" is missing'
+      'argument "metric" is missing'
    )
 })
 
-test_that("set_magnitude validates d_type", {
+test_that("set_magnitude validates metric", {
    expect_error(
-      set_magnitude(1e6, d_type = "invalid"),
-      "is not a valid choice for d_type"
+      set_magnitude(1e6, metric = "invalid"),
+      "is not a valid choice for metric"
    )
 })
 
 test_that("set_magnitude preserves other parameters", {
    # Test label_thousands is passed through
    expect_warning(
-      result <- set_magnitude(1e3, d_type = "count", count_label_thousands = TRUE)
+      result <- set_magnitude(1e3, metric = "count", count_label_thousands = TRUE)
       , regexp = "'thousands' magnitude is not Lancet-valid"
 
    )
    expect_equal(result$mag, "t")
 
    # Test mag override is passed through
-   result2 <- set_magnitude(1e6, d_type = "count", mag = "b")
+   result2 <- set_magnitude(1e6, metric = "count", mag = "b")
    expect_equal(result2$mag, "b")
 })
 
@@ -148,9 +148,9 @@ test_that("set_magnitude errors for empty vectors", {
 
 test_that("set_magnitude returns consistent structure", {
    # All helpers should return same column structure
-   result_prop <- set_magnitude(0.5, d_type = "prop")
-   result_count <- set_magnitude(1e6, d_type = "count")
-   result_rate <- set_magnitude(0.0000123, d_type = "rate")
+   result_prop <- set_magnitude(0.5, metric = "prop")
+   result_count <- set_magnitude(1e6, metric = "count")
+   result_rate <- set_magnitude(0.0000123, metric = "rate")
 
    expect_equal(names(result_prop), c("mag", "mag_label", "denom"))
    expect_equal(names(result_count), c("mag", "mag_label", "denom"))

@@ -23,11 +23,11 @@
 #' @param central [num] central, point_estimate value vector
 #' @param lower [num] lower bound vector
 #' @param upper [num] upper bound vector
-#' @param d_type [chr c(prop, pp, count, rate)] data type - proportion,
+#' @param metric [chr c(prop, pp, count, rate)] data type - proportion,
 #'   percentage point, count, or rate
 #' @param style_name [chr: default 'nature'] style name - controls rounding and
 #'   formatting.
-#' @param rate_unit [chr: default NULL] rate unit label (required when d_type = 'rate')
+#' @param rate_unit [chr: default NULL] rate unit label (required when metric = 'rate')
 #'   - Examples: "deaths", "cases", "events", "births"
 #' @return [chr] formatted string vector
 #' @export
@@ -37,7 +37,7 @@
 #'  central = c(0.994, -0.994)
 #'  , lower = c(0.984, -0.998)
 #'  , upper = c(0.998, -0.984)
-#'  , d_type = "prop"
+#'  , metric = "prop"
 #' )
 #'
 #' # Rate formatting with rate_unit
@@ -45,20 +45,20 @@
 #'   central   = 0.0000123,
 #'   lower     = 0.0000098,
 #'   upper     = 0.0000152,
-#'   d_type    = "rate",
+#'   metric    = "rate",
 #'   rate_unit = "deaths"
 #' )
 format_journal_clu <- function(
       central
       , lower
       , upper
-      , d_type
+      , metric
       , style_name = "nature"
       , rate_unit  = NULL
 ) {
 
-   d_type <- assert_data_type(d_type)
-   assert_rate_unit(d_type, rate_unit)
+   metric <- assert_metric(metric)
+   assert_rate_unit(metric, rate_unit)
 
    style                  <- get_style(style_name)
    neg_mark_mean          <- style[["neg_mark_mean"]]
@@ -140,7 +140,7 @@ format_journal_clu <- function(
    results_list <- lapply(seq_len(ncol(triplets_neg_processed)), function(idx){
       result <- fround_clu_triplet(
          clu          = triplets_neg_processed[, idx]
-         , d_type     = d_type
+         , metric     = metric
          , style_name = style_name
       )
 
@@ -165,9 +165,9 @@ format_journal_clu <- function(
 
    # === END NEW ===
 
-   d_type_label <- get_data_type_labels(d_type)
+   metric_label <- get_metric_labels(metric)
 
-   is_rate_type <- (d_type == "rate")
+   is_rate_type <- (metric == "rate")
 
    str_vec <- unlist(lapply(seq_along(triplets_fmt), function(i){
       .cen          <- triplets_fmt[[i]]['central']
@@ -187,7 +187,7 @@ format_journal_clu <- function(
          rate_unit_fmt    <- ""                           # empty for non-rates
          .rate_mag_label  <- ""                           # empty for non-rates
          .count_mag_label <- .mag_label                   # "million " for counts
-         .type_label      <- d_type_label                 # "%" for props
+         .type_label      <- metric_label                 # "%" for props
       }
 
       # Single glue template handles all types
@@ -211,11 +211,11 @@ format_journal_clu <- function(
 
 #' Return a table with formatted central, lower, upper
 #'
-#' Assumes a single data-type (d_type) for the whole table (e.g. 'prop', 'pp',
+#' Assumes a single data-type (metric) for the whole table (e.g. 'prop', 'pp',
 #' 'count')
 #'
 #' @param df [data.frame, data.table]
-#' @param d_type [chr c('prop', 'pp', 'count', 'rate')] a single data type
+#' @param metric [chr c('prop', 'pp', 'count', 'rate')] a single data type
 #' @param central_var [chr: default 'mean'] name of central tendency variable
 #' @param lower_var [chr: default 'lower'] name of lower bound variable
 #' @param upper_var [chr: default 'upper'] name of upper bound variable
@@ -223,7 +223,7 @@ format_journal_clu <- function(
 #'   variables after formatting?
 #' @param style_name [chr: default 'nature'] style name - controls rounding and
 #'   formatting.
-#' @param rate_unit [chr: default NULL] rate unit label (required when d_type = 'rate')
+#' @param rate_unit [chr: default NULL] rate unit label (required when metric = 'rate')
 #'   - Examples: "deaths", "cases", "events", "births"
 #' @param new_var [chr: default 'clu_fmt'] name of new formatted column
 #'
@@ -238,7 +238,7 @@ format_journal_clu <- function(
 #'  , lower     = c(0.1134, -0.2245, -0.4445)
 #'  , upper     = c(0.1334, 0.2445, 0.3556)
 #' )
-#' format_journal_df(df, d_type = "prop")
+#' format_journal_df(df, metric = "prop")
 #'
 #' # Rate formatting example
 #' rate_df <- data.frame(
@@ -247,10 +247,10 @@ format_journal_clu <- function(
 #'   lower    = c(0.0000098, 0.0000401),
 #'   upper    = c(0.0000152, 0.0000512)
 #' )
-#' format_journal_df(rate_df, d_type = "rate", rate_unit = "deaths")
+#' format_journal_df(rate_df, metric = "rate", rate_unit = "deaths")
 format_journal_df <- function(
       df
-      , d_type
+      , metric
       , new_var            = "clu_fmt"
       , style_name         = "nature"
       , central_var        = "mean"
@@ -260,7 +260,7 @@ format_journal_df <- function(
       , rate_unit          = NULL
 ){
 
-   d_type <- assert_data_type(d_type)
+   metric <- assert_metric(metric)
 
    checkmate::assert_string(central_var)
    checkmate::assert_string(lower_var)
@@ -276,7 +276,7 @@ format_journal_df <- function(
          central      = df[[central_var]]
          , lower      = df[[lower_var]]
          , upper      = df[[upper_var]]
-         , d_type     = d_type
+         , metric     = metric
          , style_name = style_name
          , rate_unit  = rate_unit
       )
@@ -289,14 +289,14 @@ format_journal_df <- function(
 
 #' Format multiple data.frame 'mean_*' columns for presentation (by data type).
 #'
-#' Format one or more 'mean_' columns by magnitude, data_type, and style.
+#' Format one or more 'mean_' columns by magnitude, metric, and style.
 #'
 #' BEWARE: Does not have sophisticated count-type data handling like
 #' `format_journal_clu()`.  This is a simple formatter for multiple mean
 #' columns. Use with caution.
 #'
 #' @param df [data.table] input data.table with one or more 'mean_' columns
-#' @param d_type [chr c('prop', 'pp', or 'count')] a single data type
+#' @param metric [chr c('prop', 'pp', or 'count')] a single data type
 #' @param central_var [chr: default 'mean'] prefix of mean variable names to
 #'   format.  Implemented as e.g. "^mean[_]*" to capture 'mean', 'mean_1990',
 #'   'mean_2000', etc.
@@ -313,31 +313,31 @@ format_journal_df <- function(
 #'   , mean_1990 = c(100, 1e6, 1e9)
 #'   , mean_2000 = c(200, 2e6, 2e-1)
 #'  )
-#' format_means_df(df, d_type = "count")
+#' format_means_df(df, metric = "count")
 format_means_df <- function(
       df
-      , d_type
+      , metric
       , central_var = "mean"
       , style_name  = "nature"
 ){
    checkmate::assert_data_frame(df)
-   assert_data_type(d_type)
+   assert_metric(metric)
    checkmate::assert_string(central_var)
 
    style <- get_style(style_name)
 
-   digits <- get_style_item_by_data_type(
+   digits <- get_style_item_by_metric(
       style_name   = style_name
       , style_item = "digits"
-      , d_type     = d_type
+      , metric     = metric
    )
-   n_small <- get_style_item_by_data_type(
+   n_small <- get_style_item_by_metric(
       style_name   = style_name
       , style_item = "n_small"
-      , d_type     = d_type
+      , metric     = metric
    )
 
-   label <- get_data_type_labels(d_type)
+   label <- get_metric_labels(metric)
 
    mean_varnames <- grep(
       pattern = sprintf("^%s[_]+", central_var)
@@ -356,7 +356,7 @@ format_means_df <- function(
                , count_label_thousands = style[["count_label_thousands"]]
                , digits                = digits
                , nsmall                = n_small
-               , d_type                = d_type
+               , metric                = metric
             )
             , label
          )
@@ -375,9 +375,9 @@ format_means_df <- function(
 #' @param central [num] central, point_estimate value vector
 #' @param lower [num] lower bound vector
 #' @param upper [num] upper bound vector
-#' @param d_type [chr c(prop, pp, count, rate)] data type - proportion,
+#' @param metric [chr c(prop, pp, count, rate)] data type - proportion,
 #'   percentage point, count, or rate
-#' @param rate_unit [chr: default NULL] rate unit label (required when d_type = 'rate')
+#' @param rate_unit [chr: default NULL] rate unit label (required when metric = 'rate')
 #'
 #' @returns [chr] formatted string vector
 #' @export
@@ -388,7 +388,7 @@ format_means_df <- function(
 #'    central  = c(0.994, -0.994)
 #'    , lower  = c(0.984, -0.998)
 #'    , upper  = c(0.998, -0.984)
-#'    , d_type = "prop"
+#'    , metric = "prop"
 #' )
 #'
 #' # Rate example with Lancet formatting
@@ -396,21 +396,21 @@ format_means_df <- function(
 #'   central   = 0.0000123,
 #'   lower     = 0.0000098,
 #'   upper     = 0.0000152,
-#'   d_type    = "rate",
+#'   metric    = "rate",
 #'   rate_unit = "deaths"
 #' )
 format_lancet_clu <- function(
       central
       , lower
       , upper
-      , d_type
+      , metric
       , rate_unit = NULL
 ) {
    format_journal_clu(
       central      = central
       , lower      = lower
       , upper      = upper
-      , d_type     = d_type
+      , metric     = metric
       , style_name = "lancet"
       , rate_unit  = rate_unit
    )
@@ -418,11 +418,11 @@ format_lancet_clu <- function(
 
 #' Return a table with formatted central, lower, upper for Lancet journal
 #'
-#' Assumes a single data-type (d_type) for the whole table (e.g. 'prop', 'pp',
+#' Assumes a single data-type (metric) for the whole table (e.g. 'prop', 'pp',
 #' 'count')
 #'
 #' @param df [data.table] with central, lower, upper columns
-#' @param d_type [chr c('prop', 'pp', 'count', 'rate')] data type - proportion,
+#' @param metric [chr c('prop', 'pp', 'count', 'rate')] data type - proportion,
 #'   percentage point, count, or rate
 #' @param central_var [chr: default 'mean'] name of central tendency e.g.
 #'   'point_estimate'
@@ -431,7 +431,7 @@ format_lancet_clu <- function(
 #' @param new_var [chr: default 'clu_fmt'] name of new formatted column
 #' @param remove_clu_columns [lgl: default TRUE] remove central, lower, upper
 #'   columns after formatting?
-#' @param rate_unit [chr: default NULL] rate unit label (required when d_type = 'rate')
+#' @param rate_unit [chr: default NULL] rate unit label (required when metric = 'rate')
 #'
 #' @returns [data.frame, data.table] with mean_95_UI_formatted column, and
 #'   central, lower, upper columns removed (if specified)
@@ -447,10 +447,10 @@ format_lancet_clu <- function(
 #'    , lower         = 50.7e6
 #'    , upper         = 60.7e6
 #' )
-#' format_lancet_df(df = df, d_type = "count", central_var = 'mean')
+#' format_lancet_df(df = df, metric = "count", central_var = 'mean')
 format_lancet_df <- function(
       df
-      , d_type
+      , metric
       , new_var            = "clu_fmt"
       , central_var        = "mean"
       , lower_var          = "lower"
@@ -460,7 +460,7 @@ format_lancet_df <- function(
 ){
    format_journal_df(
       df                   = df
-      , d_type             = d_type
+      , metric             = metric
       , style_name         = "lancet"
       , central_var        = central_var
       , lower_var          = lower_var
@@ -480,9 +480,9 @@ format_lancet_df <- function(
 #' @param central [num] central, point_estimate value vector
 #' @param lower [num] lower bound vector
 #' @param upper [num] upper bound vector
-#' @param d_type [chr c(prop, pp, count, rate)] data type - proportion,
+#' @param metric [chr c(prop, pp, count, rate)] data type - proportion,
 #'   percentage point, count, or rate
-#' @param rate_unit [chr: default NULL] rate unit label (required when d_type = 'rate')
+#' @param rate_unit [chr: default NULL] rate unit label (required when metric = 'rate')
 #'
 #' @returns [chr] formatted string vector
 #' @export
@@ -493,7 +493,7 @@ format_lancet_df <- function(
 #'    central  = c(0.994, -0.994)
 #'    , lower  = c(0.984, -0.998)
 #'    , upper  = c(0.998, -0.984)
-#'    , d_type = "prop"
+#'    , metric = "prop"
 #' )
 #'
 #' # Rate example with Nature formatting
@@ -501,21 +501,21 @@ format_lancet_df <- function(
 #'   central   = 0.0000123,
 #'   lower     = 0.0000098,
 #'   upper     = 0.0000152,
-#'   d_type    = "rate",
+#'   metric    = "rate",
 #'   rate_unit = "cases"
 #' )
 format_nature_clu <- function(
       central
       , lower
       , upper
-      , d_type
+      , metric
       , rate_unit = NULL
 ) {
    format_journal_clu(
       central      = central
       , lower      = lower
       , upper      = upper
-      , d_type     = d_type
+      , metric     = metric
       , style_name = "nature"
       , rate_unit  = rate_unit
    )
@@ -524,14 +524,14 @@ format_nature_clu <- function(
 #' Return a table with formatted central, lower, upper for Nature journal
 #'
 #' @param df [data.table]
-#' @param d_type [chr c('prop', 'pp', 'count', 'rate')] a single data type
+#' @param metric [chr c('prop', 'pp', 'count', 'rate')] a single data type
 #' @param new_var [chr: default 'clu_fmt'] name of new formatted column
 #' @param central_var [chr: default 'mean'] name of central tendency variable
 #' @param lower_var [chr: default 'lower'] name of lower bound variable
 #' @param upper_var [chr: default 'upper'] name of upper bound variable
 #' @param remove_clu_columns [lgl: default TRUE] remove central, lower, upper
 #'   columns after formatting?
-#' @param rate_unit [chr: default NULL] rate unit label (required when d_type = 'rate')
+#' @param rate_unit [chr: default NULL] rate unit label (required when metric = 'rate')
 #' @returns [data.table] copy of input data.table with new 'clu_fmt' column
 #' @export
 #' @family styled_formats
@@ -545,10 +545,10 @@ format_nature_clu <- function(
 #'    , lower         = 50.7e6
 #'    , upper         = 60.7e6
 #' )
-#' format_nature_df(df = df, d_type = "count", central_var = 'mean')
+#' format_nature_df(df = df, metric = "count", central_var = 'mean')
 format_nature_df <- function(
       df
-      , d_type
+      , metric
       , new_var            = "clu_fmt"
       , central_var        = "mean"
       , lower_var          = "lower"
@@ -558,7 +558,7 @@ format_nature_df <- function(
 ){
    format_journal_df(
       df                   = df
-      , d_type             = d_type
+      , metric             = metric
       , style_name         = "nature"
       , central_var        = central_var
       , lower_var          = lower_var

@@ -4,12 +4,12 @@
 \alias{fround_clu_triplet}
 \title{Format and round a single central/lower/upper value set by magnitude without units}
 \usage{
-fround_clu_triplet(clu, d_type, style_name = "nature")
+fround_clu_triplet(clu, metric, style_name = "nature")
 }
 \arguments{
 \item{clu}{[num] a numeric triplet of three values in central/lower/upper order}
 
-\item{d_type}{[chr c('prop', 'pp', 'count', or 'rate')] data type - proportion,
+\item{metric}{[chr c('prop', 'pp', 'count', or 'rate')] metric type - proportion,
 percentage point, count, or rate}
 
 \item{style_name}{[chr: default 'nature'] style name - controls rounding and formatting}
@@ -20,7 +20,7 @@ percentage point, count, or rate}
   - df_mag_row: data.frame[1,] - magnitude info (mag, mag_label, denom)
 }
 \description{
-`central` could be mean/median/point_estimate. `d_type` is required (count
+`central` could be mean/median/point_estimate. `metric` is required (count
 data requires nuanced logic), but labels are not returned.
 }
 \details{
@@ -31,7 +31,7 @@ Format and round without unit labeling
 \dontrun{
 result <- fround_clu_triplet(
   clu = c(central = 0.2, lower = 0.1, upper = 0.3),
-  d_type = "prop"
+  metric = "prop"
 )
 result$formatted  # chr[3]
 result$df_mag_row # df[1,]

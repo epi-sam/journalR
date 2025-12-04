@@ -6,10 +6,10 @@ test_that("fround works", {
    expect_equal(fround(0.123456789, digits = 3, nsmall = 4), "0.1230")
 })
 
-test_that("fround_dtype works", {
-   expect_equal(fround_dtype_lancet(0.123456789), "0·1%")
-   expect_equal(fround_dtype_lancet(0.123456789, d_type = "pp"), "0·1 pp")
-   expect_equal(fround_dtype_lancet(0.123456789, d_type = "count", digits = 3, nsmall = 4), "0·1230")
+test_that("fround_metric works", {
+   expect_equal(fround_metric_lancet(0.123456789), "0·1%")
+   expect_equal(fround_metric_lancet(0.123456789, metric = "pp"), "0·1 pp")
+   expect_equal(fround_metric_lancet(0.123456789, metric = "count", digits = 3, nsmall = 4), "0·1230")
 })
 
 test_that("fmt_magnitude works", {
@@ -143,7 +143,7 @@ test_that("fround_count_rate handles counts correctly", {
   result <- fround_count_rate(
     clu = c(12345, 10000, 15000),
     style_name = "nature",
-    d_type = "count"
+    metric = "count"
   )
 
   # Should return list structure
@@ -164,7 +164,7 @@ test_that("fround_count_rate handles rates correctly", {
   result <- fround_count_rate(
     clu = c(0.0000123, 0.00001, 0.000015),
     style_name = "nature",
-    d_type = "rate"
+    metric = "rate"
   )
 
   # Should return list structure

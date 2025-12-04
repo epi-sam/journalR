@@ -4,25 +4,25 @@
 \alias{assert_rate_unit}
 \title{Assert rate unit parameter}
 \usage{
-assert_rate_unit(d_type, rate_unit)
+assert_rate_unit(metric, rate_unit)
 }
 \arguments{
-\item{d_type}{[chr] data type}
+\item{metric}{[chr] metric type}
 
 \item{rate_unit}{[chr or NULL] rate unit parameter}
 }
 \value{
-[none] stop if d_type is "rate" and rate_unit is missing/invalid
+[none] stop if metric is "rate" and rate_unit is missing/invalid
 }
 \description{
-Validates that when d_type is "rate", rate_unit is provided and is a string.
-When d_type is not "rate", rate_unit is ignored.
+Validates that when metric is "rate", rate_unit is provided and is a string.
+When metric is not "rate", rate_unit is ignored.
 }
 \seealso{
 Other assertions: 
 \code{\link{assert_clu_relationship}()},
-\code{\link{assert_data_type}()},
 \code{\link{assert_fround_return_schema}()},
+\code{\link{assert_metric}()},
 \code{\link{assert_set_choice}()},
 \code{\link{assert_style_schema}()},
 \code{\link{assert_x_gte_y}()},

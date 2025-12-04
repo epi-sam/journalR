@@ -4,7 +4,7 @@
 \alias{format_lancet_clu}
 \title{Format central, lower, upper value triplets for Lancet journal presentation}
 \usage{
-format_lancet_clu(central, lower, upper, d_type, rate_unit = NULL)
+format_lancet_clu(central, lower, upper, metric, rate_unit = NULL)
 }
 \arguments{
 \item{central}{[num] central, point_estimate value vector}
@@ -13,10 +13,10 @@ format_lancet_clu(central, lower, upper, d_type, rate_unit = NULL)
 
 \item{upper}{[num] upper bound vector}
 
-\item{d_type}{[chr c(prop, pp, count, rate)] data type - proportion,
+\item{metric}{[chr c(prop, pp, count, rate)] data type - proportion,
 percentage point, count, or rate}
 
-\item{rate_unit}{[chr: default NULL] rate unit label (required when d_type = 'rate')}
+\item{rate_unit}{[chr: default NULL] rate unit label (required when metric = 'rate')}
 }
 \value{
 [chr] formatted string vector
@@ -29,7 +29,7 @@ format_lancet_clu(
    central  = c(0.994, -0.994)
    , lower  = c(0.984, -0.998)
    , upper  = c(0.998, -0.984)
-   , d_type = "prop"
+   , metric = "prop"
 )
 
 # Rate example with Lancet formatting
@@ -37,7 +37,7 @@ format_lancet_clu(
   central   = 0.0000123,
   lower     = 0.0000098,
   upper     = 0.0000152,
-  d_type    = "rate",
+  metric    = "rate",
   rate_unit = "deaths"
 )
 }

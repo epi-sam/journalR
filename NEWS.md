@@ -1,6 +1,6 @@
 # journalR 0.4.0
 
- added rate-space metric/d_type
+ added rate-space metric/metric
 
 # journalR 0.3.0
 

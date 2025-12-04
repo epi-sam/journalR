@@ -23,8 +23,8 @@ Other vector_formats:
 \code{\link{format_oxford_comma}()},
 \code{\link{fround}()},
 \code{\link{fround_count_rate}()},
-\code{\link{fround_dtype}()},
-\code{\link{fround_dtype_lancet}()},
+\code{\link{fround_metric}()},
+\code{\link{fround_metric_lancet}()},
 \code{\link{fround_props}()}
 }
 \concept{vector_formats}

@@ -6,7 +6,7 @@
 \usage{
 fmt_magnitude(
   x,
-  d_type,
+  metric,
   digits = 1,
   nsmall = 1,
   decimal.mark = ".",
@@ -18,7 +18,7 @@ fmt_magnitude(
 \arguments{
 \item{x}{[num] numeric vector}
 
-\item{d_type}{[chr] data type: "prop", "pp", "count", "rate" (required)}
+\item{metric}{[chr] data type: "prop", "pp", "count", "rate" (required)}
 
 \item{digits}{[int: default 1L] passed to `round()`}
 
@@ -35,7 +35,7 @@ fmt_magnitude(
 Lancet-valid. Passed to `set_magnitude()`}
 
 \item{rate_unit}{[chr: default NULL] unit label for rates (e.g., "deaths", "cases").
-Required when d_type = "rate", ignored otherwise.}
+Required when metric = "rate", ignored otherwise.}
 }
 \value{
 [chr] formatted string
@@ -50,8 +50,8 @@ Unaware of schema, just a hard-coded git-er-done function.
 Caution - thousands magnitude is not Lancet compliant.
 }
 \examples{
-fmt_magnitude(123456789, d_type = "count")
-fmt_magnitude(0.0000123, d_type = "rate", rate_unit = "deaths")
+fmt_magnitude(123456789, metric = "count")
+fmt_magnitude(0.0000123, metric = "rate", rate_unit = "deaths")
 }
 \seealso{
 Other vector_formats: 
@@ -59,8 +59,8 @@ Other vector_formats:
 \code{\link{format_oxford_comma}()},
 \code{\link{fround}()},
 \code{\link{fround_count_rate}()},
-\code{\link{fround_dtype}()},
-\code{\link{fround_dtype_lancet}()},
+\code{\link{fround_metric}()},
+\code{\link{fround_metric_lancet}()},
 \code{\link{fround_props}()}
 
 Other magnitudes: 

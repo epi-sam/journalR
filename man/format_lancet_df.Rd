@@ -6,7 +6,7 @@
 \usage{
 format_lancet_df(
   df,
-  d_type,
+  metric,
   new_var = "clu_fmt",
   central_var = "mean",
   lower_var = "lower",
@@ -18,7 +18,7 @@ format_lancet_df(
 \arguments{
 \item{df}{[data.table] with central, lower, upper columns}
 
-\item{d_type}{[chr c('prop', 'pp', 'count', 'rate')] data type - proportion,
+\item{metric}{[chr c('prop', 'pp', 'count', 'rate')] data type - proportion,
 percentage point, count, or rate}
 
 \item{new_var}{[chr: default 'clu_fmt'] name of new formatted column}
@@ -33,14 +33,14 @@ percentage point, count, or rate}
 \item{remove_clu_columns}{[lgl: default TRUE] remove central, lower, upper
 columns after formatting?}
 
-\item{rate_unit}{[chr: default NULL] rate unit label (required when d_type = 'rate')}
+\item{rate_unit}{[chr: default NULL] rate unit label (required when metric = 'rate')}
 }
 \value{
 [data.frame, data.table] with mean_95_UI_formatted column, and
   central, lower, upper columns removed (if specified)
 }
 \description{
-Assumes a single data-type (d_type) for the whole table (e.g. 'prop', 'pp',
+Assumes a single data-type (metric) for the whole table (e.g. 'prop', 'pp',
 'count')
 }
 \examples{
@@ -52,7 +52,7 @@ df <- data.frame(
    , lower         = 50.7e6
    , upper         = 60.7e6
 )
-format_lancet_df(df = df, d_type = "count", central_var = 'mean')
+format_lancet_df(df = df, metric = "count", central_var = 'mean')
 }
 \seealso{
 Other styled_formats: 

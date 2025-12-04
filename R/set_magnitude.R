@@ -174,7 +174,7 @@ set_magnitude_rate <- function(x, mag = NULL, verbose = TRUE) {
          if (abs(x_i) >= 1) {
             if (verbose) {
                warning(
-                  "Rate value >= 1 detected. Consider using d_type='count' instead. Value: ",
+                  "Rate value >= 1 detected. Consider using metric='count' instead. Value: ",
                   x_i,
                   call. = FALSE
                )
@@ -266,7 +266,7 @@ set_magnitude_rate <- function(x, mag = NULL, verbose = TRUE) {
 #' Routes to appropriate helper based on data type.
 #'
 #' @param x [num] numeric vector
-#' @param d_type [chr] data type: "prop", "pp", "count", "rate" (required)
+#' @param metric [chr] data type: "prop", "pp", "count", "rate" (required)
 #' @param mag [chr: default NULL] magnitude override (NULL = auto-detect)
 #'   - For counts: "t", "m", "b"
 #'   - For rates: "per10", "per100", "per1k", ..., "per10b"
@@ -281,36 +281,36 @@ set_magnitude_rate <- function(x, mag = NULL, verbose = TRUE) {
 #'
 #' @examples
 #' # Counts
-#' set_magnitude(c(1e3, 1e6, 1e9), d_type = "count")
+#' set_magnitude(c(1e3, 1e6, 1e9), metric = "count")
 #'
 #' # Rates
-#' set_magnitude(c(0.0000123, 0.0000456), d_type = "rate")
+#' set_magnitude(c(0.0000123, 0.0000456), metric = "rate")
 #'
 #' # Proportions (no scaling)
-#' set_magnitude(c(0.5, 0.75), d_type = "prop")
+#' set_magnitude(c(0.5, 0.75), metric = "prop")
 #'
-#' # All calls require d_type
-#' set_magnitude(c(1e6, 1e9), d_type = "count")
+#' # All calls require metric
+#' set_magnitude(c(1e6, 1e9), metric = "count")
 set_magnitude <- function(
       x,
-      d_type,
+      metric,
       mag                   = NULL,
       count_label_thousands = FALSE,
       verbose               = TRUE
 ) {
    checkmate::assert_vector(x)
    checkmate::assert_numeric(x, min.len = 1, any.missing = FALSE)
-   checkmate::assert_string(d_type, na.ok = FALSE)
+   checkmate::assert_string(metric, na.ok = FALSE)
    checkmate::assert_character(mag, len = 1, null.ok = TRUE)
    checkmate::assert_logical(count_label_thousands, len = 1)
    checkmate::assert_logical(verbose, len = 1)
 
-   # Validate and normalize d_type
-   d_type <- assert_data_type(d_type)
+   # Validate and normalize metric
+   metric <- assert_metric(metric)
 
    # Route to appropriate helper using switch_strict
    df_mag <- switch_strict(
-      d_type
+      metric
       , "prop" = set_magnitude_prop(
          x         = x
          , mag     = mag
