@@ -296,7 +296,7 @@ format_journal_df <- function(
 #' columns. Use with caution.
 #'
 #' @param df [data.table] input data.table with one or more 'mean_' columns
-#' @param metric [chr c('prop', 'pp', or 'count')] a single metric
+#' @param metric [chr c('prop', 'pp', 'count', 'rate')] a single metric
 #' @param central_var [chr: default 'mean'] prefix of mean variable names to
 #'   format.  Implemented as e.g. "^mean[_]*" to capture 'mean', 'mean_1990',
 #'   'mean_2000', etc.

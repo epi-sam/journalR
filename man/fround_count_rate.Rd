@@ -11,7 +11,7 @@ fround_count_rate(clu, style_name, metric)
 
 \item{style_name}{[chr] style name - controls rounding and formatting}
 
-\item{metric}{[chr] metric type: "count" or "rate"}
+\item{metric}{[chr]}
 }
 \value{
 [list] with elements:

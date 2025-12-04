@@ -9,7 +9,7 @@ format_means_df(df, metric, central_var = "mean", style_name = "nature")
 \arguments{
 \item{df}{[data.table] input data.table with one or more 'mean_' columns}
 
-\item{metric}{[chr c('prop', 'pp', or 'count')] a single metric}
+\item{metric}{[chr c('prop', 'pp', 'count', 'rate')] a single metric}
 
 \item{central_var}{[chr: default 'mean'] prefix of mean variable names to
 format.  Implemented as e.g. "^mean[_]*" to capture 'mean', 'mean_1990',
