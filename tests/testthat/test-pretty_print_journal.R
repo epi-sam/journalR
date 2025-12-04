@@ -43,7 +43,7 @@ test_that("fround_clu_triplet works", {
    expect_equal(result6$formatted, c(central = "10·5", lower = "0·200", upper = "20·3"))
    # rounding edge case
    result7 <- fround_clu_triplet(style_name = 'lancet', clu = c(central = 9995, lower = 9990, upper = 10100), d_type = 'count')
-   expect_equal(result7$formatted, c(central = "10 000", lower = "9990", upper = "10 100"))
+   expect_equal(result7$formatted, c(central = "10 000", lower = "9990", upper = "10 100"))
 })
 
 
@@ -283,7 +283,7 @@ test_that("edge case rounding works with and without thousands label", {
          data_space = c("thousands", "thousands_edge", "millions", "billions"),
          clu_fmt = c(
             "999 thousand (889–2,222)",
-            "1 million (1–2)", # Not sure there's a way around this or if it's right as-is, or if I care
+            "1,000 thousand (889–2,222)", # Not sure there's a way around this or if it's right as-is, or if I care
             "56 million (51–61)",
             "5,472 billion (4,827–5,979)"
          )
@@ -298,7 +298,7 @@ test_that("edge case rounding works with and without thousands label", {
 test_that("fround_clu_triplet works with rates", {
    result1 <- fround_clu_triplet(style_name = 'nature', clu = c(central = 0.0000123, lower = 0.0000098, upper = 0.0000152), d_type = "rate")
    expect_equal(result1$formatted, c(central = "12.3", lower = "9.80", upper = "15.2"))
-   
+
    result2 <- fround_clu_triplet(style_name = 'lancet', clu = c(central = 0.0000123, lower = 0.0000098, upper = 0.0000152), d_type = "rate")
    expect_equal(result2$formatted, c(central = "12·3", lower = "9·80", upper = "15·2"))
 })

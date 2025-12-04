@@ -262,6 +262,43 @@ format_int <- function(x_sc, decimal.mark, big.mark) {
   trimws(x_chr)
 }
 
+#' Helper to assist round_5_up
+#'
+#' @param x [numeric] vector
+#' @param epsilon [numeric] some small value to help e.g. 1225 round up to 1230
+#' @family vector_formats
+#' @keywords internal
+#'
+#' @returns
+add_epsilon <- function(x, epsilon = 1e-12){
+   checkmate::assert_numeric(x)
+   checkmate::assert_numeric(epsilon)
+
+   small_x <- min(abs(x))
+   if(small_x == 0) small_x <- 1
+   order_mag_small_x <- log10(10^(ceiling(log10(small_x))))
+   order_mag_epsilon <- log10(10^(ceiling(log10(epsilon))))
+
+   x_pos <- x > 0
+   x_neg <- x < 0
+
+
+   if(order_mag_epsilon - order_mag_small_x > -3){
+      warning(
+         sprintf(
+            "epsilon (%s - %s) must be 3 orders of magnitude smaller than the smallest supported magnitude unit (%s - %s) (see set_magnitude_rate()) - setting epsilon to 0, round_5_up may not work as expected."
+            , epsilon, order_mag_epsilon, small_x, order_mag_small_x
+         )
+      )
+      epsilon <- 0
+   }
+
+   # don't add epsilon to 0s
+   x[x_pos] <- x[x_pos] + epsilon
+   x[x_neg] <- x[x_neg] - epsilon
+   return(x)
+}
+
 #' Format and round proportion-ish number
 #'
 #' non-exported helper
@@ -291,9 +328,7 @@ fround_props <- function(clu, style_name) {
 
    style <- get_style(style_name)
 
-   if (style$round_5_up) {
-      clu <- clu + 1e-9
-   }
+   if (style$round_5_up) clu <- add_epsilon(clu)
 
    # Use denominator from df_mag
    clu <- clu / df_mag$denom
@@ -377,7 +412,8 @@ fround_count_rate <- function(clu, style_name, d_type) {
 
   # Apply round-5-up rule if needed
   if (round_5_up) {
-    central_val <- central_val + 1e-9
+     # must be small enough not to affect smallest possible rate category (per10bn)
+    central_val <- central_val + 1e-12
   }
 
   # Do trial rounding with arbitrary magnitude (scale = 1)
@@ -389,7 +425,7 @@ fround_count_rate <- function(clu, style_name, d_type) {
         "int"     = round(central_val, digits = 0)
      )
   } else if (d_type == "rate"){
-     clu[1]
+     central_val
   }
 
   # Compute magnitude based on trial-rounded value
@@ -410,9 +446,7 @@ fround_count_rate <- function(clu, style_name, d_type) {
     x_raw <- x
 
     # Apply round-5-up rule
-    if (round_5_up) {
-      x <- x + 1e-9
-    }
+    if (round_5_up) x <- add_epsilon(x)
 
     # Scale by magnitude denom
     x_sc <- x / df_mag$denom

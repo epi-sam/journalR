@@ -80,7 +80,7 @@ test_that("end-to-end: rates with different magnitudes", {
    result <- format_journal_df(df, d_type = "rate", rate_unit = "cases")
 
    expect_equal(result$clu_fmt[1], "12.3 cases (9.80–15.2) per 1 million")
-   expect_equal(result$clu_fmt[2], "11.0 cases (9.00–13.0) per 1 billion")
+   expect_equal(result$clu_fmt[2], "10.0 cases (8.00–12.0) per 1 billion")
    expect_equal(result$clu_fmt[3], "12.3 cases (9.80–15.2) per 100,000")
 
    # All should have "cases" unit
