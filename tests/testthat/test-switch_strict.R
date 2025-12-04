@@ -21,7 +21,7 @@ test_that("switch_strict fails with informative message on invalid option", {
       # `.*` is required for tests
       # - messages include the name of the function that calls switch_strict
       # - 'eval_bare()' is used for tests
-      "'x' is not a valid option.* Valid options are: a, b, c",
+      "Invalid option: x.*Valid options:  c, b, a",
    )
 })
 test_that("switch_strict fails with informative message on invalid option", {
@@ -32,6 +32,6 @@ test_that("switch_strict fails with informative message on invalid option", {
          , banana = "banana"
          , cherry = "cherry"
       ),
-      "'b' is not a valid option.* Valid options are: apple, banana, cherry",
+      "Invalid option: b.*Valid options:  cherry, banana, apple",
    )
 })
