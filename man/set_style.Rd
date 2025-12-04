@@ -21,7 +21,8 @@ Set a new style by list
 set_style(
    style_name    = "my_style"
    , style_entry = list(
-      prop_digits_round       = 1
+      style_name             = "my_style"
+      , prop_digits_round     = 1
       , prop_nsmall           = 1
       , count_method          = "sigfig"
       , count_digits_sigfig   = 3

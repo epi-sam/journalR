@@ -10,8 +10,11 @@
 #' get_style_schema()
 get_style_schema <- function(){
    list(
+
+      style_name              = "character"
+
       # Proportion parameters
-      prop_digits_round       = "integer"
+      , prop_digits_round     = "integer"
       , prop_nsmall           = "integer"
 
       # Count parameters
@@ -176,7 +179,8 @@ assert_style_schema <- function(style_entry){
 #' set_style(
 #'    style_name    = "my_style"
 #'    , style_entry = list(
-#'       prop_digits_round       = 1
+#'       style_name             = "my_style"
+#'       , prop_digits_round     = 1
 #'       , prop_nsmall           = 1
 #'       , count_method          = "sigfig"
 #'       , count_digits_sigfig   = 3
@@ -264,7 +268,8 @@ new_style <- function(
    set_style(
       style_name    = style_name
       , style_entry = list(
-         prop_digits_round       = prop_digits_round
+         style_name              = style_name
+         , prop_digits_round     = prop_digits_round
          , prop_nsmall           = prop_nsmall
          , count_method          = count_method
          , count_digits_sigfig   = count_digits_sigfig
@@ -324,7 +329,8 @@ get_style <- function(style_name) {
 style_nature <- function(){
    assert_style_schema(
       list(
-         prop_digits_round       = 1
+         style_name              = "nature"
+         , prop_digits_round     = 1
          , prop_nsmall           = 1
          , count_method          = "sigfig"
          , count_digits_sigfig   = 3
@@ -361,7 +367,8 @@ style_nature <- function(){
 style_lancet <- function(){
    assert_style_schema(
       list(
-         prop_digits_round       = 1
+         style_name              = "lancet"
+         , prop_digits_round     = 1
          , prop_nsmall           = 1
          , count_method          = "sigfig"
          , count_pad_sigfigs     = TRUE
