@@ -70,7 +70,7 @@ Enter `format_journal_df()`:
 - Format a central/lower/upper set of three columns into an
   e.g. `mean (lower -- upper)` string.
   - Ready for easy copy/paste into Word or similar.
-- The user must provide a data type (`d_type`), which tells the function
+- The user must provide a data type (`metric`), which tells the function
   how to format the numbers.
   - central/lower/upper relationships are asserted (lower \< central \<
     upper) before formatting.
@@ -78,7 +78,7 @@ Enter `format_journal_df()`:
 ``` r
 DT_hp |>
    journalR::format_journal_df(
-      d_type = "count"
+      metric = "count"
    )
 #>      cyl         clu_fmt
 #>    <num>          <char>
@@ -112,7 +112,7 @@ DF_count <- data.frame(
 )
 DF_count|>
    journalR::format_journal_df(
-      d_type = "count"
+      metric = "count"
    )
 #>       data_space                     clu_fmt
 #> 1      thousands 999,000 (889,000–2,220,000)
@@ -128,14 +128,14 @@ DF_count|>
 ``` r
 new_style(
    style_name = "thousands_labeled"
-   , label_thousands = TRUE
+   , count_label_thousands = TRUE
 )
 ```
 
 ``` r
 DF_count|>
    journalR::format_journal_df(
-      d_type               = "count"
+      metric               = "count"
       , style_name         = "thousands_labeled"
    )
 #>       data_space                     clu_fmt
@@ -161,7 +161,7 @@ DT_prop <- data.table::data.table(
 )
 DT_prop|>
    journalR::format_journal_df(
-      d_type = "prop"
+      metric = "prop"
       , remove_clu_columns = FALSE
    )
 #>           data_space   mean  lower  upper                 clu_fmt
@@ -201,7 +201,7 @@ As long as your table is tidy, it can be formatted.
 ``` r
 DT_summary |>
    journalR::format_journal_df(
-      d_type               = c("prop")
+      metric               = c("prop")
       , new_var            = "pct_vshape_fmt" # specify output colname (must be a new one)
       , central_var        = "pct_vshape" 
       , lower_var          = "lower_vshape"
@@ -237,24 +237,29 @@ affect presentation tables.
 ``` r
 # print(style_lancet()) # as a list
 print(lancet) # formatted a little nicer
-#>                     key          value
-#>                  <fctr>         <char>
-#>  1:   prop_digits_round              1
-#>  2:         prop_nsmall              1
-#>  3:        count_method         sigfig
-#>  4:   count_pad_sigfigs           TRUE
-#>  5: count_digits_sigfig              3
-#>  6:        count_nsmall              1
-#>  7:        decimal.mark              ·
-#>  8:      count_big.mark               
-#>  9:       neg_mark_mean a decrease of 
-#> 10:         neg_mark_UI              –
-#> 11:             UI_text               
-#> 12:             UI_only          FALSE
-#> 13:    assert_clu_order           TRUE
-#> 14:     label_thousands          FALSE
-#> 15:           is_lancet           TRUE
-#> 16:          round_5_up           TRUE
+#>                       key          value
+#>                    <fctr>         <char>
+#>  1:     prop_digits_round              1
+#>  2:           prop_nsmall              1
+#>  3:          count_method         sigfig
+#>  4:     count_pad_sigfigs           TRUE
+#>  5:   count_digits_sigfig              3
+#>  6:          count_nsmall              1
+#>  7:          decimal.mark              ·
+#>  8:        count_big.mark               
+#>  9: count_label_thousands          FALSE
+#> 10:           rate_method         sigfig
+#> 11:    rate_digits_sigfig              3
+#> 12:      rate_pad_sigfigs           TRUE
+#> 13:           rate_nsmall              1
+#> 14:         neg_mark_mean a decrease of 
+#> 15:           neg_mark_UI              –
+#> 16:               UI_text               
+#> 17:               UI_only          FALSE
+#> 18:      assert_clu_order           TRUE
+#> 19:             is_lancet           TRUE
+#> 20:            round_5_up           TRUE
+#>                       key          value
 ```
 
 Lancet receives non-standard formatting
@@ -270,7 +275,7 @@ journalR::format_journal_df(
       , lower         = c(50.7e3, 48.6e6)
       , upper         = c(60.7e3, 59.6e6)
    )
-   , d_type = "count"
+   , metric = "count"
    , style = "lancet"
 )
 #>                    clu_fmt
@@ -290,7 +295,7 @@ journalR::format_journal_df(
                 , lower         = c(.5076231,       -0.25321,         -0.235321)
                 , upper         = c(.6076589,       1.365432,         -0.056549)
              )
-   , d_type = "prop"
+   , metric = "prop"
    , style = "lancet"
 )
 #>        data_space                              clu_fmt
@@ -340,7 +345,7 @@ journalR::format_journal_df(
       , lower         = c(50.7e3, 48.6e6)
       , upper         = c(60.7e3, 59.6e6)
    )
-   , d_type = "count"
+   , metric = "count"
    , style  = "wacky_style"
 )
 #>                                clu_fmt
@@ -355,7 +360,7 @@ journalR::format_journal_df(
                 , lower         = c(.5076231, -0.25321, -0.235321)
                 , upper         = c(.6076589, 1.365432, -0.056549)
              )
-   , d_type = "prop"
+   , metric = "prop"
    , style = "wacky_style"
 )
 #>        data_space                                     clu_fmt

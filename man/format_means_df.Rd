@@ -2,18 +2,33 @@
 % Please edit documentation in R/pretty_print_journal.R
 \name{format_means_df}
 \alias{format_means_df}
-\title{Format multiple data.frame 'mean_*' columns for presentation (by data type).}
+\title{Format multiple data.frame 'mean_*' columns for presentation (by metric).}
 \usage{
-format_means_df(df, d_type, central_var = "mean", style_name = "nature")
+format_means_df(
+  df,
+  metric,
+  rate_unit = NULL,
+  central_var = "mean",
+  mag = NULL,
+  style_name = "nature"
+)
 }
 \arguments{
 \item{df}{[data.table] input data.table with one or more 'mean_' columns}
 
-\item{d_type}{[chr c('prop', 'pp', or 'count')] a single data type}
+\item{metric}{[chr c('prop', 'pp', 'count', 'rate')] a single metric}
+
+\item{rate_unit}{[chr: default NULL] unit label for rates (e.g., "deaths", "cases").
+Required when metric = "rate", ignored otherwise.}
 
 \item{central_var}{[chr: default 'mean'] prefix of mean variable names to
-format.  Implemented as e.g. "^mean[_]*" to capture 'mean', 'mean_1990',
+format.  Implemented as e.g. "^mean[_]+" to capture 'mean', 'mean_1990',
 'mean_2000', etc.}
+
+\item{mag}{[chr: default NULL] magnitude override - see set_magnitude()
+- For props/pp: "as-is" (no scaling, use values as provided)
+- For counts: "t" (thousand), "m" (million), "b" (billion)
+- For rates: "per10", "per100", "per1k", ..., "per10b"}
 
 \item{style_name}{[chr: default 'nature'] style name - controls rounding and
 formatting.}
@@ -22,12 +37,12 @@ formatting.}
 [data.table] copy of input data.table with formatted mean column(s)
 }
 \description{
-Format one or more 'mean_' columns by magnitude, data_type, and style.
+Format one or more 'mean_' columns by magnitude, metric, and style.
 }
 \details{
 BEWARE: Does not have sophisticated count-type data handling like
-`format_journal_clu()`.  This is a simple formatter for multiple mean columns.
-Use with caution.
+`format_journal_clu()`.  This is a simple formatter for multiple mean
+columns. Use with caution.
 }
 \examples{
 df <- data.frame(
@@ -35,7 +50,7 @@ df <- data.frame(
   , mean_1990 = c(100, 1e6, 1e9)
   , mean_2000 = c(200, 2e6, 2e-1)
  )
-format_means_df(df, d_type = "count")
+format_means_df(df, metric = "count")
 }
 \seealso{
 Other styled_formats: 

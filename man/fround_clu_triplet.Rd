@@ -2,27 +2,30 @@
 % Please edit documentation in R/format_vectors.R
 \name{fround_clu_triplet}
 \alias{fround_clu_triplet}
-\title{Format and round central/lower/upper value sets by magnitude without units.}
+\title{Format and round a single central/lower/upper value set by magnitude without units}
 \usage{
-fround_clu_triplet(clu, d_type, style_name = "nature", idx = NULL)
+fround_clu_triplet(clu, metric, style_name = "nature", mag = NULL)
 }
 \arguments{
-\item{clu}{[num] a numeric triplet of three values in central/lower/upper
-order.}
+\item{clu}{[num] a numeric triplet of three values in central/lower/upper order}
 
-\item{d_type}{[chr c('prop', 'pp', or 'count')] data type - proportion,
-percentage point or count}
+\item{metric}{[chr c('prop', 'pp', 'count', or 'rate')] metric type - proportion,
+percentage point, count, or rate}
 
-\item{style_name}{[chr: default 'nature'] style name - controls rounding and
-formatting.}
+\item{style_name}{[chr: default 'nature'] style name - controls rounding and formatting}
 
-\item{idx}{[int] row index when called from format_journal_clu(), NULL for standalone}
+\item{mag}{[chr: default NULL] magnitude override - see set_magnitude()
+- For props/pp: "as-is" (no scaling, use values as provided)
+- For counts: "t" (thousand), "m" (million), "b" (billion)
+- For rates: "per10", "per100", "per1k", ..., "per10b"}
 }
 \value{
-[chr] formatted string (vectorized)
+[list] with elements:
+  - formatted: chr[3] - formatted central, lower, upper values
+  - df_mag_row: data.frame[1,] - magnitude info (mag, mag_label, denom)
 }
 \description{
-`central` could be mean/median/point_estimate. `d_type` is required (count
+`central` could be mean/median/point_estimate. `metric` is required (count
 data requires nuanced logic), but labels are not returned.
 }
 \details{
@@ -31,16 +34,12 @@ Format and round without unit labeling
 }
 \examples{
 \dontrun{
-fround_clu_triplet(clu = c(central = 0.2, lower = 0.1, upper = 0.3)
-, d_type = "prop")
-fround_clu_triplet(clu = c(central = 0.2, lower = -0.1, upper = 0.3)
-, d_type = "pp")
-fround_clu_triplet(clu = c(central = 95e6, lower = 89e6, upper = 101e6)
-, d_type = "count", idx = 1)
-fround_clu_triplet(clu = c(central = 95e6, lower = 1e5, upper = 101e9)
-, d_type = "count", idx = 2)
-fround_clu_triplet(clu = c(central = 678901, lower = 123456, upper = 6e6)
-, d_type = "count", idx = 3)
+result <- fround_clu_triplet(
+  clu = c(central = 0.2, lower = 0.1, upper = 0.3),
+  metric = "prop"
+)
+result$formatted  # chr[3]
+result$df_mag_row # df[1,]
 }
 }
 \seealso{

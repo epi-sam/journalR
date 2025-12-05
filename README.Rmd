@@ -77,13 +77,13 @@ Enter `format_journal_df()`:
 
 - Format a central/lower/upper set of three columns into an e.g. `mean (lower -- upper)` string.
    - Ready for easy copy/paste into Word or similar.
-- The user must provide a data type (`d_type`), which tells the function how to format the numbers.
+- The user must provide a data type (`metric`), which tells the function how to format the numbers.
    - central/lower/upper relationships are asserted (lower < central < upper) before formatting.
 
 ```{r format}
 DT_hp |>
    journalR::format_journal_df(
-      d_type = "count"
+      metric = "count"
    )
 ```
 
@@ -115,7 +115,7 @@ DF_count <- data.frame(
 )
 DF_count|>
    journalR::format_journal_df(
-      d_type = "count"
+      metric = "count"
    )
 ```
 
@@ -128,7 +128,7 @@ DF_count|>
 ```{r thou_style_new}
 new_style(
    style_name = "thousands_labeled"
-   , label_thousands = TRUE
+   , count_label_thousands = TRUE
 )
 ```
 
@@ -136,7 +136,7 @@ new_style(
 ```{r thou_style_show}
 DF_count|>
    journalR::format_journal_df(
-      d_type               = "count"
+      metric               = "count"
       , style_name         = "thousands_labeled"
    )
 ```
@@ -158,7 +158,7 @@ DT_prop <- data.table::data.table(
 )
 DT_prop|>
    journalR::format_journal_df(
-      d_type = "prop"
+      metric = "prop"
       , remove_clu_columns = FALSE
    )
 ```
@@ -192,7 +192,7 @@ As long as your table is tidy, it can be formatted.
 ```{r options_formatted}
 DT_summary |>
    journalR::format_journal_df(
-      d_type               = c("prop")
+      metric               = c("prop")
       , new_var            = "pct_vshape_fmt" # specify output colname (must be a new one)
       , central_var        = "pct_vshape" 
       , lower_var          = "lower_vshape"
@@ -235,7 +235,7 @@ journalR::format_journal_df(
       , lower         = c(50.7e3, 48.6e6)
       , upper         = c(60.7e3, 59.6e6)
    )
-   , d_type = "count"
+   , metric = "count"
    , style = "lancet"
 )
 ```
@@ -253,7 +253,7 @@ journalR::format_journal_df(
                 , lower         = c(.5076231,       -0.25321,         -0.235321)
                 , upper         = c(.6076589,       1.365432,         -0.056549)
              )
-   , d_type = "prop"
+   , metric = "prop"
    , style = "lancet"
 )
 ```
@@ -294,7 +294,7 @@ journalR::format_journal_df(
       , lower         = c(50.7e3, 48.6e6)
       , upper         = c(60.7e3, 59.6e6)
    )
-   , d_type = "count"
+   , metric = "count"
    , style  = "wacky_style"
 )
 
@@ -306,7 +306,7 @@ journalR::format_journal_df(
                 , lower         = c(.5076231, -0.25321, -0.235321)
                 , upper         = c(.6076589, 1.365432, -0.056549)
              )
-   , d_type = "prop"
+   , metric = "prop"
    , style = "wacky_style"
 )
 ```

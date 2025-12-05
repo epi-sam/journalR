@@ -6,19 +6,23 @@
 \usage{
 format_lancet_df(
   df,
-  d_type,
+  metric,
+  rate_unit = NULL,
   new_var = "clu_fmt",
   central_var = "mean",
   lower_var = "lower",
   upper_var = "upper",
-  remove_clu_columns = TRUE
+  remove_clu_columns = TRUE,
+  mag = NULL
 )
 }
 \arguments{
 \item{df}{[data.table] with central, lower, upper columns}
 
-\item{d_type}{[chr c(prop', 'pp', 'count')] data type - proportion, percentage
-point or count}
+\item{metric}{[chr c('prop', 'pp', 'count', 'rate')] metric - proportion,
+percentage point, count, or rate}
+
+\item{rate_unit}{[chr: default NULL] rate unit label (required when metric = 'rate')}
 
 \item{new_var}{[chr: default 'clu_fmt'] name of new formatted column}
 
@@ -29,14 +33,21 @@ point or count}
 
 \item{upper_var}{[chr: default 'upper']}
 
-\item{remove_clu_columns}{[lgl: default TRUE] remove central, lower, upper columns?}
+\item{remove_clu_columns}{[lgl: default TRUE] remove central, lower, upper
+columns after formatting?}
+
+\item{mag}{[chr: default NULL] magnitude override - see set_magnitude()
+- For props/pp: "as-is" (no scaling, use values as provided)
+- For counts: "t" (thousand), "m" (million), "b" (billion)
+- For rates: "per10", "per100", "per1k", ..., "per10b"
+- Examples: "deaths", "cases", "events", "births"}
 }
 \value{
 [data.frame, data.table] with mean_95_UI_formatted column, and
   central, lower, upper columns removed (if specified)
 }
 \description{
-Assumes a single data-type (d_type) for the whole table (e.g. 'prop', 'pp',
+Assumes a single data-type (metric) for the whole table (e.g. 'prop', 'pp',
 'count')
 }
 \examples{
@@ -48,7 +59,7 @@ df <- data.frame(
    , lower         = 50.7e6
    , upper         = 60.7e6
 )
-format_lancet_df(df = df, d_type = "count", central_var = 'mean')
+format_lancet_df(df = df, metric = "count", central_var = 'mean')
 }
 \seealso{
 Other styled_formats: 

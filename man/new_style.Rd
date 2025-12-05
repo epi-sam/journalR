@@ -13,6 +13,11 @@ new_style(
   count_pad_sigfigs = TRUE,
   count_nsmall = 1,
   count_big.mark = ",",
+  count_label_thousands = FALSE,
+  rate_method = "sigfig",
+  rate_digits_sigfig = 3,
+  rate_pad_sigfigs = TRUE,
+  rate_nsmall = 1,
   decimal.mark = ".",
   neg_mark_mean = "-",
   neg_mark_UI = "-",
@@ -20,7 +25,6 @@ new_style(
   UI_text = "",
   assert_clu_order = TRUE,
   is_lancet = FALSE,
-  label_thousands = FALSE,
   round_5_up = TRUE
 )
 }
@@ -41,6 +45,16 @@ new_style(
 
 \item{count_big.mark}{[chr: default ","] character to use for counts thousand, million, billion separator e.g. ","}
 
+\item{count_label_thousands}{[lgl: default FALSE] whether format counts as e.g. 10,000 as '10 thousand'}
+
+\item{rate_method}{[chr: c("sigfig", "decimal", "int")] choose how to report rates - prioritize sigfigs across mean/lower/upper, hard-set decimals, or leave numbers in integer space.}
+
+\item{rate_digits_sigfig}{[int: default 3] number of significant figures for rates}
+
+\item{rate_pad_sigfigs}{[lgl: default TRUE] signif(5.00, 3) is "5" - do you want to pad the trailing 0s back on for rates - usually TRUE?}
+
+\item{rate_nsmall}{[int: default 1] passed to `format()` if `rate_method` == 'decimal'}
+
 \item{decimal.mark}{[chr: default "."] decimal mark e.g. "." or `mid_dot()` for Lancet.}
 
 \item{neg_mark_mean}{[chr: default "-"] string to describe central value negatives - e.g. "-1 (-2 to 4)" could become "Negtive 1 (-2 to 4)"}
@@ -54,8 +68,6 @@ new_style(
 \item{assert_clu_order}{[lgl: default TRUE] whether to assert CLU relationships (ensure lower < central < upper)}
 
 \item{is_lancet}{[lgl: default FALSE] TRUE to handle edge-case Lancet count formatting policies}
-
-\item{label_thousands}{[lgl: default FALSE] whether format counts as e.g. 10,000 as '10 thousand'}
 
 \item{round_5_up}{[lgl: default TRUE] In R, `round(1245, 3)` is "1240".  Do you want to round to "1250" instead? Default TRUE to conform with common expectations.}
 }

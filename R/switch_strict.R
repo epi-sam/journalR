@@ -52,13 +52,14 @@ switch_strict <- function(EXPR, ..., .empty = NULL, .default = NULL) {
       # pass name of function calling the switch to error handler
       call       <- sys.call(-1)
       caller     <- if (!is.null(call)) as.character(call[[1]]) else NULL
-      caller_msg <- if (!is.null(caller)) sprintf(" in '%s()'", caller) else ""
+      # caller_msg <- if (!is.null(caller)) sprintf(" in '%s()'", caller) else ""
       stop(
          sprintf(
-            "'%s' is not a valid option%s. Valid options are: %s",
+            # "'%s' is not a valid option%s. Valid options are: %s",
+            "Invalid option: %s\n  Valid options:  %s",
             EXPR,
-            caller_msg,
-            toString(opt_names)
+            # caller_msg,
+            toString(rev(opt_names)) # in the context switch_strict is called, reversing the options seems more informative
          )
          # , call. = FALSE # suppresses switch_strict in error message - not sure if I want this
       )

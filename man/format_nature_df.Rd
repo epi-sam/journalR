@@ -6,18 +6,22 @@
 \usage{
 format_nature_df(
   df,
-  d_type,
+  metric,
+  rate_unit = NULL,
   new_var = "clu_fmt",
   central_var = "mean",
   lower_var = "lower",
   upper_var = "upper",
-  remove_clu_columns = TRUE
+  remove_clu_columns = TRUE,
+  mag = NULL
 )
 }
 \arguments{
 \item{df}{[data.table]}
 
-\item{d_type}{[chr c('prop', 'pp', or 'count')] a single data type}
+\item{metric}{[chr c('prop', 'pp', 'count', 'rate')] a single metric}
+
+\item{rate_unit}{[chr: default NULL] rate unit label (required when metric = 'rate')}
 
 \item{new_var}{[chr: default 'clu_fmt'] name of new formatted column}
 
@@ -27,8 +31,14 @@ format_nature_df(
 
 \item{upper_var}{[chr: default 'upper'] name of upper bound variable}
 
-\item{remove_clu_columns}{[lgl: default TRUE] remove central, lower, upper variables
-after}
+\item{remove_clu_columns}{[lgl: default TRUE] remove central, lower, upper
+columns after formatting?}
+
+\item{mag}{[chr: default NULL] magnitude override - see set_magnitude()
+- For props/pp: "as-is" (no scaling, use values as provided)
+- For counts: "t" (thousand), "m" (million), "b" (billion)
+- For rates: "per10", "per100", "per1k", ..., "per10b"
+- Examples: "deaths", "cases", "events", "births"}
 }
 \value{
 [data.table] copy of input data.table with new 'clu_fmt' column
@@ -45,7 +55,7 @@ df <- data.frame(
    , lower         = 50.7e6
    , upper         = 60.7e6
 )
-format_nature_df(df = df, d_type = "count", central_var = 'mean')
+format_nature_df(df = df, metric = "count", central_var = 'mean')
 }
 \seealso{
 Other styled_formats: 
