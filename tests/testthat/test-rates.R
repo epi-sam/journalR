@@ -5,8 +5,8 @@
 
 test_that("end-to-end: proportions (backward compatibility)", {
    df <- data.frame(
-      id = 1:3,
-      mean = c(0.558, 0.234, 0.789),
+      id    = 1:3,
+      mean  = c(0.558, 0.234, 0.789),
       lower = c(0.507, 0.201, 0.756),
       upper = c(0.607, 0.267, 0.821)
    )
@@ -22,8 +22,8 @@ test_that("end-to-end: proportions (backward compatibility)", {
 
 test_that("end-to-end: percentage points (backward compatibility)", {
    df <- data.frame(
-      id = 1:2,
-      mean = c(0.123, -0.045),
+      id    = 1:2,
+      mean  = c(0.123, -0.045),
       lower = c(0.089, -0.067),
       upper = c(0.156, -0.023)
    )
@@ -67,6 +67,8 @@ test_that("end-to-end: rates", {
    expect_equal(result$clu_fmt[2], "45.6 deaths (40.1–51.2) per 1 million")
    expect_equal(result$clu_fmt[3], "78.9 deaths (65.4–92.3) per 1 million")
    expect_false(grepl("%|pp", result$clu_fmt[1])) # No percentage signs
+
+   result_mag_override <- format_journal_df(df, metric = "rate", rate_unit = "deaths")
 })
 
 test_that("end-to-end: rates with different magnitudes", {

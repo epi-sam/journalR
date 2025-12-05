@@ -27,64 +27,64 @@
 #' )
 #' }
 process_clu_triplet_negatives <- function(
-      triplets
-      , assert_clu_order = TRUE
+    triplets
+    , assert_clu_order = TRUE
 ){
 
-   # lists with two shapes for assertions and processing
-   # 1. input  - three vectors of equal length (central, lower, upper)
-   # 2. output - triplet sets of (central, lower, upper) values for presentation
+  # lists with two shapes for assertions and processing
+  # 1. input  - three vectors of equal length (central, lower, upper)
+  # 2. output - triplet sets of (central, lower, upper) values for presentation
 
-   checkmate::assert_matrix(
-      triplets
-      , mode        = "numeric"
-      , nrows       = 3
-      , any.missing = FALSE
-      , row.names   = "strict"
-   )
-   assert_x_in_y(x = c("central", "lower", "upper"), y = rownames(triplets))
+  checkmate::assert_matrix(
+    triplets
+    , mode        = "numeric"
+    , nrows       = 3
+    , any.missing = FALSE
+    , row.names   = "strict"
+  )
+  assert_x_in_y(x = c("central", "lower", "upper"), y = rownames(triplets))
 
-   if(assert_clu_order == TRUE){
-      assert_clu_relationship(
-         central = triplets["central", ]
-         , lower = triplets["lower", ]
-         , upper = triplets["upper", ]
-      )
-   }
+  if(assert_clu_order == TRUE){
+    assert_clu_relationship(
+      central = triplets["central", ]
+      , lower = triplets["lower", ]
+      , upper = triplets["upper", ]
+    )
+  }
 
-   # process negatives
-   triplets <- apply(triplets, 2, function(triplet){
+  # process negatives
+  triplets <- apply(triplets, 2, function(triplet){
 
-      all_neg     <- all(triplet <= 0)
-      central_neg <- (triplet["central"] < 0) & !all_neg
+    all_neg     <- all(triplet <= 0)
+    central_neg <- (triplet["central"] < 0) & !all_neg
 
-      # If just the mean is negative, invert just the mean
-      # - style$neg_mark_mean handles the text prefixing
-      if(central_neg) triplet["central"] <- triplet["central"] * -1
+    # If just the mean is negative, invert just the mean
+    # - style$neg_mark_mean handles the text prefixing
+    if(central_neg) triplet["central"] <- triplet["central"] * -1
 
-      # If the triplet is all negative, invert and flip upper, lower values
-      if(all_neg) {
+    # If the triplet is all negative, invert and flip upper, lower values
+    if(all_neg) {
 
-         triplet <- triplet * -1
-         l_temp  <- triplet[["lower"]]
-         u_temp  <- triplet[["upper"]]
-         triplet[["lower"]] <- u_temp
-         triplet[["upper"]] <- l_temp
+      triplet <- triplet * -1
+      l_temp  <- triplet[["lower"]]
+      u_temp  <- triplet[["upper"]]
+      triplet[["lower"]] <- u_temp
+      triplet[["upper"]] <- l_temp
 
-         if(assert_clu_order == TRUE){
-            assert_clu_relationship(
-               central = triplet["central"]
-               , lower = triplet["lower"]
-               , upper = triplet["upper"]
-            )
-         }
-
+      if(assert_clu_order == TRUE){
+        assert_clu_relationship(
+          central = triplet["central"]
+          , lower = triplet["lower"]
+          , upper = triplet["upper"]
+        )
       }
 
-      return(triplet)
-   })
+    }
 
-   return(triplets)
+    return(triplet)
+  })
+
+  return(triplets)
 
 }
 
@@ -101,13 +101,17 @@ process_clu_triplet_negatives <- function(
 #' @return [NULL] invisibly (stops on validation failure)
 #' @family assertions
 #' @keywords internal
-assert_fround_return_schema <- function(result, context = "fround helper") {
+assert_fround_return_schema <- function(
+    result
+    , context = "fround helper"
+) {
 
   # Check it's a list
   if (!is.list(result)) {
     stop(
-      sprintf("%s must return a list. Got: %s", context, class(result)[1]),
-      call. = FALSE
+      sprintf(
+        "%s must return a list. Got: %s", context, class(result)[1])
+      , call. = FALSE
     )
   }
 
@@ -116,12 +120,12 @@ assert_fround_return_schema <- function(result, context = "fround helper") {
   if (!all(required_names %in% names(result))) {
     stop(
       sprintf(
-        "%s must return list with names: %s. Got: %s",
-        context,
-        toString(required_names),
-        toString(names(result))
-      ),
-      call. = FALSE
+        "%s must return list with names: %s. Got: %s"
+        , context
+        , toString(required_names)
+        , toString(names(result))
+      )
+      , call. = FALSE
     )
   }
 
@@ -129,12 +133,12 @@ assert_fround_return_schema <- function(result, context = "fround helper") {
   if (!is.character(result$formatted) || length(result$formatted) != 3) {
     stop(
       sprintf(
-        "%s$formatted must be character vector of length 3. Got: %s[%d]",
-        context,
-        class(result$formatted)[1],
-        length(result$formatted)
-      ),
-      call. = FALSE
+        "%s$formatted must be character vector of length 3. Got: %s[%d]"
+        , context
+        , class(result$formatted)[1]
+        , length(result$formatted)
+      )
+      , call. = FALSE
     )
   }
 
@@ -142,12 +146,12 @@ assert_fround_return_schema <- function(result, context = "fround helper") {
   if (!is.data.frame(result$df_mag_row) || nrow(result$df_mag_row) != 1) {
     stop(
       sprintf(
-        "%s$df_mag_row must be single-row data.frame. Got: %s with %d rows",
-        context,
-        class(result$df_mag_row)[1],
-        nrow(result$df_mag_row)
-      ),
-      call. = FALSE
+        "%s$df_mag_row must be single-row data.frame. Got: %s with %d rows"
+        , context
+        , class(result$df_mag_row)[1]
+        , nrow(result$df_mag_row)
+      )
+      , call. = FALSE
     )
   }
 
@@ -155,12 +159,12 @@ assert_fround_return_schema <- function(result, context = "fround helper") {
   if (!all(required_cols %in% names(result$df_mag_row))) {
     stop(
       sprintf(
-        "%s$df_mag_row must have columns: %s. Got: %s",
-        context,
-        toString(required_cols),
-        toString(names(result$df_mag_row))
-      ),
-      call. = FALSE
+        "%s$df_mag_row must have columns: %s. Got: %s"
+        , context
+        , toString(required_cols)
+        , toString(names(result$df_mag_row))
+      )
+      , call. = FALSE
     )
   }
 
@@ -232,11 +236,11 @@ apply_sigfig_zero_padding <- function(x_chr, sigfig, decimal.mark) {
 format_decimal <- function(x_sc, nsmall, decimal.mark, big.mark) {
   x_fmt <- round(x_sc, digits = nsmall)
   x_chr <- format(
-    x_fmt,
-    nsmall       = nsmall,
-    decimal.mark = decimal.mark,
-    big.mark     = big.mark,
-    scientific   = FALSE
+    x_fmt
+    , nsmall       = nsmall
+    , decimal.mark = decimal.mark
+    , big.mark     = big.mark
+    , scientific   = FALSE
   )
   trimws(x_chr)
 }
@@ -254,10 +258,10 @@ format_decimal <- function(x_sc, nsmall, decimal.mark, big.mark) {
 format_int <- function(x_sc, decimal.mark, big.mark) {
   x_fmt <- round(x_sc, digits = 0)
   x_chr <- format(
-    x_fmt,
-    decimal.mark = decimal.mark,
-    big.mark     = big.mark,
-    scientific   = FALSE
+    x_fmt
+    , decimal.mark = decimal.mark
+    , big.mark     = big.mark
+    , scientific   = FALSE
   )
   trimws(x_chr)
 }
@@ -271,32 +275,32 @@ format_int <- function(x_sc, decimal.mark, big.mark) {
 #'
 #' @returns [numeric] x +/- epsilon (for pos/neg x)
 add_epsilon <- function(x, epsilon = 1e-12){
-   checkmate::assert_numeric(x)
-   checkmate::assert_numeric(epsilon)
+  checkmate::assert_numeric(x)
+  checkmate::assert_numeric(epsilon)
 
-   small_x <- min(abs(x))
-   if(small_x == 0) small_x <- 1
-   order_mag_small_x <- log10(10^(ceiling(log10(small_x))))
-   order_mag_epsilon <- log10(10^(ceiling(log10(epsilon))))
+  small_x <- min(abs(x))
+  if(small_x == 0) small_x <- 1
+  order_mag_small_x <- log10(10^(ceiling(log10(small_x))))
+  order_mag_epsilon <- log10(10^(ceiling(log10(epsilon))))
 
-   x_pos <- x > 0
-   x_neg <- x < 0
+  x_pos <- x > 0
+  x_neg <- x < 0
 
 
-   if(order_mag_epsilon - order_mag_small_x > -3){
-      warning(
-         sprintf(
-            "epsilon must be 3 orders of magnitude smaller (%s, %s) than the smallest supported magnitude unit (%s, %s) (see set_magnitude_rate()) - setting epsilon to 0, round_5_up may not work as expected."
-            , epsilon, order_mag_epsilon, small_x, order_mag_small_x
-         )
+  if(order_mag_epsilon - order_mag_small_x > -3){
+    warning(
+      sprintf(
+        "epsilon must be 3 orders of magnitude smaller (%s, %s) than the smallest supported magnitude unit (%s, %s) (see set_magnitude_rate()) - setting epsilon to 0, round_5_up may not work as expected."
+        , epsilon, order_mag_epsilon, small_x, order_mag_small_x
       )
-      epsilon <- 0
-   }
+    )
+    epsilon <- 0
+  }
 
-   # don't add epsilon to 0s
-   x[x_pos] <- x[x_pos] + epsilon
-   x[x_neg] <- x[x_neg] - epsilon
-   return(x)
+  # don't add epsilon to 0s
+  x[x_pos] <- x[x_pos] + epsilon
+  x[x_neg] <- x[x_neg] - epsilon
+  return(x)
 }
 
 #' Format and round proportion-ish number
@@ -307,6 +311,10 @@ add_epsilon <- function(x, epsilon = 1e-12){
 #'
 #' @param clu [num] numeric triplet of proportions (central, lower, upper)
 #' @param style_name [chr] style name - controls rounding and formatting
+#' @param mag [chr: default NULL] magnitude override - see set_magnitude()
+#'   - For props/pp: "as-is" (no scaling, use values as provided)
+#'   - For counts: "t" (thousand), "m" (million), "b" (billion)
+#'   - For rates: "per10", "per100", "per1k", ..., "per10b"
 #'
 #' @returns [list] with elements:
 #'   - formatted: chr[3] - formatted central, lower, upper values
@@ -320,30 +328,30 @@ add_epsilon <- function(x, epsilon = 1e-12){
 #' result$formatted  # chr[3]
 #' result$df_mag_row # df[1,]
 #' }
-fround_props <- function(clu, style_name) {
+fround_props <- function(clu, style_name, mag = NULL) {
 
-   # Compute magnitude from central value
-   df_mag <- set_magnitude(clu[1], metric = "prop")
-   checkmate::assert_data_frame(df_mag, nrows = 1)
+  # Compute magnitude from central value
+  df_mag <- set_magnitude(x = clu[1], metric = "prop", mag = mag)
+  checkmate::assert_data_frame(df_mag, nrows = 1)
 
-   style <- get_style(style_name)
+  style <- get_style(style_name)
 
-   if (style$round_5_up) clu <- add_epsilon(clu)
+  if (style$round_5_up) clu <- add_epsilon(clu)
 
-   # Use denominator from df_mag
-   clu <- clu / df_mag$denom
+  # Use denominator from df_mag
+  clu <- clu / df_mag$denom
 
-   formatted <- round(x = clu, digits = style$prop_digits_round) |>
-      format(nsmall = style$prop_nsmall, decimal.mark = style$decimal.mark) |>
-      trimws()
+  formatted <- round(x = clu, digits = style$prop_digits_round) |>
+    format(nsmall = style$prop_nsmall, decimal.mark = style$decimal.mark) |>
+    trimws()
 
-   # Return both formatted values and magnitude info
-   result <- list(
-      formatted   = formatted,
-      df_mag_row  = df_mag
-   )
+  # Return both formatted values and magnitude info
+  result <- list(
+    formatted   = formatted,
+    df_mag_row  = df_mag
+  )
 
-   return(result)
+  return(result)
 }
 
 #' Format and round count or rate numbers
@@ -356,6 +364,10 @@ fround_props <- function(clu, style_name) {
 #' @param clu [num] numeric triplet of counts/rates (central, lower, upper)
 #' @param style_name [chr] style name - controls rounding and formatting
 #' @param metric [chr]
+#' @param mag mag [chr: default NULL] magnitude override - see set_magnitude()
+#'   - For props/pp: "as-is" (no scaling, use values as provided)
+#'   - For counts: "t" (thousand), "m" (million), "b" (billion)
+#'   - For rates: "per10", "per100", "per1k", ..., "per10b"
 #'
 #' @returns [list] with elements:
 #'   - formatted: chr[3] - formatted central, lower, upper values
@@ -373,7 +385,7 @@ fround_props <- function(clu, style_name) {
 #' result$formatted  # chr[3]
 #' result$df_mag_row # df[1,]
 #' }
-fround_count_rate <- function(clu, style_name, metric) {
+fround_count_rate <- function(clu, style_name, metric, mag = NULL) {
 
   # === Input Validation ===
   if (metric == "count" && any(clu < 0)) {
@@ -412,29 +424,30 @@ fround_count_rate <- function(clu, style_name, metric) {
 
   # Apply round-5-up rule if needed
   if (round_5_up) {
-     # must be small enough not to affect smallest possible rate category (per10bn)
+    # must be small enough not to affect smallest possible rate category (per10bn)
     central_val <- central_val + 1e-12
   }
 
   # Do trial rounding with arbitrary magnitude (scale = 1)
   central_trial_rounded <- if (metric == "count"){
-     switch_strict(
-        method,
-        "sigfig"  = signif(central_val, sigfig),
-        "decimal" = round(central_val, digits = nsmall),
-        "int"     = round(central_val, digits = 0)
-     )
+    switch_strict(
+      method
+      , "sigfig"  = signif(central_val, sigfig)
+      , "decimal" = round(central_val, digits = nsmall)
+      , "int"     = round(central_val, digits = 0)
+    )
   } else if (metric == "rate"){
-     central_val
+    central_val
   }
 
   # Compute magnitude based on trial-rounded value
   # This automatically handles boundary crossings (e.g., 999,999 -> 1,000,000)
   df_mag <- set_magnitude(
-    x                     = central_trial_rounded,
-    metric                = metric,
-    count_label_thousands = count_label_thousands,
-    verbose               = FALSE
+    x                       = central_trial_rounded
+    , metric                = metric
+    , mag                   = mag
+    , count_label_thousands = count_label_thousands
+    , verbose               = FALSE
   )
 
   checkmate::assert_data_frame(df_mag, nrows = 1)
@@ -461,9 +474,9 @@ fround_count_rate <- function(clu, style_name, metric) {
 
     # Format according to method
     x_chr <- switch_strict(
-      method,
+      method
 
-      "sigfig" = {
+      , "sigfig" = {
         x_fmt <- signif(x_sc, sigfig)
 
         # Lancet edge case: if raw value <= 9999 but rounds to >= 10000
@@ -472,10 +485,10 @@ fround_count_rate <- function(clu, style_name, metric) {
         }
 
         x_chr <- format(
-          x_fmt,
-          scientific   = FALSE,
-          decimal.mark = decimal.mark,
-          big.mark     = big.mark
+          x_fmt
+          , scientific   = FALSE
+          , decimal.mark = decimal.mark
+          , big.mark     = big.mark
         )
 
         # Apply zero-padding if requested
@@ -484,13 +497,13 @@ fround_count_rate <- function(clu, style_name, metric) {
         }
 
         trimws(x_chr)
-      },
+      }
 
-      "decimal" = {
+      , "decimal" = {
         format_decimal(x_sc, nsmall, decimal.mark, big.mark)
-      },
+      }
 
-      "int" = {
+      , "int" = {
         format_int(x_sc, decimal.mark, big.mark)
       }
     )
@@ -502,8 +515,8 @@ fround_count_rate <- function(clu, style_name, metric) {
 
   # Return both formatted values and magnitude info
   result <- list(
-    formatted  = formatted,
-    df_mag_row = df_mag
+    formatted    = formatted
+    , df_mag_row = df_mag
   )
 
   return(result)
@@ -515,7 +528,7 @@ fround_count_rate <- function(clu, style_name, metric) {
 # See .github/copilot-instructions-fround_count_rate_refactor.md for details
 #
 # fround_count <- function(
-#       clu,
+    #       clu,
 #       style_name,
 #       idx = NULL
 # ) {
@@ -742,7 +755,7 @@ fround_count_rate <- function(clu, style_name, metric) {
 # See .github/copilot-instructions-fround_count_rate_refactor.md for details
 #
 # fround_rate <- function(
-#       clu,
+    #       clu,
 #       style_name,
 #       idx = NULL
 # ) {
@@ -908,6 +921,10 @@ fround_count_rate <- function(clu, style_name, metric) {
 #' @param metric [chr c('prop', 'pp', 'count', or 'rate')] metric type - proportion,
 #'   percentage point, count, or rate
 #' @param style_name [chr: default 'nature'] style name - controls rounding and formatting
+#' @param mag [chr: default NULL] magnitude override - see set_magnitude()
+#'   - For props/pp: "as-is" (no scaling, use values as provided)
+#'   - For counts: "t" (thousand), "m" (million), "b" (billion)
+#'   - For rates: "per10", "per100", "per1k", ..., "per10b"
 #'
 #' @return [list] with elements:
 #'   - formatted: chr[3] - formatted central, lower, upper values
@@ -924,44 +941,49 @@ fround_count_rate <- function(clu, style_name, metric) {
 #' result$formatted  # chr[3]
 #' result$df_mag_row # df[1,]
 #' }
-fround_clu_triplet <- function(clu, metric, style_name = "nature") {
+fround_clu_triplet <- function(
+    clu
+    , metric
+    , style_name = "nature"
+    , mag        = NULL
+) {
 
-   style  <- get_style(style_name)
-   metric <- assert_metric(metric)
+  style  <- get_style(style_name)
+  metric <- assert_metric(metric)
 
-   checkmate::assert_vector(clu, len = 3)
-   checkmate::assert_numeric(clu, len = 3)
-   if(style$assert_clu_order == TRUE){
-      assert_clu_relationship(clu[1], clu[2], clu[3])
-   }
+  checkmate::assert_vector(clu, len = 3)
+  checkmate::assert_numeric(clu, len = 3)
+  if(style$assert_clu_order == TRUE){
+    assert_clu_relationship(clu[1], clu[2], clu[3])
+  }
 
-   # Call appropriate formatting helper
-   result <- switch_strict(
-      metric,
-      "prop"  = fround_props(clu = clu, style_name = style_name),
-      "pp"    = fround_props(clu = clu, style_name = style_name),
-      "count" = fround_count_rate(clu = clu, style_name = style_name, metric = "count"),
-      "rate"  = fround_count_rate(clu = clu, style_name = style_name, metric = "rate")
-   )
+  # Call appropriate formatting helper
+  result <- switch_strict(
+    metric
+    , "prop"  = fround_props(clu = clu, style_name = style_name, mag = mag)
+    , "pp"    = fround_props(clu = clu, style_name = style_name, mag = mag)
+    , "count" = fround_count_rate(clu = clu, style_name = style_name, metric = "count", mag = mag)
+    , "rate"  = fround_count_rate(clu = clu, style_name = style_name, metric = "rate", mag = mag)
+  )
 
-   # Validate return schema
-   assert_fround_return_schema(result, context = sprintf("fround helper (metric=%s)", metric))
+  # Validate return schema
+  assert_fround_return_schema(result, context = sprintf("fround helper (metric=%s)", metric))
 
-   # Extract formatted values and apply negative sign styling
-   clu_fmt <- result$formatted
-   names(clu_fmt) <- names(clu)
+  # Extract formatted values and apply negative sign styling
+  clu_fmt <- result$formatted
+  names(clu_fmt) <- names(clu)
 
-   # Replace negative sign
-   # - This needs to be done here, not in format_journal_clu() in case
-   #   fround_clu_triplet() is called by the user
-   clu_fmt <- unlist(lapply(clu_fmt, function(x_i_chr) {
-      sub("^-", style$neg_mark_UI, x_i_chr)
-   }))
+  # Replace negative sign
+  # - This needs to be done here, not in format_journal_clu() in case
+  #   fround_clu_triplet() is called by the user
+  clu_fmt <- unlist(lapply(clu_fmt, function(x_i_chr) {
+    sub("^-", style$neg_mark_UI, x_i_chr)
+  }))
 
-   # Update result with styled formatted values
-   result$formatted <- clu_fmt
+  # Update result with styled formatted values
+  result$formatted <- clu_fmt
 
-   return(result)
+  return(result)
 }
 
 # ---- Public -----------------------------------------------------------------
@@ -979,23 +1001,26 @@ fround_clu_triplet <- function(clu, metric, style_name = "nature") {
 #' format_oxford_comma(1:2)
 #' format_oxford_comma(1:3)
 #' format_oxford_comma(1:3, "or")
-format_oxford_comma <- function(vec, sep = "and") {
-   checkmate::assert_vector(vec, min.len = 1)
-   checkmate::assert_string(sep)
+format_oxford_comma <- function(
+    vec
+    , sep = "and"
+) {
+  checkmate::assert_vector(vec, min.len = 1)
+  checkmate::assert_string(sep)
 
-   n       <- length(vec)
-   set1    <- toString(vec[1:(n - 1)])
+  n    <- length(vec)
+  set1 <- toString(vec[1:(n - 1)])
 
-   if(n > 2) {
-      sep <- sprintf(", %s ", sep)
-   } else {
-      sep <- sprintf(" %s ", sep)
-   }
+  if(n > 2) {
+    sep <- sprintf(", %s ", sep)
+  } else {
+    sep <- sprintf(" %s ", sep)
+  }
 
-   set2 <- vec[n]
-   str  <- sprintf("%s%s%s", set1, sep, set2)
+  set2 <- vec[n]
+  str  <- sprintf("%s%s%s", set1, sep, set2)
 
-   return(str)
+  return(str)
 }
 
 #' Format and round
@@ -1015,11 +1040,16 @@ format_oxford_comma <- function(vec, sep = "and") {
 #' fround(0.123456789)
 #' fround(0.123456789, digits = 3)
 #' fround(0.123456789, digits = 3, nsmall = 4)
-fround <- function(x, digits = 1L, nsmall = 1L, decimal.mark = "."){
-   # Format and round, no label
-   round(x, digits) |>
-      format(nsmall = nsmall, decimal.mark = decimal.mark) |>
-      trimws()
+fround <- function(
+    x
+    , digits       = 1L
+    , nsmall       = 1L
+    , decimal.mark = "."
+){
+  # Format and round, no label
+  round(x, digits) |>
+    format(nsmall = nsmall, decimal.mark = decimal.mark) |>
+    trimws()
 }
 
 
@@ -1043,28 +1073,28 @@ fround <- function(x, digits = 1L, nsmall = 1L, decimal.mark = "."){
 #' fround_metric(0.123456789, 'pp', 3, 4)
 #' fround_metric(c(55.8346, 123.456789), 'count', 3, 4, ".")
 fround_metric <- function(
-      x
-      , metric       = "prop"
-      , digits       = 1L
-      , nsmall       = 1L
-      , decimal.mark = "."
+    x
+    , metric       = "prop"
+    , digits       = 1L
+    , nsmall       = 1L
+    , decimal.mark = "."
 ){
 
-   checkmate::assert_numeric(x)
-   checkmate::assert_integerish(digits, len = 1, lower = 0)
-   checkmate::assert_integerish(nsmall, len = 1, lower = 0)
-   checkmate::assert_character(decimal.mark, len = 1)
+  checkmate::assert_numeric(x)
+  checkmate::assert_integerish(digits, len = 1, lower = 0)
+  checkmate::assert_integerish(nsmall, len = 1, lower = 0)
+  checkmate::assert_character(decimal.mark, len = 1)
 
-   # select data-type label
-   suffix <- get_metric_labels(metric)
+  # select data-type label
+  suffix <- get_metric_labels(metric)
 
-   # round and format
-   x_fmt <- x  |>
-      round(digits) |>
-      format(nsmall = nsmall, decimal.mark = decimal.mark) |>
-      trimws() |>
-      sprintf("%s%s", ... = _ , suffix)
-   return(x_fmt)
+  # round and format
+  x_fmt <- x  |>
+    round(digits) |>
+    format(nsmall = nsmall, decimal.mark = decimal.mark) |>
+    trimws() |>
+    sprintf("%s%s", ... = _ , suffix)
+  return(x_fmt)
 }
 
 #' Format magnitude
@@ -1080,10 +1110,10 @@ fround_metric <- function(
 #' @param metric [chr `c("prop", "pp", "count", "rate")`]
 #' @param digits [int: default 1L] passed to `round()`
 #' @param nsmall [int: default 1L] passed to `format()`
-#' @param mag [chr: default NULL] magnitude override
+#' @param mag [chr: default NULL] magnitude override - see set_magnitude()
+#'   - For props/pp: "as-is" (no scaling, use values as provided)
 #'   - For counts: "t" (thousand), "m" (million), "b" (billion)
 #'   - For rates: "per10", "per100", "per1k", ..., "per10b"
-#'   - For props/pp: "as-is" (no scaling, use values as provided)
 #' @param count_label_thousands [lgl: default FALSE] allow thousands magnitude?  Not
 #'   Lancet-valid. Passed to `set_magnitude()`
 #' @param decimal.mark [chr: default "."] decimal mark passed to `format()`
@@ -1099,47 +1129,47 @@ fround_metric <- function(
 #' fmt_magnitude(123456789, metric = "count")
 #' fmt_magnitude(0.0000123, metric = "rate", rate_unit = "deaths")
 fmt_magnitude <- function(
-      x
-      , metric
-      , digits                = 1
-      , nsmall                = 1
-      , decimal.mark          = "."
-      , mag                   = NULL
-      , count_label_thousands = FALSE
-      , rate_unit             = NULL
+    x
+    , metric
+    , rate_unit             = NULL
+    , digits                = 1
+    , nsmall                = 1
+    , decimal.mark          = "."
+    , mag                   = NULL
+    , count_label_thousands = FALSE
 ){
 
-   assert_rate_unit(metric, rate_unit)
+  assert_rate_unit(metric, rate_unit)
 
-   checkmate::assert_numeric(x)
-   checkmate::assert_vector(x)
-   checkmate::assert_logical(count_label_thousands, len = 1)
-   checkmate::assert_integerish(digits, len = 1, lower = 0)
-   checkmate::assert_integerish(nsmall, len = 1, lower = 0)
+  checkmate::assert_numeric(x)
+  checkmate::assert_vector(x)
+  checkmate::assert_logical(count_label_thousands, len = 1)
+  checkmate::assert_integerish(digits, len = 1, lower = 0)
+  checkmate::assert_integerish(nsmall, len = 1, lower = 0)
 
-   # Define rate unit space for sprintf
-   rate_unit_fmt <- if (metric == "rate" && !is.null(rate_unit)) sprintf(" %s", rate_unit) else ""
+  # Define rate unit space for sprintf
+  rate_unit_fmt <- if (metric == "rate" && !is.null(rate_unit)) sprintf(" %s", rate_unit) else ""
 
-   df_mag <- set_magnitude(
-      x
-      , metric                = metric
-      , mag                   = mag
-      , count_label_thousands = count_label_thousands
-      , verbose               = FALSE
-   )
+  df_mag <- set_magnitude(
+    x
+    , metric                = metric
+    , mag                   = mag
+    , count_label_thousands = count_label_thousands
+    , verbose               = FALSE
+  )
 
-   # hack for floating point rounding issues
-   epsilon <- 1e-9
-   x <- x + epsilon
+  # hack for floating point rounding issues
+  epsilon <- 1e-9
+  x <- x + epsilon
 
-   x_fmt <-
-      round(x / df_mag$denom, digits = digits) |>
-      format(nsmall = nsmall, decimal.mark = decimal.mark) |>
-      trimws()|>
-      sprintf("%s%s %s", ... = _, rate_unit_fmt, df_mag$mag_label) |>
-      trimws()
+  x_fmt <-
+    round(x / df_mag$denom, digits = digits) |>
+    format(nsmall = nsmall, decimal.mark = decimal.mark) |>
+    trimws()|>
+    sprintf("%s%s %s", ... = _, rate_unit_fmt, df_mag$mag_label) |>
+    trimws()
 
-   return(x_fmt)
+  return(x_fmt)
 }
 
 
@@ -1166,19 +1196,19 @@ fmt_magnitude <- function(
 #' fround_metric_lancet(0.123456789, 'pp', 3, 4)
 #' fround_metric_lancet(c(55.8346, 123.456789), 'count', 3, 4, ".")
 fround_metric_lancet <- function(
-      x
-      , metric       = "prop"
-      , digits       = 1L
-      , nsmall       = 1L
-      , decimal.mark = mid_dot()
+    x
+    , metric       = "prop"
+    , digits       = 1L
+    , nsmall       = 1L
+    , decimal.mark = mid_dot()
 ){
 
-   fround_metric(
-      x              = x
-      , metric       = metric
-      , digits       = digits
-      , nsmall       = nsmall
-      , decimal.mark = decimal.mark
-   )
+  fround_metric(
+    x              = x
+    , metric       = metric
+    , digits       = digits
+    , nsmall       = nsmall
+    , decimal.mark = decimal.mark
+  )
 
 }
