@@ -4,12 +4,17 @@
 \alias{fround_props}
 \title{Format and round proportion-ish number}
 \usage{
-fround_props(clu, style_name)
+fround_props(clu, style_name, mag = NULL)
 }
 \arguments{
 \item{clu}{[num] numeric triplet of proportions (central, lower, upper)}
 
 \item{style_name}{[chr] style name - controls rounding and formatting}
+
+\item{mag}{[chr: default NULL] magnitude override - see set_magnitude()
+- For props/pp: "as-is" (no scaling, use values as provided)
+- For counts: "t" (thousand), "m" (million), "b" (billion)
+- For rates: "per10", "per100", "per1k", ..., "per10b"}
 }
 \value{
 [list] with elements:

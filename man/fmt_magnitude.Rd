@@ -7,12 +7,12 @@
 fmt_magnitude(
   x,
   metric,
+  rate_unit = NULL,
   digits = 1,
   nsmall = 1,
   decimal.mark = ".",
   mag = NULL,
-  count_label_thousands = FALSE,
-  rate_unit = NULL
+  count_label_thousands = FALSE
 )
 }
 \arguments{
@@ -20,22 +20,22 @@ fmt_magnitude(
 
 \item{metric}{[chr `c("prop", "pp", "count", "rate")`]}
 
+\item{rate_unit}{[chr: default NULL] unit label for rates (e.g., "deaths", "cases").
+Required when metric = "rate", ignored otherwise.}
+
 \item{digits}{[int: default 1L] passed to `round()`}
 
 \item{nsmall}{[int: default 1L] passed to `format()`}
 
 \item{decimal.mark}{[chr: default "."] decimal mark passed to `format()`}
 
-\item{mag}{[chr: default NULL] magnitude override
+\item{mag}{[chr: default NULL] magnitude override - see set_magnitude()
+- For props/pp: "as-is" (no scaling, use values as provided)
 - For counts: "t" (thousand), "m" (million), "b" (billion)
-- For rates: "per10", "per100", "per1k", ..., "per10b"
-- For props/pp: "as-is" (no scaling, use values as provided)}
+- For rates: "per10", "per100", "per1k", ..., "per10b"}
 
 \item{count_label_thousands}{[lgl: default FALSE] allow thousands magnitude?  Not
 Lancet-valid. Passed to `set_magnitude()`}
-
-\item{rate_unit}{[chr: default NULL] unit label for rates (e.g., "deaths", "cases").
-Required when metric = "rate", ignored otherwise.}
 }
 \value{
 [chr] formatted string

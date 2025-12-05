@@ -4,7 +4,7 @@
 \alias{fround_clu_triplet}
 \title{Format and round a single central/lower/upper value set by magnitude without units}
 \usage{
-fround_clu_triplet(clu, metric, style_name = "nature")
+fround_clu_triplet(clu, metric, style_name = "nature", mag = NULL)
 }
 \arguments{
 \item{clu}{[num] a numeric triplet of three values in central/lower/upper order}
@@ -13,6 +13,11 @@ fround_clu_triplet(clu, metric, style_name = "nature")
 percentage point, count, or rate}
 
 \item{style_name}{[chr: default 'nature'] style name - controls rounding and formatting}
+
+\item{mag}{[chr: default NULL] magnitude override - see set_magnitude()
+- For props/pp: "as-is" (no scaling, use values as provided)
+- For counts: "t" (thousand), "m" (million), "b" (billion)
+- For rates: "per10", "per100", "per1k", ..., "per10b"}
 }
 \value{
 [list] with elements:

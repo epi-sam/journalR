@@ -4,7 +4,7 @@
 \alias{fround_count_rate}
 \title{Format and round count or rate numbers}
 \usage{
-fround_count_rate(clu, style_name, metric)
+fround_count_rate(clu, style_name, metric, mag = NULL)
 }
 \arguments{
 \item{clu}{[num] numeric triplet of counts/rates (central, lower, upper)}
@@ -12,6 +12,11 @@ fround_count_rate(clu, style_name, metric)
 \item{style_name}{[chr] style name - controls rounding and formatting}
 
 \item{metric}{[chr]}
+
+\item{mag}{mag [chr: default NULL] magnitude override - see set_magnitude()
+- For props/pp: "as-is" (no scaling, use values as provided)
+- For counts: "t" (thousand), "m" (million), "b" (billion)
+- For rates: "per10", "per100", "per1k", ..., "per10b"}
 }
 \value{
 [list] with elements:

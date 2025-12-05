@@ -1,3 +1,78 @@
+# API mag override ----------------------------------------------------------
+
+test_that("API mag override works end-to-end: proportions", {
+   df <- data.frame(
+      id    = 1:3,
+      mean  = c(055.8, 023.4, 078.9),
+      lower = c(050.7, 020.1, 075.6),
+      upper = c(060.7, 026.7, 082.1)
+   )
+
+   # no override
+   expect_error(
+      format_journal_df(df, metric = "prop")
+      , regexp = "Proportion values must be between -1 and \\+1"
+   )
+
+   # with override
+   result <- format_journal_df(df, metric = "prop", mag = 'as-is')
+   expect_true("clu_fmt" %in% colnames(result))
+   expect_equal(nrow(result), 3)
+   expect_equal(result$clu_fmt[1], "55.8% (50.7–60.7)")
+   expect_equal(result$clu_fmt[2], "23.4% (20.1–26.7)")
+   expect_equal(result$clu_fmt[3], "78.9% (75.6–82.1)")
+})
+
+test_that("API mag override works end-to-end: counts ", {
+   df <- data.frame(
+      id    = 1:3,
+      mean  = c(55.8e7, 123.4e7, 5.67e10),
+      lower = c(50.7e7, 110.2e7, 5.12e10),
+      upper = c(60.7e7, 135.6e7, 6.23e10)
+   )
+
+   # no override
+   result <- format_journal_df(df, metric = "count")
+   expect_true("clu_fmt" %in% colnames(result))
+   expect_equal(result$clu_fmt[1], "558 million (507–607)")
+   expect_equal(result$clu_fmt[2], "1.23 billion (1.10–1.36)")
+   expect_equal(result$clu_fmt[3], "56.7 billion (51.2–62.3)")
+
+
+   # with override
+   result <- format_journal_df(df, metric = "count", mag = "b")
+   expect_true("clu_fmt" %in% colnames(result))
+   expect_equal(result$clu_fmt[1], "0.558 billion (0.507–0.607)")
+   expect_equal(result$clu_fmt[2], "1.23 billion (1.10–1.36)")
+   expect_equal(result$clu_fmt[3], "56.7 billion (51.2–62.3)")
+})
+
+test_that("API mag override works end-to-end: rates ", {
+   df <- data.frame(
+      id    = 1:3,
+      mean  = c(0.000123, 0.000456, 0.000789),
+      lower = c(0.000100, 0.000400, 0.000700),
+      upper = c(0.000150, 0.000500, 0.000900)
+   )
+
+   # no override
+   result <- format_journal_df(df, metric = "rate", rate_unit = "deaths")
+   expect_true("clu_fmt" %in% colnames(result))
+   expect_equal(result$clu_fmt[1], "12.3 deaths (10.0–15.0) per 100,000")
+   expect_equal(result$clu_fmt[2], "45.6 deaths (40.0–50.0) per 100,000")
+   expect_equal(result$clu_fmt[3], "78.9 deaths (70.0–90.0) per 100,000")
+
+   # with override
+   result <- format_journal_df(df, metric = "rate", rate_unit = "deaths", mag = "per1m")
+
+   expect_true("clu_fmt" %in% colnames(result))
+   expect_equal(result$clu_fmt[1], "123 deaths (100–150) per 1 million")
+   expect_equal(result$clu_fmt[2], "456 deaths (400–500) per 1 million")
+   expect_equal(result$clu_fmt[3], "789 deaths (700–900) per 1 million")
+
+})
+
+
 # Test Helper Functions Independently ----------------------------------------
 
 test_that("set_magnitude_prop scales correctly", {

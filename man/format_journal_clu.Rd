@@ -9,8 +9,9 @@ format_journal_clu(
   lower,
   upper,
   metric,
-  style_name = "nature",
-  rate_unit = NULL
+  rate_unit = NULL,
+  mag = NULL,
+  style_name = "nature"
 )
 }
 \arguments{
@@ -23,11 +24,16 @@ format_journal_clu(
 \item{metric}{[chr c(prop, pp, count, rate)] metric - proportion,
 percentage point, count, or rate}
 
+\item{rate_unit}{[chr: default NULL] rate unit label (required when metric = 'rate')}
+
+\item{mag}{[chr: default NULL] magnitude override - see set_magnitude()
+- For props/pp: "as-is" (no scaling, use values as provided)
+- For counts: "t" (thousand), "m" (million), "b" (billion)
+- For rates: "per10", "per100", "per1k", ..., "per10b"
+- Examples: "deaths", "cases", "events", "births"}
+
 \item{style_name}{[chr: default 'nature'] style name - controls rounding and
 formatting.}
-
-\item{rate_unit}{[chr: default NULL] rate unit label (required when metric = 'rate')
-- Examples: "deaths", "cases", "events", "births"}
 }
 \value{
 [chr] formatted string vector
