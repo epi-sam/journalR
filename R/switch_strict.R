@@ -56,12 +56,12 @@ switch_strict <- function(EXPR, ..., .empty = NULL, .default = NULL) {
       stop(
          sprintf(
             # "'%s' is not a valid option%s. Valid options are: %s",
-            "Invalid option: %s\n  Valid options:  %s",
+            "\nInvalid option: %s\nValid options:  %s",
             EXPR,
             # caller_msg,
             toString(rev(opt_names)) # in the context switch_strict is called, reversing the options seems more informative
          )
-         # , call. = FALSE # suppresses switch_strict in error message - not sure if I want this
+         , call. = FALSE # suppresses switch_strict in error message - not sure if I want this
       )
    }
    res

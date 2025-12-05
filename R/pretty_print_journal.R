@@ -14,8 +14,8 @@
 #'
 #' `central` could be mean, median, point_estimate
 #'
-#' Transform c(central = 0.994, lower = 0.984, upper = 0.998) to "99.4%
-#' (98.4–99.8)"
+#' Transform c(central = 0.994, lower = 0.984, upper = 0.998) to "99.4\%
+#' (98.4--99.8)"
 #'
 #' Accounts for negative values, and UIs that cross zero.  Checks if central,
 #' lower, upper values are in the correct order.
