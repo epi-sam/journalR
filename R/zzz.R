@@ -31,10 +31,7 @@
 #'
 #' @returns [env] the package's dictionary environment
 #'
-#' @examples
-#' \dontrun{
-#' get_dict_formats()
-#' }
+#'@keywords internal
 get_dict_formats <- function() {
    .dict_formats
 }
@@ -43,11 +40,8 @@ get_dict_formats <- function() {
 #' Get all pre-assigned .dict_formats names
 #'
 #' @returns [chr] names of all pre-assigned dictionaries in .dict_formats
+#' @keywords internal
 #'
-#' @examples
-#' \dontrun{
-#' get_dict_formats_names()
-#' }
 get_dict_formats_names <- function(){
    names(get_dict_formats())
 }
@@ -60,11 +54,8 @@ get_dict_formats_names <- function(){
 #' @param dict_name [chr] name of the dictionary to retrieve
 #'
 #' @returns [any] the requested dictionary
+#' @keywords internal
 #'
-#' @examples
-#' \dontrun{
-#' get_dict_format("lancet")
-#' }
 get_dict_format <- function(dict_name) {
    checkmate::assert_string(dict_name)
    avail_names <- get_dict_formats_names()
@@ -91,11 +82,8 @@ get_dict_format <- function(dict_name) {
 #' @param dict_entry [any] value to assign to the dictionary
 #'
 #' @returns [chr] invisible vector of input objects, to allow easier un-locking
+#' @keywords internal
 #'
-#' @examples
-#' \dontrun{
-#' set_dict_format("my_dict", list(a = 1, b = 2))
-#' }
 set_dict_format <- function(dict_name, dict_entry) {
    checkmate::assert_string(dict_name)
    # done within schema validation, keep this one as general as possible

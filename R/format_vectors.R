@@ -14,17 +14,10 @@
 #'
 #' @param triplets [matrix]  with rownames 'central', 'lower', 'upper'
 #' @param assert_clu_order [lgl: default TRUE] assert that central, lower, upper relationships are valid
+#' @keywords internal
 #'
 #' @returns [num matrix] matrix with rows 'central', 'lower', 'upper' and columns for each triplet set
 #'
-#' @examples
-#' \dontrun{
-#' process_clu_triplet_negatives(
-#'    central  = c(0.5, -0.2, -0.5, -2)
-#'    , lower  = c(0.3, -0.5, -1.0, -3)
-#'    , upper  = c(0.7, 0.1, -0.2, -1)
-#' )
-#' }
 process_clu_triplet_negatives <- function(
       triplets
       , assert_clu_order = TRUE
@@ -99,11 +92,8 @@ process_clu_triplet_negatives <- function(
 #'
 #' @returns [chr] formatted string
 #' @family vector_formats
+#' @keywords internal
 #'
-#' @examples
-#' \dontrun{
-#' fround_propish(0.123456789, 'nature')
-#' }
 fround_props <- function(
       clu
       , style_name
@@ -132,12 +122,8 @@ fround_props <- function(
 #'
 #' @returns [chr] formatted string vector
 #' @family vector_formats
+#' @keywords internal
 #'
-#' @examples
-#' \dontrun{
-#' fround_countish(clu = c(12345, 67890, 6.6666e6),
-#' df_mag = set_magnitude(12345), style_name = 'nature')
-#' }
 fround_count <- function(
       clu,
       style_name,
@@ -325,15 +311,8 @@ fround_count <- function(
 #'   formatting.
 #' @return [chr] formatted string (vectorized)
 #' @family styled_formats
+#' @keywords internal
 #'
-#' @examples
-#' \dontrun{
-#' fround_clu_triplet(clu = c(central = 0.2, lower = 0.1, upper = 0.3), d_type = "prop")
-#' fround_clu_triplet(clu = c(central = 0.2, lower = -0.1, upper = 0.3), d_type = "pp")
-#' fround_clu_triplet(clu = c(central = 95e6, lower = 89e6, upper = 101e6), d_type = "count")
-#' fround_clu_triplet(clu = c(central = 95e6, lower = 1e5, upper = 101e9), d_type = "count")
-#' fround_clu_triplet(clu = c(central = 678901, lower = 123456, upper = 6e6), d_type = "count")
-#' }
 fround_clu_triplet <- function(
       clu
       , d_type

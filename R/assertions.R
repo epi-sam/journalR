@@ -15,6 +15,7 @@ require_args <- function(...) {
 #'
 #' @return [none] stop if any elements of x are not in y
 #' @family assertions
+#' @keywords internal
 #'
 assert_x_in_y <- function(x, y){
    checkmate::assert_vector(x)
@@ -34,6 +35,7 @@ assert_x_in_y <- function(x, y){
 #'
 #' @returns [none] stop if any elements of x are in y
 #' @family assertions
+#' @keywords internal
 #'
 assert_x_not_in_y <- function(x, y){
    checkmate::assert_vector(x, null.ok = TRUE)
@@ -53,6 +55,8 @@ assert_x_not_in_y <- function(x, y){
 #'
 #' @returns [scalar] invisible validated x
 #' @family assertions
+#' @keywords internal
+#'
 assert_set_choice <- function(x, choices){
    checkmate::assert_scalar(x)
    checkmate::assert_vector(choices)
@@ -80,6 +84,8 @@ assert_set_choice <- function(x, choices){
 #'
 #' @returns [chr] invisible validated d_type
 #' @family assertions
+#' @keywords internal
+#'
 assert_data_type <- function(d_type){
    require_args(d_type)
    assert_set_choice(x = d_type, choices = get_data_types())
@@ -94,6 +100,8 @@ assert_data_type <- function(d_type){
 #'
 #' @returns [none] stop if any elements of x are greater than y
 #' @family assertions
+#' @keywords internal
+#'
 assert_x_gte_y <- function(x, y){
    checkmate::assert_numeric(x, any.missing = FALSE)
    checkmate::assert_numeric(y, any.missing = FALSE)
@@ -120,6 +128,8 @@ assert_x_gte_y <- function(x, y){
 #'
 #' @returns [none] stop if any of the CLU relationships are violated
 #' @family assertions
+#' @keywords internal
+#'
 assert_clu_relationship <- function(central, lower, upper){
    assert_x_gte_y(x = upper,   y = central)
    assert_x_gte_y(x = central, y = lower)

@@ -23,12 +23,4 @@ Casting some negatives as positives allows user control to set
 \details{
 non-exported helper
 }
-\examples{
-\dontrun{
-process_clu_triplet_negatives(
-   central  = c(0.5, -0.2, -0.5, -2)
-   , lower  = c(0.3, -0.5, -1.0, -3)
-   , upper  = c(0.7, 0.1, -0.2, -1)
-)
-}
-}
+\keyword{internal}

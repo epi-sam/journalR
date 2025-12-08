@@ -4,7 +4,7 @@
 \alias{lock_some_bindings}
 \title{Lock select bindings in the global environment}
 \usage{
-lock_some_bindings(objs, env = globalenv())
+lock_some_bindings(objs, env)
 }
 \arguments{
 \item{objs}{[chr] a vector of object names to lock}
@@ -18,3 +18,4 @@ lock_some_bindings(objs, env = globalenv())
 Safely tries to lock the specified object bindings in the given environment.
 }
 \concept{bindings}
+\keyword{internal}

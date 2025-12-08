@@ -36,15 +36,6 @@ data requires nuanced logic), but labels are not returned.
 Format and round without unit labeling
 - Use `format_lancet_clu()` for unit labels
 }
-\examples{
-\dontrun{
-fround_clu_triplet(clu = c(central = 0.2, lower = 0.1, upper = 0.3), d_type = "prop")
-fround_clu_triplet(clu = c(central = 0.2, lower = -0.1, upper = 0.3), d_type = "pp")
-fround_clu_triplet(clu = c(central = 95e6, lower = 89e6, upper = 101e6), d_type = "count")
-fround_clu_triplet(clu = c(central = 95e6, lower = 1e5, upper = 101e9), d_type = "count")
-fround_clu_triplet(clu = c(central = 678901, lower = 123456, upper = 6e6), d_type = "count")
-}
-}
 \seealso{
 Other styled_formats: 
 \code{\link{format_journal_clu}()},
@@ -57,3 +48,4 @@ Other styled_formats:
 \code{\link{new_style}()}
 }
 \concept{styled_formats}
+\keyword{internal}

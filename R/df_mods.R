@@ -15,18 +15,8 @@ NULL
 #'
 #' @returns [data.frame or data.table] input `x` with new column added
 #' @family column_mods
+#' @keywords internal
 #'
-#' @examples
-#'\dontrun{
-#' df <- data.frame(a = 1:3, b = letters[1:3])
-#' df <- add_column(df, "c", c(TRUE, FALSE, TRUE))
-#' print(df)
-#' class(df)
-#' dt <- data.table::data.table(a = 1:3, b = letters[1:3])
-#' add_column(dt, "c", c(TRUE, FALSE, TRUE)) # modified in place
-#' print(dt)
-#' class(dt)
-#'}
 add_column <- function(x, varname, vec, overwrite = FALSE){
    checkmate::assert_data_frame(x)
    checkmate::assert_string(varname)
@@ -50,18 +40,8 @@ add_column <- function(x, varname, vec, overwrite = FALSE){
 #'
 #' @returns [data.frame or data.table] input `x` with column dropped
 #' @family column_mods
+#' @keywords internal
 #'
-#' @examples
-#'\dontrun{
-#' df <- data.frame(a = 1:3, b = letters[1:3], c = c(TRUE, FALSE, TRUE))
-#' df <- drop_column(df, "c")
-#' print(df)
-#' class(df)
-#' dt <- data.table::data.table(a = 1:3, b = letters[1:3], c = c(TRUE, FALSE, TRUE))
-#' drop_column(dt, "c") # modified in place
-#' print(dt)
-#' class(dt)
-#'}
 drop_column <- function(x, varname){
    checkmate::assert_data_frame(x)
    checkmate::assert_string(varname)
@@ -82,12 +62,8 @@ drop_column <- function(x, varname){
 #'
 #' @returns [data.frame or data.table] input `x` with columns dropped
 #' @family column_mods
+#' @keywords internal
 #'
-#' @examples
-#'\dontrun{
-#' df <- data.frame(a = 1:3, b = letters[1:3], c = c(TRUE, FALSE, TRUE))
-#' df <- drop_columns(df, c("b", "c"))
-#'}
 drop_columns <- function(x, varnames){
    checkmate::assert_data_frame(x)
    checkmate::assert_character(varnames)
@@ -104,6 +80,7 @@ drop_columns <- function(x, varnames){
 #' Forbids vector length 1 recycling
 #'
 #' @param ... [any] passed to `data.frame()`
+#' @keywords internal
 #'
 #' @returns [data.frame]
 df_strict <- function(...) {

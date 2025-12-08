@@ -12,8 +12,4 @@ get_dict_formats_names()
 \description{
 Get all pre-assigned .dict_formats names
 }
-\examples{
-\dontrun{
-get_dict_formats_names()
-}
-}
+\keyword{internal}

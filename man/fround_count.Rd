@@ -20,12 +20,6 @@ formatting.}
 \description{
 non-exported helper
 }
-\examples{
-\dontrun{
-fround_countish(clu = c(12345, 67890, 6.6666e6),
-df_mag = set_magnitude(12345), style_name = 'nature')
-}
-}
 \seealso{
 Other vector_formats: 
 \code{\link{fmt_magnitude}()},
@@ -36,3 +30,4 @@ Other vector_formats:
 \code{\link{fround_props}()}
 }
 \concept{vector_formats}
+\keyword{internal}

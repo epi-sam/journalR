@@ -21,11 +21,6 @@ non-exported helper
 \details{
 "well that was easy, how hard could counts be?"
 }
-\examples{
-\dontrun{
-fround_propish(0.123456789, 'nature')
-}
-}
 \seealso{
 Other vector_formats: 
 \code{\link{fmt_magnitude}()},
@@ -36,3 +31,4 @@ Other vector_formats:
 \code{\link{fround_dtype_lancet}()}
 }
 \concept{vector_formats}
+\keyword{internal}

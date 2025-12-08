@@ -48,6 +48,7 @@ get_data_type_labels <- function(d_type){
 #' @param style_name [chr] name of a style
 #' @param style_item [chr] a style list item name
 #' @param d_type [chr] a valid data type
+#' @keywords internal
 #'
 #' @returns [scalar] some style item, type may vary
 get_style_item_by_data_type <- function(style_name, style_item, d_type){

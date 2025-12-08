@@ -17,15 +17,10 @@ drop_columns(x, varnames)
 \description{
 Vectorized version of drop_column()
 }
-\examples{
-\dontrun{
-df <- data.frame(a = 1:3, b = letters[1:3], c = c(TRUE, FALSE, TRUE))
-df <- drop_columns(df, c("b", "c"))
-}
-}
 \seealso{
 Other column_mods: 
 \code{\link{add_column}()},
 \code{\link{drop_column}()}
 }
 \concept{column_mods}
+\keyword{internal}
