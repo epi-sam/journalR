@@ -52,9 +52,9 @@ get_metric_labels <- function(metric){
 #' @param style_name [chr] name of a style
 #' @param style_item [chr] a style list item name
 #' @param metric [chr] a valid metric type
+#' @keywords internal
 #'
 #' @returns [scalar] some style item, type may vary
-#' @keywords internal
 get_style_item_by_metric <- function(style_name, style_item, metric){
 
    style  <- get_style(style_name)

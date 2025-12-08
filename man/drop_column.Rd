@@ -19,18 +19,6 @@ drop_column(x, varname)
 Drop a column from a data.frame or data.table, preserving class and
 modifying in place if data.table.
 }
-\examples{
-\dontrun{
-df <- data.frame(a = 1:3, b = letters[1:3], c = c(TRUE, FALSE, TRUE))
-df <- drop_column(df, "c")
-print(df)
-class(df)
-dt <- data.table::data.table(a = 1:3, b = letters[1:3], c = c(TRUE, FALSE, TRUE))
-drop_column(dt, "c") # modified in place
-print(dt)
-class(dt)
-}
-}
 \seealso{
 Other column_mods: 
 \code{\link{add_column}()},

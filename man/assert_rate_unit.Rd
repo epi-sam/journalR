@@ -16,7 +16,7 @@ assert_rate_unit(metric, rate_unit)
 }
 \description{
 Validates that when metric is "rate", rate_unit is provided and is a string.
-When metric is not "rate", rate_unit is ignored.
+When metric is not "rate ", rate_unit is ignored.
 }
 \seealso{
 Other assertions: 

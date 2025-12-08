@@ -55,6 +55,7 @@ get_style_schema <- function(){
 #' @keywords internal
 #' @family assertions
 #' @family styles
+#'
 assert_style_schema <- function(style_entry){
 
    require_args(style_entry)

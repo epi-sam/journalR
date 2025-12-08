@@ -13,16 +13,7 @@
 #'
 #' @returns [any] the value of the matched option
 #' @keywords internal
-#' @keywords internal
 #'
-#' @examples
-#' \dontrun{
-#' switch_strict("b",
-#'   a = "apple",
-#'   b = "banana",
-#'   c = "cherry"
-#' )
-#' }
 switch_strict <- function(EXPR, ..., .empty = NULL, .default = NULL) {
    # Handle empty string case first
    if (EXPR == "" && !is.null(.empty)) {

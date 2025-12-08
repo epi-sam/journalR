@@ -30,17 +30,6 @@ Computes magnitude based on trial-rounded central value.
 \details{
 non-exported helper
 }
-\examples{
-\dontrun{
-result <- fround_count_rate(
-  clu = c(12345, 67890, 6.6666e6),
-  style_name = 'nature',
-  metric = 'count'
-)
-result$formatted  # chr[3]
-result$df_mag_row # df[1,]
-}
-}
 \seealso{
 Other vector_formats: 
 \code{\link{add_epsilon}()},

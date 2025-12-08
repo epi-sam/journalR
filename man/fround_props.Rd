@@ -27,13 +27,6 @@ non-exported helper
 \details{
 "well that was easy, how hard could counts be?"
 }
-\examples{
-\dontrun{
-result <- fround_props(c(0.123, 0.100, 0.150), 'nature')
-result$formatted  # chr[3]
-result$df_mag_row # df[1,]
-}
-}
 \seealso{
 Other vector_formats: 
 \code{\link{add_epsilon}()},

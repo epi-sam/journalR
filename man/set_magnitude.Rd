@@ -35,17 +35,14 @@ Support function used on _central_ (e.g. mean) values for later formatting.
 Routes to appropriate helper based on metric.
 }
 \examples{
+# Proportions (no scaling)
+set_magnitude(c(0.5, 0.75), metric = "prop")
+
 # Counts
 set_magnitude(c(1e3, 1e6, 1e9), metric = "count")
 
 # Rates
 set_magnitude(c(0.0000123, 0.0000456), metric = "rate")
-
-# Proportions (no scaling)
-set_magnitude(c(0.5, 0.75), metric = "prop")
-
-# All calls require metric
-set_magnitude(c(1e6, 1e9), metric = "count")
 }
 \seealso{
 Other magnitudes: 

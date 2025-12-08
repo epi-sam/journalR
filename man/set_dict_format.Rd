@@ -21,9 +21,4 @@ dictionary environment.
 \details{
 Dictionary entries should only be settable with the accessor functions.
 }
-\examples{
-\dontrun{
-set_dict_format("my_dict", list(a = 1, b = 2))
-}
-}
 \keyword{internal}
