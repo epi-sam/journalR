@@ -1,3 +1,11 @@
+# journalR 0.5.1
+
+cran initial submit harmonization
+
+- description update
+- remove dontrun examples
+- remove globalenv references
+
 # journalR 0.5.0
 
 mag override can now be passed down from user API
