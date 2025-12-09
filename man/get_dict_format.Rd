@@ -16,9 +16,4 @@ get_dict_format(dict_name)
 Accessor function to retrieve a format dictionary from the package's
 dictionary environment.
 }
-\examples{
-\dontrun{
-get_dict_format("lancet")
-}
-}
 \keyword{internal}

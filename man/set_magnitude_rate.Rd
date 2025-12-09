@@ -25,11 +25,6 @@ E.g., 0.0000123 / 1e-5 = 1.23 "per 100,000"
 \details{
 Target: scaled value between 0.1 and 100
 }
-\examples{
-\dontrun{
-set_magnitude_rate(c(0.0000123, 0.0000456))
-}
-}
 \seealso{
 Other magnitudes: 
 \code{\link{fmt_magnitude}()},

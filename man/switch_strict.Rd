@@ -22,13 +22,4 @@ switch_strict(EXPR, ..., .empty = NULL, .default = NULL)
 Options for handling empty string ("") and no match cases
 - no case matching is not allowed by default (hence 'strict')
 }
-\examples{
-\dontrun{
-switch_strict("b",
-  a = "apple",
-  b = "banana",
-  c = "cherry"
-)
-}
-}
 \keyword{internal}

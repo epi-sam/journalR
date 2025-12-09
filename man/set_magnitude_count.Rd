@@ -27,11 +27,6 @@ set_magnitude_count(
 Counts are values >= 1 that are scaled down by dividing by large denominators.
 E.g., 55,831,000 / 1e6 = 55.831 "million"
 }
-\examples{
-\dontrun{
-set_magnitude_count(c(1e3, 1e6, 1e9))
-}
-}
 \seealso{
 Other magnitudes: 
 \code{\link{fmt_magnitude}()},

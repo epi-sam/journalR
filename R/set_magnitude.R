@@ -12,6 +12,7 @@
 #' @return [data.frame] with columns: mag, mag_label, denom
 #' @keywords internal
 #' @family magnitudes
+#'
 set_magnitude_prop <- function(x, mag = NULL, verbose = TRUE) {
    checkmate::assert_numeric(x)
    checkmate::assert_vector(x)
@@ -66,10 +67,6 @@ set_magnitude_prop <- function(x, mag = NULL, verbose = TRUE) {
 #' @keywords internal
 #' @family magnitudes
 #'
-#' @examples
-#' \dontrun{
-#' set_magnitude_count(c(1e3, 1e6, 1e9))
-#' }
 set_magnitude_count <- function(x, mag = NULL, count_label_thousands = FALSE, verbose = TRUE) {
    checkmate::assert_numeric(x)
    checkmate::assert_vector(x)
@@ -150,10 +147,6 @@ set_magnitude_count <- function(x, mag = NULL, count_label_thousands = FALSE, ve
 #' @keywords internal
 #' @family magnitudes
 #'
-#' @examples
-#' \dontrun{
-#' set_magnitude_rate(c(0.0000123, 0.0000456))
-#' }
 set_magnitude_rate <- function(x, mag = NULL, verbose = TRUE) {
    checkmate::assert_numeric(x)
    checkmate::assert_vector(x)
@@ -280,17 +273,14 @@ set_magnitude_rate <- function(x, mag = NULL, verbose = TRUE) {
 #' @family magnitudes
 #'
 #' @examples
+#' # Proportions (no scaling)
+#' set_magnitude(c(0.5, 0.75), metric = "prop")
+#'
 #' # Counts
 #' set_magnitude(c(1e3, 1e6, 1e9), metric = "count")
 #'
 #' # Rates
 #' set_magnitude(c(0.0000123, 0.0000456), metric = "rate")
-#'
-#' # Proportions (no scaling)
-#' set_magnitude(c(0.5, 0.75), metric = "prop")
-#'
-#' # All calls require metric
-#' set_magnitude(c(1e6, 1e9), metric = "count")
 set_magnitude <- function(
       x,
       metric,

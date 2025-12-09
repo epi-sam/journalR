@@ -12,9 +12,4 @@ get_dict_formats()
 \description{
 For internal use.
 }
-\examples{
-\dontrun{
-get_dict_formats()
-}
-}
 \keyword{internal}

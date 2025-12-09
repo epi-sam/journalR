@@ -32,16 +32,6 @@ data requires nuanced logic), but labels are not returned.
 Format and round without unit labeling
 - Use `format_lancet_clu()` for unit labels
 }
-\examples{
-\dontrun{
-result <- fround_clu_triplet(
-  clu = c(central = 0.2, lower = 0.1, upper = 0.3),
-  metric = "prop"
-)
-result$formatted  # chr[3]
-result$df_mag_row # df[1,]
-}
-}
 \seealso{
 Other styled_formats: 
 \code{\link{format_journal_clu}()},

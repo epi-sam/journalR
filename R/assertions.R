@@ -1,5 +1,3 @@
-# No docstring for this function - internal utility
-# @keywords internal
 require_args <- function(...) {
    args <- as.list(match.call())[-1]
    for (arg in args) {
@@ -58,6 +56,7 @@ assert_x_not_in_y <- function(x, y){
 #' @returns [scalar] invisible validated x
 #' @family assertions
 #' @keywords internal
+#'
 assert_set_choice <- function(x, choices){
    checkmate::assert_scalar(x)
    checkmate::assert_vector(choices)
@@ -86,6 +85,7 @@ assert_set_choice <- function(x, choices){
 #' @returns [chr] invisible validated metric
 #' @family assertions
 #' @keywords internal
+#'
 assert_metric <- function(metric){
    require_args(metric)
    assert_set_choice(x = metric, choices = get_metrics())
@@ -101,6 +101,7 @@ assert_metric <- function(metric){
 #' @returns [none] stop if any elements of x are greater than y
 #' @family assertions
 #' @keywords internal
+#'
 assert_x_gte_y <- function(x, y){
    checkmate::assert_numeric(x, any.missing = FALSE)
    checkmate::assert_numeric(y, any.missing = FALSE)
@@ -128,6 +129,7 @@ assert_x_gte_y <- function(x, y){
 #' @returns [none] stop if any of the CLU relationships are violated
 #' @family assertions
 #' @keywords internal
+#'
 assert_clu_relationship <- function(central, lower, upper){
    assert_x_gte_y(x = upper,   y = central)
    assert_x_gte_y(x = central, y = lower)
@@ -138,7 +140,7 @@ assert_clu_relationship <- function(central, lower, upper){
 #' Assert rate unit parameter
 #'
 #' Validates that when metric is "rate", rate_unit is provided and is a string.
-#' When metric is not "rate", rate_unit is ignored.
+#' When metric is not "rate ", rate_unit is ignored.
 #'
 #' @param metric [chr] metric type
 #' @param rate_unit [chr or NULL] rate unit parameter
