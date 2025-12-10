@@ -337,8 +337,8 @@ format_journal_df <- function(
 format_means_df <- function(
       df
       , metric
-      , rate_unit   = NULL
       , central_var = "mean"
+      , rate_unit   = NULL
       , mag         = NULL
       , style_name  = "nature"
 ){

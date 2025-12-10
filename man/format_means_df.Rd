@@ -7,8 +7,8 @@
 format_means_df(
   df,
   metric,
-  rate_unit = NULL,
   central_var = "mean",
+  rate_unit = NULL,
   mag = NULL,
   style_name = "nature"
 )
@@ -18,12 +18,12 @@ format_means_df(
 
 \item{metric}{[chr c('prop', 'pp', 'count', 'rate')] a single metric}
 
-\item{rate_unit}{[chr: default NULL] unit label for rates (e.g., "deaths", "cases").
-Required when metric = "rate", ignored otherwise.}
-
 \item{central_var}{[chr: default 'mean'] prefix of mean variable names to
 format.  Implemented as e.g. "^mean[_]+" to capture 'mean', 'mean_1990',
 'mean_2000', etc.}
+
+\item{rate_unit}{[chr: default NULL] unit label for rates (e.g., "deaths", "cases").
+Required when metric = "rate", ignored otherwise.}
 
 \item{mag}{[chr: default NULL] magnitude override - see set_magnitude()
 - For props/pp: "as-is" (no scaling, use values as provided)
