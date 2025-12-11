@@ -8,8 +8,15 @@ Authors@R: c(
     , comment = c(ORCID = "0009-0008-1067-307X"))
            )
 Maintainer: Sam Byrne <ssbyrne@uw.edu>
-Description: Tools for scientific journal publication.  
-    Emphasis on formatting mean/upper/lower sets of values.
+Description: Scientific journal numeric formatting policies implemented in
+  code. Emphasis on formatting mean/upper/lower sets of values. 
+  Convert raw numeric triplet value vectors to formatted text
+  for journal submission. For example  c(2e6, 1e6, 3e6) becomes
+  "2.00 million (1.00--3.00)".  Lancet and Nature have built-in
+  styles for rounding and punctuation marks.  Users may extend
+  journal styles arbitrarily. Four metrics are supported;
+  proportions, percentage points, counts and rates.  Magnitudes for
+  all metrics are discovered automatically.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
