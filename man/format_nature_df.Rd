@@ -7,12 +7,12 @@
 format_nature_df(
   df,
   metric,
-  rate_unit = NULL,
   new_var = "clu_fmt",
   central_var = "mean",
   lower_var = "lower",
   upper_var = "upper",
   remove_clu_columns = TRUE,
+  rate_unit = NULL,
   mag = NULL
 )
 }
@@ -20,8 +20,6 @@ format_nature_df(
 \item{df}{[data.table]}
 
 \item{metric}{[chr c('prop', 'pp', 'count', 'rate')] a single metric}
-
-\item{rate_unit}{[chr: default NULL] rate unit label (required when metric = 'rate')}
 
 \item{new_var}{[chr: default 'clu_fmt'] name of new formatted column}
 
@@ -33,6 +31,8 @@ format_nature_df(
 
 \item{remove_clu_columns}{[lgl: default TRUE] remove central, lower, upper
 columns after formatting?}
+
+\item{rate_unit}{[chr: default NULL] rate unit label (required when metric = 'rate')}
 
 \item{mag}{[chr: default NULL] magnitude override - see set_magnitude()
 - For props/pp: "as-is" (no scaling, use values as provided)
