@@ -74,10 +74,10 @@ set_magnitude_count <- function(x, mag = NULL, count_label_thousands = FALSE, ve
    checkmate::assert_logical(count_label_thousands, len = 1)
    checkmate::assert_logical(verbose, len = 1)
 
-   # Assert count values are greater than 0
-   if (any(x <= 0)) {
-      .ex <- x[x <= 0]
-      stop("Count values must be greater than 0. Found non-positive values, e.g.: ", .ex[1], call. = FALSE)
+   # Assert count values are greater than or equal to 0
+   if (any(x < 0)) {
+      .ex <- x[x < 0]
+      stop("Count values must be positive or 0. Found non-positive values, e.g.: ", .ex[1], call. = FALSE)
    }
 
    if (count_label_thousands && verbose) {
@@ -153,10 +153,10 @@ set_magnitude_rate <- function(x, mag = NULL, verbose = TRUE) {
    checkmate::assert_character(mag, len = 1, null.ok = TRUE)
    checkmate::assert_logical(verbose, len = 1)
 
-   # Assert rate values are greater than 0
-   if (any(x <= 0)) {
-      .ex <- x[x <= 0]
-      stop("Rate values must be greater than 0. Found non-positive values, e.g.: ", .ex[1], call. = FALSE)
+   # Assert rate values are positive or 0
+   if (any(x < 0)) {
+      .ex <- x[x < 0]
+      stop("Rate values must be positive or 0. Found non-positive values, e.g.: ", .ex[1], call. = FALSE)
    }
 
    # Auto-detect or user override

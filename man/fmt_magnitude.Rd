@@ -46,7 +46,7 @@ Format a numeric vector into a string with specified magnitude (billion,
 million, thousand).
 }
 \details{
-Unaware of schema, just a hard-coded git-er-done function.
+Unaware of styles, just a hard-coded git-er-done function.
 
 Caution - thousands magnitude is not Lancet compliant.
 }

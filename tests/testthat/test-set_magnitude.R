@@ -109,12 +109,8 @@ test_that("set_magnitude_count detects billions/millions/thousands", {
 
 test_that("set_magnitude_count validates positive values", {
    expect_error(
-      set_magnitude_count(c(1e6, 0)),
-      "Count values must be greater than 0"
-   )
-   expect_error(
       set_magnitude_count(c(-1e6)),
-      "Count values must be greater than 0"
+      "Count values must be positive or 0"
    )
 })
 
@@ -143,12 +139,8 @@ test_that("set_magnitude_rate scales appropriately", {
 
 test_that("set_magnitude_rate validates positive values", {
    expect_error(
-      set_magnitude_rate(c(0.001, 0)),
-      "Rate values must be greater than 0"
-   )
-   expect_error(
       set_magnitude_rate(c(-0.001)),
-      "Rate values must be greater than 0"
+      "Rate values must be positive or 0"
    )
 })
 
