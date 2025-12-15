@@ -700,6 +700,7 @@ fround_metric <- function(
 #' @param decimal.mark [chr: default "."] decimal mark passed to `format()`
 #' @param rate_unit [chr: default NULL] unit label for rates (e.g., "deaths", "cases").
 #'   Required when metric = "rate", ignored otherwise.
+#' @param big.mark [chr: default ","] thousands separator passed to `format()`
 #'
 #' @return [chr] formatted string
 #' @export
