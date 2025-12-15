@@ -11,6 +11,7 @@ fmt_magnitude(
   digits = 1,
   nsmall = 1,
   decimal.mark = ".",
+  big.mark = ",",
   mag = NULL,
   count_label_thousands = FALSE
 )

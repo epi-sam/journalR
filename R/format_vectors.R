@@ -716,6 +716,7 @@ fmt_magnitude <- function(
     , digits                = 1
     , nsmall                = 1
     , decimal.mark          = "."
+    , big.mark              = ","
     , mag                   = NULL
     , count_label_thousands = FALSE
 ){
@@ -745,7 +746,7 @@ fmt_magnitude <- function(
 
   x_fmt <-
     round(x / df_mag$denom, digits = digits) |>
-    format(nsmall = nsmall, decimal.mark = decimal.mark) |>
+    format(nsmall = nsmall, decimal.mark = decimal.mark, big.mark = big.mark) |>
     trimws()|>
     sprintf("%s%s %s", ... = _, rate_unit_fmt, df_mag$mag_label) |>
     trimws()

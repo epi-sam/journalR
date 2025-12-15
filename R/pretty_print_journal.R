@@ -378,9 +378,11 @@ format_means_df <- function(
                , metric                = metric
                , rate_unit             = rate_unit
                , mag                   = mag
-               , count_label_thousands = style[["count_label_thousands"]]
                , digits                = digits
                , nsmall                = n_small
+               , count_label_thousands = style[["count_label_thousands"]]
+               , decimal.mark          = style[["decimal.mark"]]
+               , big.mark              = style[["count_big.mark"]]
             )
             , label
          )

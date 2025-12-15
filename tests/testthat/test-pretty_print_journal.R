@@ -16,6 +16,23 @@ test_that("format_mean_df works", {
    )
 
    expect_equal(DT_result, DT_expected)
+
+   DT_test <- data.table::data.table(
+      location_id = c(1, 2, 3)
+      , mean_1990 = c(1234, 02345, 03456)
+      , mean_2000 = c(2234, 03345, 04456)
+   )
+
+   style_int <- new_style(style_name = "test_style_int", count_nsmall = 0)
+   DT_result <- format_means_df(DT_test, metric = "count", style_name = "test_style_int")
+
+   DT_expected <- data.table::data.table(
+      location_id = c(1, 2, 3)
+      , mean_1990 = c("1,234", "2,345", "3,456")
+      , mean_2000 = c("2,234", "3,345", "4,456")
+   )
+
+   expect_equal(DT_result, DT_expected)
 })
 
 
