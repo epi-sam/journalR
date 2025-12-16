@@ -14,18 +14,17 @@ downloads](https://cranlogs.r-pkg.org/badges/grand-total/journlaR)
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
-The goal of journalR is to ease real-world scientific publication
-writing. The core functions allow the user to take a triple set of
-central/lower/upper (CLU) raw numeric values, and format them into a
-nicely formatted drop-in string that can be placed directly in a
-journal’s text.
+The goal of **journalR** is to ease real-world scientific publication
+writing. The core functions format a triplet set of central/lower/upper
+(CLU) raw numeric values into a drop-in string that’s immediately
+pasteable into journal text.
 
 ``` r
 journalR::format_journal_clu(2e6, 1e6, 3e6, metric = 'count')
 #> [1] "2.00 million (1.00–3.00)"
 ```
 
-This core utility is vectorized, and works on data.frames.
+This core utility is vectorized, with wrappers for data.frames.
 
 - The user may also create ‘styles’ that allow setting significant
   digits, numbers of decimals, and more (see ‘Styles’ below).
@@ -50,12 +49,8 @@ journalR::format_journal_df(
 
 ## Installation
 
-You can install the development version of journalR from
-[GitHub](https://github.com/) with:
-
 ``` r
-# install.packages("pak")
-pak::pak("epi-sam/journalR")
+install.packages("journalR")
 ```
 
 ## Basics
@@ -68,15 +63,15 @@ multiple messy copies.
 
 Sometimes, you just need to copy and paste some numbers.
 
-Enter journalR.
+Enter **journalR**.
 
 ``` r
 library(journalR)
 library(data.table) # journalR works on both data.frames and data.tables
 ```
 
-Once you’ve done some statistical analysis, you’ll want to format
-numbers for presentation.
+Once you’ve done a statistical analysis, you’ll want to format numbers
+for presentation.
 
 ``` r
 DT <- data.table::as.data.table(mtcars)
@@ -103,8 +98,8 @@ print(DT_hp)
 Enter `format_journal_df()`:
 
 - Format a central/lower/upper set of three columns into an
-  e.g. `mean (lower -- upper)` string.
-- Ready for easy copy/paste into Word or similar.
+  e.g. $mean (lower -- upper)$ string.
+  - Ready for direct copy/paste into Word or similar.
 - The user must provide a data type (`metric`), which tells the function
   how to format the numbers.
 - central/lower/upper relationships are asserted (lower \< central \<
@@ -366,8 +361,7 @@ Here is an example of a very particular style, and how these values
 affect presentation tables.
 
 ``` r
-# print(style_lancet()) # as a list
-print(lancet) # formatted a little nicer
+print(style_lancet) 
 #>                       key          value
 #>                    <fctr>         <char>
 #>  1:            style_name         lancet
