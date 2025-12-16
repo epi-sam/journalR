@@ -30,6 +30,8 @@ Required when metric = "rate", ignored otherwise.}
 
 \item{decimal.mark}{[chr: default "."] decimal mark passed to `format()`}
 
+\item{big.mark}{[chr: default ","] thousands separator passed to `format()`}
+
 \item{mag}{[chr: default NULL] magnitude override - see set_magnitude()
 - For props/pp: "as-is" (no scaling, use values as provided)
 - For counts: "t" (thousand), "m" (million), "b" (billion)
