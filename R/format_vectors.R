@@ -331,6 +331,11 @@ fround_props <- function(clu, style_name, mag = NULL) {
     format(nsmall = style$prop_nsmall, decimal.mark = style$decimal.mark) |>
     trimws()
 
+  # Replace negative sign with style-specific mark
+  formatted <- unlist(lapply(formatted, function(x_i_chr) {
+    sub("^-", style$neg_mark_UI, x_i_chr)
+  }))
+
   # Return both formatted values and magnitude info
   result <- list(
     formatted   = formatted,
@@ -489,6 +494,11 @@ fround_count_rate <- function(clu, style_name, metric, mag = NULL) {
 
   formatted <- unname(vapply(clu, format_one, FUN.VALUE = character(1)))
 
+  # Replace negative sign with style-specific mark
+  formatted <- unlist(lapply(formatted, function(x_i_chr) {
+    sub("^-", style$neg_mark_UI, x_i_chr)
+  }))
+
   # Return both formatted values and magnitude info
   result <- list(
     formatted    = formatted
@@ -550,19 +560,8 @@ fround_clu_triplet <- function(
   # Validate return schema
   assert_fround_return_schema(result, context = sprintf("fround helper (metric=%s)", metric))
 
-  # Extract formatted values and apply negative sign styling
-  clu_fmt <- result$formatted
-  names(clu_fmt) <- names(clu)
-
-  # Replace negative sign
-  # - This needs to be done here, not in format_journal_clu() in case
-  #   fround_clu_triplet() is called by the user
-  clu_fmt <- unlist(lapply(clu_fmt, function(x_i_chr) {
-    sub("^-", style$neg_mark_UI, x_i_chr)
-  }))
-
-  # Update result with styled formatted values
-  result$formatted <- clu_fmt
+  # Preserve names on formatted values
+  names(result$formatted) <- names(clu)
 
   return(result)
 }
@@ -730,7 +729,6 @@ fmt_magnitude <- function(
   checkmate::assert_integerish(digits, len = 1, lower = 0)
   checkmate::assert_integerish(nsmall, len = 1, lower = 0)
 
-  # Define rate unit space for sprintf
   rate_unit_fmt <- if (metric == "rate" && !is.null(rate_unit)) sprintf(" %s", rate_unit) else ""
 
   df_mag <- set_magnitude(

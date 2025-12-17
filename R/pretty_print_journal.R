@@ -347,20 +347,8 @@ format_means_df <- function(
    checkmate::assert_string(central_var)
    assert_rate_unit(metric, rate_unit)
 
-   style <- get_style(style_name)
-
-   digits <- get_style_item_by_metric(
-      style_name   = style_name
-      , style_item = "digits"
-      , metric     = metric
-   )
-   n_small <- get_style_item_by_metric(
-      style_name   = style_name
-      , style_item = "n_small"
-      , metric     = metric
-   )
-
    label <- get_metric_labels(metric)
+   is_rate_type <- (metric == "rate")
 
    mean_varnames <- grep(
       pattern = sprintf("^%s[_]+", central_var)
@@ -369,23 +357,34 @@ format_means_df <- function(
    )
 
    for (varname in mean_varnames){
-      df <- add_column(
-         x        = df
-         , varname = varname
-         , vec     = paste0(
-            fmt_magnitude(
-               x                       = df[[varname]]
-               , metric                = metric
-               , rate_unit             = rate_unit
-               , mag                   = mag
-               , digits                = digits
-               , nsmall                = n_small
-               , count_label_thousands = style[["count_label_thousands"]]
-               , decimal.mark          = style[["decimal.mark"]]
-               , big.mark              = style[["count_big.mark"]]
-            )
-            , label
+      # Format each value individually to get proper per-value magnitude and Lancet handling
+      formatted_vals <- vapply(df[[varname]], function(x_i) {
+         result <- switch(
+            metric
+            , "prop"  = fround_props(clu = x_i, style_name = style_name, mag = mag)
+            , "pp"    = fround_props(clu = x_i, style_name = style_name, mag = mag)
+            , "count" = fround_count_rate(clu = x_i, style_name = style_name, metric = "count", mag = mag)
+            , "rate"  = fround_count_rate(clu = x_i, style_name = style_name, metric = "rate", mag = mag)
          )
+
+         # Build formatted string based on metric type
+         if (is_rate_type) {
+            # Rate format: "{value} {rate_unit} {mag_label}" e.g., "12.3 deaths per 1 million"
+            rate_unit_fmt <- if (!is.null(rate_unit)) sprintf(" %s", rate_unit) else ""
+            sprintf("%s%s %s", result$formatted[1], rate_unit_fmt, result$df_mag_row$mag_label) |> trimws()
+         } else {
+            # Non-rate format: "{value} {mag_label}" e.g., "1.50 million"
+            sprintf("%s %s", result$formatted[1], result$df_mag_row$mag_label) |> trimws()
+         }
+      }, FUN.VALUE = character(1))
+
+      # Add metric label (e.g., "%" for props) - empty for rates
+      formatted_vals <- sprintf("%s%s", formatted_vals, label)
+
+      df <- add_column(
+         x         = df
+         , varname = varname
+         , vec     = formatted_vals
          , overwrite = TRUE
       )
    }

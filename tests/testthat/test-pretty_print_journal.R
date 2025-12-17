@@ -28,8 +28,8 @@ test_that("format_mean_df works", {
 
    DT_expected <- data.table::data.table(
       location_id = c(1, 2, 3)
-      , mean_1990 = c("1,234", "2,345", "3,456")
-      , mean_2000 = c("2,234", "3,345", "4,456")
+      , mean_1990 = c("1,230", "2,350", "3,460")
+      , mean_2000 = c("2,230", "3,350", "4,460")
    )
 
    expect_equal(DT_result, DT_expected)
@@ -332,3 +332,97 @@ test_that("format_journal_clu works with rates", {
 })
 
 
+# ---- format_means_df Integration Tests ------------------------------------------------
+
+test_that("format_means_df works with prop - typical case", {
+   df <- data.frame(
+      location = c("A", "B", "C")
+      , mean_2020 = c(0.125, 0.456, 0.789)
+   )
+   result <- format_means_df(df, metric = "prop", style_name = "nature")
+   expect_equal(result$mean_2020, c("12.5%", "45.6%", "78.9%"))
+})
+
+test_that("format_means_df works with prop - edge case small values", {
+   df <- data.frame(
+      location = c("A", "B")
+      , mean_2020 = c(0.001, 0.0005)  # Very small proportions
+   )
+   result <- format_means_df(df, metric = "prop", style_name = "nature")
+   expect_equal(result$mean_2020, c("0.1%", "0.1%"))  # Rounded to 1 decimal
+})
+
+test_that("format_means_df works with pp - typical case", {
+   df <- data.frame(
+      location = c("A", "B")
+      , mean_2020 = c(0.05, -0.03)  # 5pp increase, 3pp decrease
+   )
+   result <- format_means_df(df, metric = "pp", style_name = "nature")
+   expect_equal(result$mean_2020, c("5.0 pp", "-3.0 pp"))
+})
+
+test_that("format_means_df works with pp - edge case crossing zero", {
+   df <- data.frame(
+      location = c("A", "B")
+      , mean_2020 = c(0.001, -0.001)  # Very small changes
+   )
+   result <- format_means_df(df, metric = "pp", style_name = "lancet")
+   expect_equal(result$mean_2020, c("0·1 pp", "–0·1 pp"))  # Lancet neg mark
+})
+
+test_that("format_means_df works with count - typical case with Lancet", {
+   df <- data.frame(
+      location = c("A", "B", "C")
+      , mean_2020 = c(1500, 50000, 1.5e6)
+   )
+   result <- format_means_df(df, metric = "count", style_name = "lancet")
+   # 1500 should have NO separator (Lancet rule: <= 9999)
+   # 50000 should have thin space separator
+   # 1.5e6 should be "1.50 million"
+   expect_equal(result$mean_2020[1], "1500")
+   expect_true(grepl("50\\s*000", result$mean_2020[2]))  # Has separator
+   expect_equal(result$mean_2020[3], "1·50 million")
+})
+
+test_that("format_means_df works with count - Lancet edge case 9999 boundary", {
+   df <- data.frame(
+      location = c("A", "B", "C", "D")
+      , mean_2020 = c(9994, 10000, 9995, 10005)
+   )
+   result <- format_means_df(df, metric = "count", style_name = "lancet")
+   # 9999: no separator (Lancet rule)
+   # 10000: has separator
+   # 9995: rounds to 10000, should get separator
+   # 10005: rounds to 10000, has separator
+   expect_equal(result$mean_2020[1], "9990")
+   expect_true(grepl("10\\s*000", result$mean_2020[2]))  # 10 000 with thin space
+   expect_true(grepl("10\\s*000", result$mean_2020[3]))  # 9995 rounds to 10000
+   expect_true(grepl("10\\s*000", result$mean_2020[4]))  # 10005 rounds to 10000
+})
+
+test_that("format_means_df works with rate - typical case", {
+   df <- data.frame(
+      location = c("A", "B")
+      , mean_2020 = c(0.0000123, 0.0000456)
+   )
+
+   result_with_unit <- format_means_df(df, metric = "rate", rate_unit = "deaths", style_name = "nature")
+   expect_equal(
+      result_with_unit$mean_2020
+      , c(
+         "12.3 deaths per 1 million"
+         , "45.6 deaths per 1 million"
+      )
+   )
+})
+
+test_that("format_means_df works with rate - edge case different magnitudes", {
+   df <- data.frame(
+      location = c("A", "B")
+      , mean_2020 = c(0.00123, 0.0000000456)  # per 1k vs per 1 billion
+   )
+
+   result_with_unit <- format_means_df(df, metric = "rate", rate_unit = "cases", style_name = "lancet")
+   expect_equal(result_with_unit$mean_2020[1], "12·3 cases per 10,000")
+   expect_equal(result_with_unit$mean_2020[2], "45·6 cases per 1 billion")
+})
