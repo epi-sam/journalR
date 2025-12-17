@@ -184,7 +184,7 @@ format_journal_clu <- function(
       mag_label    <- df_mag$mag_label[i]
       low_upp_sep  <- sep_vec[i]
 
-      # Define rate-specific components (conditionally populated)
+      # Define rate-specific components
       if (is_rate_type) {
          rate_unit_fmt  <- sprintf(" %s", rate_unit)  # " deaths" or " cases"
          rate_mag_label <- sprintf(" %s", mag_label)  # " per 100,000"
@@ -203,12 +203,13 @@ format_journal_clu <- function(
       )
 
       if (UI_only) {
+         rate_mag_label <- trimws(rate_mag_label) # context dependent
          str <- glue::glue(
-            "{UI_text}{low}{low_upp_sep}{upp}{rate_unit_fmt}{mag_label}{rate_mag_label}"
+            "{UI_text}{low}{low_upp_sep}{upp}{rate_unit_fmt} {mag_label}{rate_mag_label}"
          )
       }
 
-      return(str)
+      return(trimws(str))
 
    }))
 
@@ -381,9 +382,9 @@ format_metric_cols <- function(
          rate_unit_fmt <- ""
       }
 
+      # context-dependent space padding
       mag_spacers <- unlist(lapply(mag_labels, function(lbl) {
-         # If mag_label is not empty (props) _and_ lacks a leading space, add a space
-         if (!grepl("^\\s*$", lbl)) {
+         if (nchar(lbl) & !startsWith(lbl, "\\s")) {
             " "
          } else {
             ""

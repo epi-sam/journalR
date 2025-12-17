@@ -145,10 +145,28 @@ test_that("format_lancet_df and format_nature_df work", {
       , upper         = c(60.7e6, 59.6e9)
    )
 
+   new_style("test_ui", UI_only = TRUE)
+   expect_equal(
+      format_journal_df(
+         df         = DT_count,
+         metric     = "count",
+         style_name = 'test_ui'
+      )
+      , structure(
+         list(
+            location_did = c(1, 1),
+            location_name = c("Global", "Global"),
+            clu_fmt = c("50.7–60.7 million", "48.6–59.6 billion")
+         ),
+         row.names = c(NA, -2L),
+         class = c("data.frame")
+      )
+   )
+
    expect_equal(
       format_lancet_df(
          df          = DT_count,
-         metric      = "count",
+         metric      = "count"
       )
       , structure(
          list(
