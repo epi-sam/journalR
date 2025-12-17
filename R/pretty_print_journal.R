@@ -313,7 +313,7 @@ format_journal_df <- function(
 #' @param metric [chr c('prop', 'pp', 'count', 'rate')] a single metric
 #' @param rate_unit [chr: default NULL] unit label for rates (e.g., "deaths", "cases").
 #'   Required when metric = "rate", ignored otherwise.
-#' @param central_var [chr: default 'mean'] prefix of mean variable names to
+#' @param var_prefix [chr: default 'mean'] prefix of mean variable names to
 #'   format.  Implemented as e.g. "^mean[_]+" to capture 'mean', 'mean_1990',
 #'   'mean_2000', etc.
 #' @param mag [chr: default NULL] magnitude override - see set_magnitude()
@@ -337,26 +337,34 @@ format_journal_df <- function(
 format_metric_cols <- function(
       df
       , metric
-      , central_var = "mean"
+      , var_prefix = "mean"
       , rate_unit   = NULL
       , mag         = NULL
       , style_name  = "nature"
 ){
    checkmate::assert_data_frame(df)
    assert_metric(metric)
-   checkmate::assert_string(central_var)
+   checkmate::assert_string(var_prefix)
    assert_rate_unit(metric, rate_unit)
+
+   df_name <- deparse(substitute(df))
 
    label <- get_metric_labels(metric)
    is_rate_type <- (metric == "rate")
 
-   mean_varnames <- grep(
-      pattern = sprintf("^%s[_]+", central_var)
+   varnames <- grep(
+      pattern = sprintf("^%s[_]+", var_prefix)
       , x     = colnames(df)
       , value = TRUE
    )
+   if(length(varnames) == 0){
+      warning(sprintf(
+         "%s: No columns found with prefix '%s_'. Do column names have this prefix _and_ underscores?"
+         , df_name, var_prefix
+      ))
+   }
 
-   for (varname in mean_varnames){
+   for (varname in varnames){
       # Format each value individually to get proper per-value magnitude and Lancet handling
       formatted_vals <- vapply(df[[varname]], function(x_i) {
          result <- switch(
