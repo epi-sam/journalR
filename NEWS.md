@@ -1,3 +1,15 @@
+# journalR 0.6.0
+
+## Improvements
+
+`format_means_df()` 
+
+- now dispatches `fround_x()` helpers for more consistent formatting, especially for Lancet
+
+## Breaking
+
+- renamed `format_means_df()` to `format_metric_cols()`, with arg name change from `central_var` to `var_prefix`
+
 # journalR 0.5.1
 
 cran initial submit harmonization
