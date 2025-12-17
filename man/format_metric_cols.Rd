@@ -7,7 +7,7 @@
 format_metric_cols(
   df,
   metric,
-  central_var = "mean",
+  var_prefix = "mean",
   rate_unit = NULL,
   mag = NULL,
   style_name = "nature"
@@ -18,7 +18,7 @@ format_metric_cols(
 
 \item{metric}{[chr c('prop', 'pp', 'count', 'rate')] a single metric}
 
-\item{central_var}{[chr: default 'mean'] prefix of mean variable names to
+\item{var_prefix}{[chr: default 'mean'] prefix of mean variable names to
 format.  Implemented as e.g. "^mean[_]+" to capture 'mean', 'mean_1990',
 'mean_2000', etc.}
 
@@ -38,11 +38,6 @@ formatting.}
 }
 \description{
 Format one or more 'mean_' columns by magnitude, metric, and style.
-}
-\details{
-BEWARE: Does not have sophisticated count-type data handling like
-`format_journal_clu()`.  This is a simple formatter for multiple mean
-columns. Use with caution.
 }
 \examples{
 df <- data.frame(

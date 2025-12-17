@@ -305,10 +305,6 @@ format_journal_df <- function(
 #'
 #' Format one or more 'mean_' columns by magnitude, metric, and style.
 #'
-#' BEWARE: Does not have sophisticated count-type data handling like
-#' `format_journal_clu()`.  This is a simple formatter for multiple mean
-#' columns. Use with caution.
-#'
 #' @param df [data.table] input data.table with one or more 'mean_' columns
 #' @param metric [chr c('prop', 'pp', 'count', 'rate')] a single metric
 #' @param rate_unit [chr: default NULL] unit label for rates (e.g., "deaths", "cases").
@@ -349,9 +345,6 @@ format_metric_cols <- function(
 
    df_name <- deparse(substitute(df))
 
-   label <- get_metric_labels(metric)
-   is_rate_type <- (metric == "rate")
-
    varnames <- grep(
       pattern = sprintf("^%s[_]+", var_prefix)
       , x     = colnames(df)
@@ -366,7 +359,7 @@ format_metric_cols <- function(
 
    for (varname in varnames){
       # Format each value individually to get proper per-value magnitude and Lancet handling
-      formatted_vals <- vapply(df[[varname]], function(x_i) {
+      ret_list <- lapply(df[[varname]], function(x_i) {
          result <- switch(
             metric
             , "prop"  = fround_props(clu = x_i, style_name = style_name, mag = mag)
@@ -374,25 +367,38 @@ format_metric_cols <- function(
             , "count" = fround_count_rate(clu = x_i, style_name = style_name, metric = "count", mag = mag)
             , "rate"  = fround_count_rate(clu = x_i, style_name = style_name, metric = "rate", mag = mag)
          )
+      })
 
-         # Build formatted string based on metric type
-         if (is_rate_type) {
-            # Rate format: "{value} {rate_unit} {mag_label}" e.g., "12.3 deaths per 1 million"
-            rate_unit_fmt <- if (!is.null(rate_unit)) sprintf(" %s", rate_unit) else ""
-            sprintf("%s%s %s", result$formatted[1], rate_unit_fmt, result$df_mag_row$mag_label) |> trimws()
+      is_rate_type  <- (metric == "rate")
+
+      fmt_vals      <- unlist(lapply(ret_list, function(r) r$formatted[1]))
+      mag_labels    <- unlist(lapply(ret_list, function(r) r$df_mag_row$mag_label))
+      metric_label  <- get_metric_labels(metric)
+
+      if (is_rate_type) {
+         rate_unit_fmt <- sprintf(" %s", rate_unit)
+      } else{
+         rate_unit_fmt <- ""
+      }
+
+      mag_spacers <- unlist(lapply(mag_labels, function(lbl) {
+         # If mag_label is not empty (props) _and_ lacks a leading space, add a space
+         if (!grepl("^\\s*$", lbl)) {
+            " "
          } else {
-            # Non-rate format: "{value} {mag_label}" e.g., "1.50 million"
-            sprintf("%s %s", result$formatted[1], result$df_mag_row$mag_label) |> trimws()
+            ""
          }
-      }, FUN.VALUE = character(1))
+      }))
 
-      # Add metric label (e.g., "%" for props) - empty for rates
-      formatted_vals <- sprintf("%s%s", formatted_vals, label)
+      formatted_vals <- glue::glue(
+         "{fmt_vals}{rate_unit_fmt}{mag_spacers}{mag_labels}{metric_label}"
+      ) |> trimws()
+
 
       df <- add_column(
-         x         = df
-         , varname = varname
-         , vec     = formatted_vals
+         x           = df
+         , varname   = varname
+         , vec       = formatted_vals
          , overwrite = TRUE
       )
    }
