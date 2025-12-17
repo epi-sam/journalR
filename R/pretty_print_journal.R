@@ -177,38 +177,39 @@ format_journal_clu <- function(
    is_rate_type <- (metric == "rate")
 
    str_vec <- unlist(lapply(seq_along(triplets_fmt), function(i){
-      .cen          <- triplets_fmt[[i]]['central']
-      .upp          <- triplets_fmt[[i]]['upper']
-      .low          <- triplets_fmt[[i]]['lower']
-      .mean_neg_txt <- neg_str_mean_vec[i]
-      .mag_label    <- df_mag$mag_label[i]
-      .low_upp_sep  <- sep_vec[i]
+      cen          <- triplets_fmt[[i]]['central']
+      upp          <- triplets_fmt[[i]]['upper']
+      low          <- triplets_fmt[[i]]['lower']
+      mean_neg_txt <- neg_str_mean_vec[i]
+      mag_label    <- df_mag$mag_label[i]
+      low_upp_sep  <- sep_vec[i]
 
-      # Define rate-specific components (conditionally populated)
+      # Define rate-specific components
       if (is_rate_type) {
-         rate_unit_fmt    <- sprintf(" %s", rate_unit)   # " deaths " or " cases "
-         .rate_mag_label  <- sprintf(" %s", .mag_label)   # " per 100,000"
-         .count_mag_label <- ""                           # empty for rates
-         .type_label      <- ""                           # empty for rates
+         rate_unit_fmt  <- sprintf(" %s", rate_unit)  # " deaths" or " cases"
+         rate_mag_label <- sprintf(" %s", mag_label)  # " per 100,000"
+         mag_label      <- ""                         # empty for rates
+         metric_label   <- ""                         # empty for rates
       } else {
-         rate_unit_fmt    <- ""                           # empty for non-rates
-         .rate_mag_label  <- ""                           # empty for non-rates
-         .count_mag_label <- .mag_label                   # "million " for counts
-         .type_label      <- metric_label                 # "%" for props
+         rate_unit_fmt  <- ""                         # empty for non-rates
+         rate_mag_label <- ""                         # empty for non-rates
+         mag_label      <- mag_label                  # "million " for counts
+         metric_label   <- metric_label               # "%" for props
       }
 
-      # Single glue template handles all types
+      # Single glue template handles all metrics
       str <- glue::glue(
-         "{.mean_neg_txt}{.cen}{rate_unit_fmt}{.type_label} {.count_mag_label}({UI_text}{.low}{.low_upp_sep}{.upp}){.rate_mag_label}"
+         "{mean_neg_txt}{cen}{rate_unit_fmt}{metric_label} {mag_label}({UI_text}{low}{low_upp_sep}{upp}){rate_mag_label}"
       )
 
       if (UI_only) {
+         rate_mag_label <- trimws(rate_mag_label) # context dependent
          str <- glue::glue(
-            "{UI_text}{.low}{.low_upp_sep}{.upp}{rate_unit_fmt}{.count_mag_label}{.rate_mag_label}"
+            "{UI_text}{low}{low_upp_sep}{upp}{rate_unit_fmt} {mag_label}{rate_mag_label}"
          )
       }
 
-      return(str)
+      return(trimws(str))
 
    }))
 
@@ -305,15 +306,11 @@ format_journal_df <- function(
 #'
 #' Format one or more 'mean_' columns by magnitude, metric, and style.
 #'
-#' BEWARE: Does not have sophisticated count-type data handling like
-#' `format_journal_clu()`.  This is a simple formatter for multiple mean
-#' columns. Use with caution.
-#'
 #' @param df [data.table] input data.table with one or more 'mean_' columns
 #' @param metric [chr c('prop', 'pp', 'count', 'rate')] a single metric
 #' @param rate_unit [chr: default NULL] unit label for rates (e.g., "deaths", "cases").
 #'   Required when metric = "rate", ignored otherwise.
-#' @param central_var [chr: default 'mean'] prefix of mean variable names to
+#' @param var_prefix [chr: default 'mean'] prefix of mean variable names to
 #'   format.  Implemented as e.g. "^mean[_]+" to capture 'mean', 'mean_1990',
 #'   'mean_2000', etc.
 #' @param mag [chr: default NULL] magnitude override - see set_magnitude()
@@ -333,59 +330,76 @@ format_journal_df <- function(
 #'   , mean_1990 = c(100, 1e6, 1e9)
 #'   , mean_2000 = c(200, 2e6, 2e-1)
 #'  )
-#' format_means_df(df, metric = "count")
-format_means_df <- function(
+#' format_metric_cols(df, metric = "count")
+format_metric_cols <- function(
       df
       , metric
-      , central_var = "mean"
+      , var_prefix = "mean"
       , rate_unit   = NULL
       , mag         = NULL
       , style_name  = "nature"
 ){
    checkmate::assert_data_frame(df)
    assert_metric(metric)
-   checkmate::assert_string(central_var)
+   checkmate::assert_string(var_prefix)
    assert_rate_unit(metric, rate_unit)
 
-   style <- get_style(style_name)
+   df_name <- deparse(substitute(df))
 
-   digits <- get_style_item_by_metric(
-      style_name   = style_name
-      , style_item = "digits"
-      , metric     = metric
-   )
-   n_small <- get_style_item_by_metric(
-      style_name   = style_name
-      , style_item = "n_small"
-      , metric     = metric
-   )
-
-   label <- get_metric_labels(metric)
-
-   mean_varnames <- grep(
-      pattern = sprintf("^%s[_]+", central_var)
+   varnames <- grep(
+      pattern = sprintf("^%s[_]+", var_prefix)
       , x     = colnames(df)
       , value = TRUE
    )
+   if(length(varnames) == 0){
+      warning(sprintf(
+         "%s: No columns found with prefix '%s_'. Do column names have this prefix _and_ underscores?"
+         , df_name, var_prefix
+      ))
+   }
 
-   for (varname in mean_varnames){
-      df <- add_column(
-         x        = df
-         , varname = varname
-         , vec     = paste0(
-            fmt_magnitude(
-               x                       = df[[varname]]
-               , metric                = metric
-               , rate_unit             = rate_unit
-               , mag                   = mag
-               , digits                = digits
-               , nsmall                = n_small
-               , count_label_thousands = style[["count_label_thousands"]]
-               , decimal.mark          = style[["decimal.mark"]]
-               , big.mark              = style[["count_big.mark"]]
-            )
-            , label
+   for (varname in varnames){
+      # Format each value individually to get proper per-value magnitude and Lancet handling
+      ret_list <- lapply(df[[varname]], function(x_i) {
+         result <- switch(
+            metric
+            , "prop"  = fround_props(clu = x_i, style_name = style_name, mag = mag)
+            , "pp"    = fround_props(clu = x_i, style_name = style_name, mag = mag)
+            , "count" = fround_count_rate(clu = x_i, style_name = style_name, metric = "count", mag = mag)
+            , "rate"  = fround_count_rate(clu = x_i, style_name = style_name, metric = "rate", mag = mag)
          )
+      })
+
+      is_rate_type  <- (metric == "rate")
+
+      fmt_vals      <- unlist(lapply(ret_list, function(r) r$formatted[1]))
+      mag_labels    <- unlist(lapply(ret_list, function(r) r$df_mag_row$mag_label))
+      metric_label  <- get_metric_labels(metric)
+
+      if (is_rate_type) {
+         rate_unit_fmt <- sprintf(" %s", rate_unit)
+      } else{
+         rate_unit_fmt <- ""
+      }
+
+      # context-dependent space padding
+      mag_spacers <- unlist(lapply(mag_labels, function(lbl) {
+         if (nchar(lbl) & !startsWith(lbl, "\\s")) {
+            " "
+         } else {
+            ""
+         }
+      }))
+
+      formatted_vals <- glue::glue(
+         "{fmt_vals}{rate_unit_fmt}{mag_spacers}{mag_labels}{metric_label}"
+      ) |> trimws()
+
+
+      df <- add_column(
+         x           = df
+         , varname   = varname
+         , vec       = formatted_vals
          , overwrite = TRUE
       )
    }

@@ -47,7 +47,7 @@ get_metric_labels <- function(metric){
    return_metric_labels()[[metric]]
 }
 
-#' Helper for `format_means_df()`, perhaps others
+#' Helper for `format_metric_cols()`, perhaps others
 #'
 #' @param style_name [chr] name of a style
 #' @param style_item [chr] a style list item name

@@ -2,7 +2,7 @@
 % Please edit documentation in R/metrics.R
 \name{get_style_item_by_metric}
 \alias{get_style_item_by_metric}
-\title{Helper for `format_means_df()`, perhaps others}
+\title{Helper for `format_metric_cols()`, perhaps others}
 \usage{
 get_style_item_by_metric(style_name, style_item, metric)
 }
@@ -17,6 +17,6 @@ get_style_item_by_metric(style_name, style_item, metric)
 [scalar] some style item, type may vary
 }
 \description{
-Helper for `format_means_df()`, perhaps others
+Helper for `format_metric_cols()`, perhaps others
 }
 \keyword{internal}
