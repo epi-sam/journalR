@@ -25,22 +25,33 @@ knitr::opts_chunk$set(
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
+
+
+## Installation
+
+
+``` r
+install.packages("journalR")
+```
+
+## Overview
+
 ```{r invis_startup,include=FALSE}
 library(journalR)
 ```
 
 
-The goal of **journalR** is to ease real-world scientific publication writing. The
-core functions format a triplet set of central/lower/upper (CLU) raw numeric
-values into a drop-in string that's immediately pasteable into journal text.
+**journalR** eases numeric formatting for real-world scientific publication writing. 
+
+The core utility formats triplet sets of central/lower/upper (CLU) raw 
+numeric values into a drop-in string that's immediately pasteable into journal 
+text.
 
 ```{r demo_vec}
 journalR::format_journal_clu(2e6, 1e6, 3e6, metric = 'count')
 ```
 
-This core utility is vectorized, with wrappers for data.frames. 
-
-- The user may also create 'styles' that allow setting significant digits, numbers of decimals, and more (see 'Styles' below).
+This core utility is vectorized, with greatest power coming from data.frame wrappers.
 
 ```{r demo_df}
 journalR::format_journal_df(
@@ -56,24 +67,18 @@ journalR::format_journal_df(
 )
 ```
 
+The user may also define 'styles' for rounding strategy, significant
+digits, numbers of decimals, and more (see 'Styles' below).
 
 
-## Installation
 
+## Why journalR?
 
-``` r
-install.packages("journalR")
-```
-
-## Basics
-
-In the Platonic ideal world, a journal is written in Rmarkdown or pure LaTeX.
+In the Platonic ideal world, an article is written in Rmarkdown or pure LaTeX.
 
 In the real world, journals are written collaboratively in Word, with multiple messy copies.
 
 Sometimes, you just need to copy and paste some numbers.
-
-Enter **journalR**.
 
 ```{r example}
 library(journalR)
@@ -102,7 +107,7 @@ print(DT_hp)
 
 Enter `format_journal_df()`:
 
-- Format a central/lower/upper set of three columns into an e.g. $mean (lower -- upper)$ string.
+- Format a central/lower/upper set of three columns into an e.g. $mean (lower-upper)$ string.
    - Ready for direct copy/paste into Word or similar.
 - The user must provide a data type (`metric`), which tells the function how to format the numbers.
 - central/lower/upper relationships are asserted (lower < central < upper) before formatting.
@@ -145,11 +150,11 @@ As long as your table is tidy, it can be formatted.
 DT_summary |>
    journalR::format_journal_df(
       metric               = c("prop")
-      , new_var            = "pct_vshape_fmt" # specify output colname (must be a new one)
+      , new_var            = "pct_vshape_fmt" # specify output column name
       , central_var        = "pct_vshape" 
       , lower_var          = "lower_vshape"
       , upper_var          = "upper_vshape"
-      , remove_clu_columns = FALSE # retain the original columns if desired
+      , remove_clu_columns = FALSE            # retain the original columns if desired
    )
 ```
 

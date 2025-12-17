@@ -14,20 +14,28 @@ downloads](https://cranlogs.r-pkg.org/badges/grand-total/journlaR)
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
-The goal of **journalR** is to ease real-world scientific publication
-writing. The core functions format a triplet set of central/lower/upper
-(CLU) raw numeric values into a drop-in string that’s immediately
-pasteable into journal text.
+## Installation
+
+``` r
+install.packages("journalR")
+```
+
+## Overview
+
+**journalR** eases numeric formatting for real-world scientific
+publication writing.
+
+The core utility formats triplet sets of central/lower/upper (CLU) raw
+numeric values into a drop-in string that’s immediately pasteable into
+journal text.
 
 ``` r
 journalR::format_journal_clu(2e6, 1e6, 3e6, metric = 'count')
 #> [1] "2.00 million (1.00–3.00)"
 ```
 
-This core utility is vectorized, with wrappers for data.frames.
-
-- The user may also create ‘styles’ that allow setting significant
-  digits, numbers of decimals, and more (see ‘Styles’ below).
+This core utility is vectorized, with greatest power coming from
+data.frame wrappers.
 
 ``` r
 journalR::format_journal_df(
@@ -47,23 +55,18 @@ journalR::format_journal_df(
 #> 3  3 78·9% (75·6–82·1)
 ```
 
-## Installation
+The user may also define ‘styles’ for rounding strategy, significant
+digits, numbers of decimals, and more (see ‘Styles’ below).
 
-``` r
-install.packages("journalR")
-```
+## Why journalR?
 
-## Basics
-
-In the Platonic ideal world, a journal is written in Rmarkdown or pure
+In the Platonic ideal world, an article is written in Rmarkdown or pure
 LaTeX.
 
 In the real world, journals are written collaboratively in Word, with
 multiple messy copies.
 
 Sometimes, you just need to copy and paste some numbers.
-
-Enter **journalR**.
 
 ``` r
 library(journalR)
@@ -98,7 +101,7 @@ print(DT_hp)
 Enter `format_journal_df()`:
 
 - Format a central/lower/upper set of three columns into an
-  e.g. $mean (lower -- upper)$ string.
+  e.g. $mean (lower-upper)$ string.
   - Ready for direct copy/paste into Word or similar.
 - The user must provide a data type (`metric`), which tells the function
   how to format the numbers.
@@ -146,11 +149,11 @@ As long as your table is tidy, it can be formatted.
 DT_summary |>
    journalR::format_journal_df(
       metric               = c("prop")
-      , new_var            = "pct_vshape_fmt" # specify output colname (must be a new one)
+      , new_var            = "pct_vshape_fmt" # specify output column name
       , central_var        = "pct_vshape" 
       , lower_var          = "lower_vshape"
       , upper_var          = "upper_vshape"
-      , remove_clu_columns = FALSE # retain the original columns if desired
+      , remove_clu_columns = FALSE            # retain the original columns if desired
    )
 #>      cyl     n mean_mpg lower_mpg upper_mpg pct_vshape lower_vshape
 #>    <num> <int>    <num>     <num>     <num>      <num>        <num>
@@ -288,8 +291,9 @@ tell you.
 try(
    journalR::format_journal_df(DT_rates, metric = "rate", rate_unit = "deaths", mag = "I_dunno")
 )
-#> Error : Invalid option: i_dunno
-#>   Valid options:  per10, per100, per1k, per10k, per100k, per1m, per10m, per100m, per1b, per10b
+#> Error : 
+#> Invalid option: i_dunno
+#> Valid options:  per10, per100, per1k, per10k, per100k, per1m, per10m, per100m, per1b, per10b
 ```
 
 This magnitude override is probably most useful for rates, but is
