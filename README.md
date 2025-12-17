@@ -395,7 +395,7 @@ print(style_lancet)
 Lancet receives non-standard formatting
 
 - Lancet decimals are `mid_dot()`.
-- Thousands counts from 9,999 to 999,999 recieve `thin_space()`
+- Thousands counts from 9,999 to 999,999 receive `thin_space()`
   delimeter.
 
 ``` r
