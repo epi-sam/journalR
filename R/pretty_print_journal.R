@@ -186,25 +186,25 @@ format_journal_clu <- function(
 
       # Define rate-specific components (conditionally populated)
       if (is_rate_type) {
-         rate_unit_fmt   <- sprintf(" %s", rate_unit)  # " deaths" or " cases"
-         rate_mag_label  <- sprintf(" %s", mag_label)  # " per 100,000"
-         count_mag_label <- ""                         # empty for rates
-         metric_label    <- ""                         # empty for rates
+         rate_unit_fmt  <- sprintf(" %s", rate_unit)  # " deaths" or " cases"
+         rate_mag_label <- sprintf(" %s", mag_label)  # " per 100,000"
+         mag_label      <- ""                         # empty for rates
+         metric_label   <- ""                         # empty for rates
       } else {
-         rate_unit_fmt   <- ""                         # empty for non-rates
-         rate_mag_label  <- ""                         # empty for non-rates
-         count_mag_label <- mag_label                  # "million " for counts
-         metric_label    <- metric_label               # "%" for props
+         rate_unit_fmt  <- ""                         # empty for non-rates
+         rate_mag_label <- ""                         # empty for non-rates
+         mag_label      <- mag_label                  # "million " for counts
+         metric_label   <- metric_label               # "%" for props
       }
 
       # Single glue template handles all metrics
       str <- glue::glue(
-         "{mean_neg_txt}{cen}{rate_unit_fmt}{metric_label} {count_mag_label}({UI_text}{low}{low_upp_sep}{upp}){rate_mag_label}"
+         "{mean_neg_txt}{cen}{rate_unit_fmt}{metric_label} {mag_label}({UI_text}{low}{low_upp_sep}{upp}){rate_mag_label}"
       )
 
       if (UI_only) {
          str <- glue::glue(
-            "{UI_text}{low}{low_upp_sep}{upp}{rate_unit_fmt}{count_mag_label}{rate_mag_label}"
+            "{UI_text}{low}{low_upp_sep}{upp}{rate_unit_fmt}{mag_label}{rate_mag_label}"
          )
       }
 
