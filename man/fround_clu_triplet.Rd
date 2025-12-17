@@ -38,7 +38,7 @@ Other styled_formats:
 \code{\link{format_journal_df}()},
 \code{\link{format_lancet_clu}()},
 \code{\link{format_lancet_df}()},
-\code{\link{format_means_df}()},
+\code{\link{format_metric_cols}()},
 \code{\link{format_nature_clu}()},
 \code{\link{format_nature_df}()},
 \code{\link{new_style}()}

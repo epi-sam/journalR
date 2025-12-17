@@ -333,8 +333,8 @@ format_journal_df <- function(
 #'   , mean_1990 = c(100, 1e6, 1e9)
 #'   , mean_2000 = c(200, 2e6, 2e-1)
 #'  )
-#' format_means_df(df, metric = "count")
-format_means_df <- function(
+#' format_metric_cols(df, metric = "count")
+format_metric_cols <- function(
       df
       , metric
       , central_var = "mean"

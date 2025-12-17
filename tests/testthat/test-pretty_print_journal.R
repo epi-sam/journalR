@@ -7,7 +7,7 @@ test_that("format_mean_df works", {
       , mean_2000 = c(0.2234, 0.3345, 0.4456)
    )
 
-   DT_result <- format_means_df(DT_test, metric = "prop")
+   DT_result <- format_metric_cols(DT_test, metric = "prop")
 
    DT_expected <- data.table::data.table(
       location_id = c(1, 2, 3)
@@ -24,7 +24,7 @@ test_that("format_mean_df works", {
    )
 
    style_int <- new_style(style_name = "test_style_int", count_nsmall = 0)
-   DT_result <- format_means_df(DT_test, metric = "count", style_name = "test_style_int")
+   DT_result <- format_metric_cols(DT_test, metric = "count", style_name = "test_style_int")
 
    DT_expected <- data.table::data.table(
       location_id = c(1, 2, 3)
@@ -332,50 +332,50 @@ test_that("format_journal_clu works with rates", {
 })
 
 
-# ---- format_means_df Integration Tests ------------------------------------------------
+# ---- format_metric_cols Integration Tests ------------------------------------------------
 
-test_that("format_means_df works with prop - typical case", {
+test_that("format_metric_cols works with prop - typical case", {
    df <- data.frame(
       location = c("A", "B", "C")
       , mean_2020 = c(0.125, 0.456, 0.789)
    )
-   result <- format_means_df(df, metric = "prop", style_name = "nature")
+   result <- format_metric_cols(df, metric = "prop", style_name = "nature")
    expect_equal(result$mean_2020, c("12.5%", "45.6%", "78.9%"))
 })
 
-test_that("format_means_df works with prop - edge case small values", {
+test_that("format_metric_cols works with prop - edge case small values", {
    df <- data.frame(
       location = c("A", "B")
       , mean_2020 = c(0.001, 0.0005)  # Very small proportions
    )
-   result <- format_means_df(df, metric = "prop", style_name = "nature")
+   result <- format_metric_cols(df, metric = "prop", style_name = "nature")
    expect_equal(result$mean_2020, c("0.1%", "0.1%"))  # Rounded to 1 decimal
 })
 
-test_that("format_means_df works with pp - typical case", {
+test_that("format_metric_cols works with pp - typical case", {
    df <- data.frame(
       location = c("A", "B")
       , mean_2020 = c(0.05, -0.03)  # 5pp increase, 3pp decrease
    )
-   result <- format_means_df(df, metric = "pp", style_name = "nature")
+   result <- format_metric_cols(df, metric = "pp", style_name = "nature")
    expect_equal(result$mean_2020, c("5.0 pp", "-3.0 pp"))
 })
 
-test_that("format_means_df works with pp - edge case crossing zero", {
+test_that("format_metric_cols works with pp - edge case crossing zero", {
    df <- data.frame(
       location = c("A", "B")
       , mean_2020 = c(0.001, -0.001)  # Very small changes
    )
-   result <- format_means_df(df, metric = "pp", style_name = "lancet")
+   result <- format_metric_cols(df, metric = "pp", style_name = "lancet")
    expect_equal(result$mean_2020, c("0·1 pp", "–0·1 pp"))  # Lancet neg mark
 })
 
-test_that("format_means_df works with count - typical case with Lancet", {
+test_that("format_metric_cols works with count - typical case with Lancet", {
    df <- data.frame(
       location = c("A", "B", "C")
       , mean_2020 = c(1500, 50000, 1.5e6)
    )
-   result <- format_means_df(df, metric = "count", style_name = "lancet")
+   result <- format_metric_cols(df, metric = "count", style_name = "lancet")
    # 1500 should have NO separator (Lancet rule: <= 9999)
    # 50000 should have thin space separator
    # 1.5e6 should be "1.50 million"
@@ -384,12 +384,12 @@ test_that("format_means_df works with count - typical case with Lancet", {
    expect_equal(result$mean_2020[3], "1·50 million")
 })
 
-test_that("format_means_df works with count - Lancet edge case 9999 boundary", {
+test_that("format_metric_cols works with count - Lancet edge case 9999 boundary", {
    df <- data.frame(
       location = c("A", "B", "C", "D")
       , mean_2020 = c(9994, 10000, 9995, 10005)
    )
-   result <- format_means_df(df, metric = "count", style_name = "lancet")
+   result <- format_metric_cols(df, metric = "count", style_name = "lancet")
    # 9999: no separator (Lancet rule)
    # 10000: has separator
    # 9995: rounds to 10000, should get separator
@@ -400,13 +400,13 @@ test_that("format_means_df works with count - Lancet edge case 9999 boundary", {
    expect_true(grepl("10\\s*000", result$mean_2020[4]))  # 10005 rounds to 10000
 })
 
-test_that("format_means_df works with rate - typical case", {
+test_that("format_metric_cols works with rate - typical case", {
    df <- data.frame(
       location = c("A", "B")
       , mean_2020 = c(0.0000123, 0.0000456)
    )
 
-   result_with_unit <- format_means_df(df, metric = "rate", rate_unit = "deaths", style_name = "nature")
+   result_with_unit <- format_metric_cols(df, metric = "rate", rate_unit = "deaths", style_name = "nature")
    expect_equal(
       result_with_unit$mean_2020
       , c(
@@ -416,13 +416,13 @@ test_that("format_means_df works with rate - typical case", {
    )
 })
 
-test_that("format_means_df works with rate - edge case different magnitudes", {
+test_that("format_metric_cols works with rate - edge case different magnitudes", {
    df <- data.frame(
       location = c("A", "B")
       , mean_2020 = c(0.00123, 0.0000000456)  # per 1k vs per 1 billion
    )
 
-   result_with_unit <- format_means_df(df, metric = "rate", rate_unit = "cases", style_name = "lancet")
+   result_with_unit <- format_metric_cols(df, metric = "rate", rate_unit = "cases", style_name = "lancet")
    expect_equal(result_with_unit$mean_2020[1], "12·3 cases per 10,000")
    expect_equal(result_with_unit$mean_2020[2], "45·6 cases per 1 billion")
 })
