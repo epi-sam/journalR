@@ -82,7 +82,7 @@ DT <- data.table::as.data.table(mtcars)
 # calculate mean/lower/upper 95% UI for mpg by cyl
 DT_hp <- DT[
    , .(
-      mean  = mean(hp)
+      mean    = mean(hp)
       , lower = quantile(hp, 0.025)
       , upper = quantile(hp, 0.975)
    )
@@ -100,9 +100,9 @@ print(DT_hp)
 
 Enter `format_journal_df()`:
 
-- Format a central/lower/upper set of three columns into an
-  e.g. $mean (lower-upper)$ string.
-  - Ready for direct copy/paste into Word or similar.
+- Format a central/lower/upper set of three columns into an e.g. “mean
+  (lower–upper)” string.
+- Ready for direct copy/paste into Word or similar.
 - The user must provide a data type (`metric`), which tells the function
   how to format the numbers.
 - central/lower/upper relationships are asserted (lower \< central \<
@@ -131,7 +131,7 @@ above, with different data types.
 # build a mean/lower/upper summary table with some percentage from DT
 DT_summary <- DT[
    , .(
-      n            = .N
+      n              = .N
       , mean_mpg     = mean(mpg)
       , lower_mpg    = quantile(mpg, 0.025)
       , upper_mpg    = quantile(mpg, 0.975)
@@ -172,9 +172,9 @@ DT_summary |>
 ### General:
 
 1.  Central/lower/upper triplets are formatted at the same ‘scale’.
-    1.  Based on the central value.
-    2.  User may override (see ‘Rates’ below).
-2.  All triplets present with the same number of significant digits.
+2.  Based on the central value.
+3.  User may override (see ‘Rates’ below).
+4.  All triplets present with the same number of significant digits.
 
 ### Proportions:
 
@@ -184,23 +184,23 @@ DT_summary |>
 
 ``` r
 DT_prop <- data.table::data.table(
-   data_space    = c("all_positive", "mixed_negative", "all_negative", "lower_negative", "central_lower_neg")
-   , mean        = c(.558,           -0.1,             -0.1,            0.05,            -0.05)
-   , lower       = c(.507,           -0.25,            -0.2,           -0.02,            -0.1)
-   , upper       = c(.607,            1.3,             -0.05,           0.12,             0.1)
+   data_space    = c("all_pos", "mixed_neg", "all_neg", "lower_neg", "mean_lower_neg")
+   , mean        = c(.558,      -0.1,        -0.1,      0.05,        -0.05)
+   , lower       = c(.507,      -0.25,       -0.2,      -0.02,       -0.1)
+   , upper       = c(.607,      1.3,         -0.05,     0.12,        0.1)
 )
 DT_prop|>
    journalR::format_journal_df(
-      metric = "prop"
+      metric               = "prop"
       , remove_clu_columns = FALSE
    )
-#>           data_space   mean  lower  upper                 clu_fmt
-#>               <char>  <num>  <num>  <num>                  <char>
-#> 1:      all_positive  0.558  0.507  0.607       55.8% (50.7–60.7)
-#> 2:    mixed_negative -0.100 -0.250  1.300 -10.0% (-25.0 to 130.0)
-#> 3:      all_negative -0.100 -0.200 -0.050       -10.0% (5.0–20.0)
-#> 4:    lower_negative  0.050 -0.020  0.120     5.0% (-2.0 to 12.0)
-#> 5: central_lower_neg -0.050 -0.100  0.100   -5.0% (-10.0 to 10.0)
+#>        data_space   mean  lower  upper                 clu_fmt
+#>            <char>  <num>  <num>  <num>                  <char>
+#> 1:        all_pos  0.558  0.507  0.607       55.8% (50.7–60.7)
+#> 2:      mixed_neg -0.100 -0.250  1.300 -10.0% (-25.0 to 130.0)
+#> 3:        all_neg -0.100 -0.200 -0.050       -10.0% (5.0–20.0)
+#> 4:      lower_neg  0.050 -0.020  0.120     5.0% (-2.0 to 12.0)
+#> 5: mean_lower_neg -0.050 -0.100  0.100   -5.0% (-10.0 to 10.0)
 ```
 
 ### Counts:
@@ -232,11 +232,11 @@ DF_count|>
 - Count-space magnitude-edge-cases are handled.
 - By default, thousands do not receive a label.
 - Users may set their own style with `count_label_thousands = TRUE`.
-  - See ‘Styles’ section below for more details.
+- See ‘Styles’ section below for more details.
 
 ``` r
 journalR::new_style(
-   style_name = "thousands_labeled"
+   style_name              = "thousands_labeled"
    , count_label_thousands = TRUE
 )
 ```
@@ -256,8 +256,8 @@ DF_count|>
 
 ### Rates:
 
-1.  Rates are like counts, but with a `per X magnitude` suffix.
-    1.  The user may override the magnitude label easily.
+1.  Rates are like counts, but with a `per X <magnitude>` suffix.
+2.  The user may override the magnitude label easily.
 
 ``` r
 DT_rates <- data.table::data.table(
@@ -268,7 +268,11 @@ DT_rates <- data.table::data.table(
 )
 
 # Default magnitude (depends on style settings - see 'Styles' heading below)
-journalR::format_journal_df(DT_rates, metric = "rate", rate_unit = "deaths")
+journalR::format_journal_df(
+   DT_rates
+   , metric    = "rate"
+   , rate_unit = "deaths"
+)
 #>       id                                clu_fmt
 #>    <int>                                 <char>
 #> 1:     1    12.3 deaths (10.0–15.0) per 100,000
@@ -276,7 +280,12 @@ journalR::format_journal_df(DT_rates, metric = "rate", rate_unit = "deaths")
 #> 3:     3 78.9 deaths (70.0–90.0) per 10 million
 
 # User Override - one magnitude applies to the entire data.frame
-journalR::format_journal_df(DT_rates, metric = "rate", rate_unit = "deaths", mag = "per1m")
+journalR::format_journal_df(
+   DT_rates
+   , metric    = "rate"
+   , rate_unit = "deaths"
+   , mag       = "per1m"
+)
 #>       id                               clu_fmt
 #>    <int>                                <char>
 #> 1:     1    123 deaths (100–150) per 1 million
@@ -289,7 +298,12 @@ tell you.
 
 ``` r
 try(
-   journalR::format_journal_df(DT_rates, metric = "rate", rate_unit = "deaths", mag = "I_dunno")
+   journalR::format_journal_df(
+      DT_rates
+      , metric    = "rate"
+      , rate_unit = "deaths"
+      , mag       = "I_dunno"
+   )
 )
 #> Error : 
 #> Invalid option: i_dunno
@@ -313,12 +327,19 @@ df_prop <- data.frame(
 
 # The package tries to keep you safe...
 try(
-   journalR::format_journal_df(df_prop, metric = "prop")
+   journalR::format_journal_df(
+      df_prop
+      , metric = "prop"
+   )
 )
 #> Error : Proportion values must be between -1 and +1. Found values outside range, e.g.: 55.8
 
 #... and this is how to use what you have
-journalR::format_journal_df(df_prop, metric = "prop", mag = 'as-is')
+journalR::format_journal_df(
+   df_prop
+   , metric = "prop"
+   , mag    = 'as-is'
+)
 #>   id           clu_fmt
 #> 1  1 55.8% (50.7–60.7)
 #> 2  2 23.4% (20.1–26.7)
@@ -336,14 +357,21 @@ df_count <- data.frame(
 )
 
 # Default
-journalR::format_journal_df(df_count, metric = "count")
+journalR::format_journal_df(
+   df_count
+   , metric = "count"
+)
 #>   id                  clu_fmt
 #> 1  1    558 million (507–607)
 #> 2  2 1.23 billion (1.10–1.36)
 #> 3  3 56.7 billion (51.2–62.3)
 
 # User Override
-journalR::format_journal_df(df_count, metric = "count", mag = "b")
+journalR::format_journal_df(
+   df_count
+   , metric = "count"
+   , mag    = "b"
+)
 #>   id                     clu_fmt
 #> 1  1 0.558 billion (0.507–0.607)
 #> 2  2    1.23 billion (1.10–1.36)
@@ -406,7 +434,7 @@ journalR::format_journal_df(
       , upper = c(60.7e3, 59.6e6)
    )
    , metric = "count"
-   , style = "lancet"
+   , style  = "lancet"
 )
 #>                    clu_fmt
 #> 1   55 800 (50 700–60 700)
@@ -444,10 +472,9 @@ keys as the built-in styles.
   what you need.
 - Read the `new_style()` documentation carefully to understand how each
   element affects your final output.
-  - Using the “sigfig” `count_method` option involves the most
-    assumptions
-  - Read `fround_count_rate()` source in ‘R/format_vectors.R’ for
-    implementation details.
+- Using the “sigfig” `count_method` option involves the most assumptions
+- Read `fround_count_rate()` source in ‘R/format_vectors.R’ for
+  implementation details.
 
 ``` r
 
@@ -471,7 +498,7 @@ journalR::new_style(
 # Counts
 journalR::format_journal_df(
    data.frame(
-      mean          = c(55.8e3, 54.7e6)
+      mean            = c(55.8e3, 54.7e6)
       , lower         = c(50.7e3, 48.6e6)
       , upper         = c(60.7e3, 59.6e6)
    )
@@ -491,7 +518,7 @@ journalR::format_journal_df(
       , upper         = c(.6076589, 1.365432, -0.056549)
    )
    , metric = "prop"
-   , style = "wacky_style"
+   , style  = "wacky_style"
 )
 #>        data_space                                     clu_fmt
 #>            <char>                                      <char>

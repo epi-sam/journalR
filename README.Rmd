@@ -93,7 +93,7 @@ DT <- data.table::as.data.table(mtcars)
 # calculate mean/lower/upper 95% UI for mpg by cyl
 DT_hp <- DT[
    , .(
-      mean  = mean(hp)
+      mean    = mean(hp)
       , lower = quantile(hp, 0.025)
       , upper = quantile(hp, 0.975)
    )
@@ -107,8 +107,8 @@ print(DT_hp)
 
 Enter `format_journal_df()`:
 
-- Format a central/lower/upper set of three columns into an e.g. $mean (lower-upper)$ string.
-   - Ready for direct copy/paste into Word or similar.
+- Format a central/lower/upper set of three columns into an e.g. "mean (lower--upper)" string.
+- Ready for direct copy/paste into Word or similar.
 - The user must provide a data type (`metric`), which tells the function how to format the numbers.
 - central/lower/upper relationships are asserted (lower < central < upper) before formatting.
 
@@ -131,7 +131,7 @@ The user's data.frame may be formatted differently than the simple case above, w
 # build a mean/lower/upper summary table with some percentage from DT
 DT_summary <- DT[
    , .(
-      n            = .N
+      n              = .N
       , mean_mpg     = mean(mpg)
       , lower_mpg    = quantile(mpg, 0.025)
       , upper_mpg    = quantile(mpg, 0.975)
@@ -166,8 +166,8 @@ DT_summary |>
 ### General:
 
 1. Central/lower/upper triplets are formatted at the same 'scale'.
-   1. Based on the central value.
-   1. User may override (see 'Rates' below).
+1. Based on the central value.
+1. User may override (see 'Rates' below).
 1. All triplets present with the same number of significant digits.
 
 
@@ -181,14 +181,14 @@ DT_summary |>
 
 ```{r assumptions_prop}
 DT_prop <- data.table::data.table(
-   data_space    = c("all_positive", "mixed_negative", "all_negative", "lower_negative", "central_lower_neg")
-   , mean        = c(.558,           -0.1,             -0.1,            0.05,            -0.05)
-   , lower       = c(.507,           -0.25,            -0.2,           -0.02,            -0.1)
-   , upper       = c(.607,            1.3,             -0.05,           0.12,             0.1)
+   data_space    = c("all_pos", "mixed_neg", "all_neg", "lower_neg", "mean_lower_neg")
+   , mean        = c(.558,      -0.1,        -0.1,      0.05,        -0.05)
+   , lower       = c(.507,      -0.25,       -0.2,      -0.02,       -0.1)
+   , upper       = c(.607,      1.3,         -0.05,     0.12,        0.1)
 )
 DT_prop|>
    journalR::format_journal_df(
-      metric = "prop"
+      metric               = "prop"
       , remove_clu_columns = FALSE
    )
 ```
@@ -221,12 +221,12 @@ DF_count|>
 - Count-space magnitude-edge-cases are handled.
 - By default, thousands do not receive a label.
 - Users may set their own style with `count_label_thousands = TRUE`.
-   - See 'Styles' section below for more details.
+- See 'Styles' section below for more details.
 
 
 ```{r thou_style_new}
 journalR::new_style(
-   style_name = "thousands_labeled"
+   style_name              = "thousands_labeled"
    , count_label_thousands = TRUE
 )
 ```
@@ -246,8 +246,8 @@ DF_count|>
 
 ### Rates:
 
-1. Rates are like counts, but with a `per X magnitude` suffix.
-   1. The user may override the magnitude label easily.
+1. Rates are like counts, but with a `per X <magnitude>` suffix.
+1. The user may override the magnitude label easily.
 
 
 
@@ -260,10 +260,19 @@ DT_rates <- data.table::data.table(
 )
 
 # Default magnitude (depends on style settings - see 'Styles' heading below)
-journalR::format_journal_df(DT_rates, metric = "rate", rate_unit = "deaths")
+journalR::format_journal_df(
+   DT_rates
+   , metric    = "rate"
+   , rate_unit = "deaths"
+)
 
 # User Override - one magnitude applies to the entire data.frame
-journalR::format_journal_df(DT_rates, metric = "rate", rate_unit = "deaths", mag = "per1m")
+journalR::format_journal_df(
+   DT_rates
+   , metric    = "rate"
+   , rate_unit = "deaths"
+   , mag       = "per1m"
+)
 ```
 
 
@@ -271,7 +280,12 @@ If you're not sure of the available 'mag' options, the error code will tell you.
 
 ```{r assumptions_rate_options}
 try(
-   journalR::format_journal_df(DT_rates, metric = "rate", rate_unit = "deaths", mag = "I_dunno")
+   journalR::format_journal_df(
+      DT_rates
+      , metric    = "rate"
+      , rate_unit = "deaths"
+      , mag       = "I_dunno"
+   )
 )
 ```
 
@@ -292,11 +306,18 @@ df_prop <- data.frame(
 
 # The package tries to keep you safe...
 try(
-   journalR::format_journal_df(df_prop, metric = "prop")
+   journalR::format_journal_df(
+      df_prop
+      , metric = "prop"
+   )
 )
 
 #... and this is how to use what you have
-journalR::format_journal_df(df_prop, metric = "prop", mag = 'as-is')
+journalR::format_journal_df(
+   df_prop
+   , metric = "prop"
+   , mag    = 'as-is'
+)
 ```
 
 
@@ -311,10 +332,17 @@ df_count <- data.frame(
 )
 
 # Default
-journalR::format_journal_df(df_count, metric = "count")
+journalR::format_journal_df(
+   df_count
+   , metric = "count"
+)
 
 # User Override
-journalR::format_journal_df(df_count, metric = "count", mag = "b")
+journalR::format_journal_df(
+   df_count
+   , metric = "count"
+   , mag    = "b"
+)
 
 ```
 
@@ -357,7 +385,7 @@ journalR::format_journal_df(
       , upper = c(60.7e3, 59.6e6)
    )
    , metric = "count"
-   , style = "lancet"
+   , style  = "lancet"
 )
 ```
 
@@ -385,8 +413,8 @@ Users may define their own styles by creating a named list with the same keys as
 
 - All arguments except the name have sensible defaults - only change what you need.
 - Read the `new_style()` documentation carefully to understand how each element affects your final output.
-   - Using the "sigfig" `count_method` option involves the most assumptions
-   - Read `fround_count_rate()` source in 'R/format_vectors.R' for implementation details.
+- Using the "sigfig" `count_method` option involves the most assumptions
+- Read `fround_count_rate()` source in 'R/format_vectors.R' for implementation details.
 
 ```{r new_style}
 
@@ -411,7 +439,7 @@ journalR::new_style(
 # Counts
 journalR::format_journal_df(
    data.frame(
-      mean          = c(55.8e3, 54.7e6)
+      mean            = c(55.8e3, 54.7e6)
       , lower         = c(50.7e3, 48.6e6)
       , upper         = c(60.7e3, 59.6e6)
    )
@@ -428,7 +456,7 @@ journalR::format_journal_df(
       , upper         = c(.6076589, 1.365432, -0.056549)
    )
    , metric = "prop"
-   , style = "wacky_style"
+   , style  = "wacky_style"
 )
 ```
 
