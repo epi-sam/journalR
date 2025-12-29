@@ -9,7 +9,7 @@
 status](https://www.r-pkg.org/badges/version/journalR)](https://CRAN.R-project.org/package=journalR)
 [![R-CMD-check](https://github.com/epi-sam/journalR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/epi-sam/journalR/actions/workflows/R-CMD-check.yaml)
 ![CRAN
-downloads](https://cranlogs.r-pkg.org/badges/grand-total/journlaR)
+downloads](https://cranlogs.r-pkg.org/badges/grand-total/journalR)
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
