@@ -60,7 +60,6 @@ journalR::format_journal_df(
       mean  = c(.558, .234, .789),
       lower = c(.507, .201, .756),
       upper = c(.607, .267, .821)
-      
    )
    , metric     = "prop"
    , style_name = "lancet"
