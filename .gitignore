@@ -3,3 +3,9 @@
 .RData
 .Ruserdata
 .github/copilot-instructions*.md
+/revdep*
+
+CRAN*
+cran*
+inst/boneyard.R
+.Rprofile
