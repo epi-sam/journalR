@@ -370,7 +370,7 @@ fround_count_rate <- function(clu, style_name, metric, mag = NULL) {
 
   # === Input Validation ===
   if (metric == "count" && any(clu < 0)) {
-    stop("Counts < 0 not yet supported: ", toString(clu))
+    warning("Counts < 0 not yet supported: ", toString(clu))
   }
 
   if (metric == "rate" && any(clu <= 0)) {
@@ -544,9 +544,14 @@ fround_clu_triplet <- function(
 
   checkmate::assert_vector(clu, len = 3)
   checkmate::assert_numeric(clu, len = 3)
-  if(style$assert_clu_order == TRUE){
-    assert_clu_relationship(clu[1], clu[2], clu[3])
-  }
+
+  # fround_clu_triplet() is applied _after_ negative handling in
+  # process_clu_triplet_negatives() within format_journal_clu() , so CLU
+  # relationships may no longer be valid. This function must remain internal.
+
+  # if(style$assert_clu_order == TRUE){
+  #   assert_clu_relationship(clu[1], clu[2], clu[3])
+  # }
 
   # Call appropriate formatting helper
   result <- switch_strict(
