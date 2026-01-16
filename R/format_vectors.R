@@ -595,15 +595,19 @@ format_oxford_comma <- function(
 
   n    <- length(vec)
   set1 <- toString(vec[1:(n - 1)])
-
-  if(n > 2) {
-    sep <- sprintf(", %s ", sep)
-  } else {
-    sep <- sprintf(" %s ", sep)
-  }
-
   set2 <- vec[n]
-  str  <- sprintf("%s%s%s", set1, sep, set2)
+
+  if(n == 1) {
+    str <- as.character(vec[1])
+  } else if(n == 2) {
+    sep <- sprintf(" %s ", sep)
+    set2 <- vec[n]
+    str  <- sprintf("%s%s%s", set1, sep, set2)
+  } else {
+    sep <- sprintf(", %s ", sep)
+    set2 <- vec[n]
+    str  <- sprintf("%s%s%s", set1, sep, set2)
+  }
 
   return(str)
 }

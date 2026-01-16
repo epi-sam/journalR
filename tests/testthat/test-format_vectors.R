@@ -234,3 +234,12 @@ test_that("assert_fround_return_schema catches invalid structures", {
     "test\\$df_mag_row must have columns: mag, mag_label, denom"
   )
 })
+
+# ---- Misc -----------------------------------------------------------------
+
+test_that("Oxford comma formatting is correct for 1,2,3 and 4 element vectors",{
+  expect_equal(format_oxford_comma(c("A")), "A")
+  expect_equal(format_oxford_comma(c("A", "B")), "A and B")
+  expect_equal(format_oxford_comma(c("A", "B", "C")), "A, B, and C")
+  expect_equal(format_oxford_comma(c("A", "B", "C", "D")), "A, B, C, and D")
+})

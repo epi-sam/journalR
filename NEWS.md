@@ -1,9 +1,10 @@
 # journalR 0.6.1
 
-BUGFIX 
+BUGFIXES
 
 - CLU order assumption was over-checked at an inappropriate spot. 
 - Converted count-space negative stop to warning.
+- format_oxford_comma() now handles 1-element vectors correctly
 
 # journalR 0.6.0
 
