@@ -1,3 +1,10 @@
+# journalR 0.6.1
+
+BUGFIX 
+
+- CLU order assumption was over-checked at an inappropriate spot. 
+- Converted count-space negative stop to warning.
+
 # journalR 0.6.0
 
 ## Improvements
