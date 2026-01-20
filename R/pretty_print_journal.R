@@ -347,13 +347,13 @@ format_metric_cols <- function(
    df_name <- deparse(substitute(df))
 
    varnames <- grep(
-      pattern = sprintf("^%s[_]+", var_prefix)
+      pattern = sprintf("^%s", var_prefix)
       , x     = colnames(df)
       , value = TRUE
    )
    if(length(varnames) == 0){
       warning(sprintf(
-         "%s: No columns found with prefix '%s_'. Do column names have this prefix _and_ underscores?"
+         "%s: No columns found with prefix '%s'. Do column names have this prefix?"
          , df_name, var_prefix
       ))
    }

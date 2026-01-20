@@ -361,6 +361,28 @@ test_that("format_metric_cols works with prop - typical case", {
    expect_equal(result$mean_2020, c("12.5%", "45.6%", "78.9%"))
 })
 
+test_that("format_metric_cols works with different column names with and without underscores", {
+   df <- data.frame(
+      location = c("A", "B", "C")
+      , val = c(0.125, 0.456, 0.789)
+      , val_2020 = c(0.125, 0.456, 0.789)
+   )
+   result <- format_metric_cols(df, metric = "prop", var_prefix = "val", style_name = "nature")
+   expect_equal(result$val_2020, c("12.5%", "45.6%", "78.9%"))
+   expect_equal(result$val, c("12.5%", "45.6%", "78.9%"))
+})
+
+test_that("format_metric_cols works with different column names with more complex regular expressions", {
+   df <- data.frame(
+      location = c("A", "B", "C")
+      , foo = c(0.125, 0.456, 0.789)
+      , bar = c(0.125, 0.456, 0.789)
+   )
+   result <- format_metric_cols(df, metric = "prop", var_prefix = "foo|bar", style_name = "nature")
+   expect_equal(result$foo, c("12.5%", "45.6%", "78.9%"))
+   expect_equal(result$bar, c("12.5%", "45.6%", "78.9%"))
+})
+
 test_that("format_metric_cols works with prop - edge case small values", {
    df <- data.frame(
       location = c("A", "B")
