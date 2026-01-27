@@ -59,15 +59,7 @@ get_dict_formats_names <- function(){
 get_dict_format <- function(dict_name) {
    checkmate::assert_string(dict_name)
    avail_names <- get_dict_formats_names()
-   if (!dict_name %in% avail_names) {
-      stop(
-         sprintf(
-            "Dictionary '%s' not found. Available dictionaries are:\n  %s"
-            , dict_name
-            , toString(avail_names)
-         )
-      )
-   }
+   assert_set_choice(dict_name, avail_names)
    return(.dict_formats[[dict_name]])
 }
 
