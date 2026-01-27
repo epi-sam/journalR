@@ -73,6 +73,11 @@ format_journal_clu <- function(
    assert_clu_order       <- style[["assert_clu_order"]]
    count_label_thousands  <- style[["count_label_thousands"]]
    round_5_up             <- style[["round_5_up"]]
+   invert_all_neg_UI      <- get_style_item_by_metric(
+      style_name   = style_name
+      , style_item = "invert_all_neg_UI"
+      , metric     = metric
+   )
 
    checkmate::assert_numeric(central, min.len = 1)
    checkmate::assert_numeric(lower)
@@ -93,13 +98,6 @@ format_journal_clu <- function(
 
    n <- nrow(clu)
 
-   # === REMOVED: All state management ===
-   # - init_df_mag_state(n)
-   # - on.exit(flush_df_mag_state(), add = TRUE)
-   # - Thread safety code (data.table::setDTthreads)
-   # - Initial set_magnitude() call
-   # - set_df_mag_state(df_mag)
-
    if(assert_clu_order == TRUE){
       assert_clu_relationship(
          central = clu$central
@@ -110,14 +108,21 @@ format_journal_clu <- function(
 
    triplets <- t(clu) # transpose for easier processing
 
-   # Capture numeric info before character conversion
-   # Does UI cross zero? Decide which UI separator to use.
-   UI_crosses_zero_vec <- unlist(apply(triplets, 2, function(triplet) {
-      (triplet["lower"] < 0) & (triplet["upper"] > 0)
-   })) |> unname()
+   # Capture numeric information before conversion to character
 
-   # Is the central value negative?
-   neg_str_mean_vec <- unlist(lapply(triplets["central", ], function(c_i){
+   # First, account for negatives, and associated formatting
+
+   # Handle central negatives and full-negative triplet sets
+   # - allows style$neg_mark_mean to be assigned
+   triplets_neg_processed <- process_clu_triplet_negatives(
+      triplets            = triplets
+      , assert_clu_order  = assert_clu_order
+      , invert_all_neg_UI = invert_all_neg_UI
+   )
+
+   # Handle the central value negative mark
+   # 1. if central value is negative, apply the user's style choice
+   neg_str_cen_vec <- unlist(lapply(triplets["central", ], function(c_i){
       if(c_i < 0) {
          neg_mark_mean
       } else {
@@ -125,23 +130,27 @@ format_journal_clu <- function(
       }
    }))
 
+   # Does UI cross zero? Decide which UI separator to use.
+   UI_crosses_zero_vec <- unlist(apply(triplets, 2, function(triplet) {
+      (triplet["lower"] < 0) & (triplet["upper"] > 0)
+   })) |> unname()
+
    # Is the whole triplet set negative?
    all_neg_vec <- unlist(apply(triplets, 2, function(triplet) all(triplet <= 0)))
 
    # Which `(x to/- y)` separator based on triplet set pos/neg relationships
+   # Use " to " when:
+   # 1. UI crosses zero (mixed positive/negative)
+   # 2. All negative and NOT inverting the UI
+   # - e.g. {-2, -3, -1} remains "-2 (-3 to -1)" instead of "-2 (1 to 3)"
    sep_vec <- data.table::fifelse(
-      (UI_crosses_zero_vec == TRUE & all_neg_vec == FALSE)
-      , " to ", en_dash()
+      (UI_crosses_zero_vec == TRUE & all_neg_vec == FALSE) |
+      (all_neg_vec == TRUE & invert_all_neg_UI == FALSE)
+      , " to "
+      , en_dash()
    )
 
-   # Handle central negatives and full-negative triplet sets
-   # - allows style$neg_mark_mean to be assigned
-   triplets_neg_processed <- process_clu_triplet_negatives(
-      triplets = triplets
-      , assert_clu_order = assert_clu_order
-   )
-
-   # === NEW: Format triplets and accumulate df_mag ===
+   # Format triplets and accumulate df_mag
    # Each call returns list(formatted = chr[3], df_mag_row = df[1,])
    results_list <- lapply(seq_len(ncol(triplets_neg_processed)), function(idx){
       result <- fround_clu_triplet(
@@ -180,7 +189,7 @@ format_journal_clu <- function(
       cen          <- triplets_fmt[[i]]['central']
       upp          <- triplets_fmt[[i]]['upper']
       low          <- triplets_fmt[[i]]['lower']
-      mean_neg_txt <- neg_str_mean_vec[i]
+      cen_neg_txt  <- neg_str_cen_vec[i]
       mag_label    <- df_mag$mag_label[i]
       low_upp_sep  <- sep_vec[i]
 
@@ -199,7 +208,7 @@ format_journal_clu <- function(
 
       # Single glue template handles all metrics
       str <- glue::glue(
-         "{mean_neg_txt}{cen}{rate_unit_fmt}{metric_label} {mag_label}({UI_text}{low}{low_upp_sep}{upp}){rate_mag_label}"
+         "{cen_neg_txt}{cen}{rate_unit_fmt}{metric_label} {mag_label}({UI_text}{low}{low_upp_sep}{upp}){rate_mag_label}"
       )
 
       if (UI_only) {

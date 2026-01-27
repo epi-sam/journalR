@@ -60,12 +60,12 @@ get_style_item_by_metric <- function(style_name, style_item, metric){
    style  <- get_style(style_name)
    metric <- assert_metric(metric)
 
-   switch_strict(
+   item <- switch(
 
       style_item
 
       , "digits" = {
-         switch_strict(
+         switch(
             metric
             , "prop"  = style[["prop_digits_round"]]
             , "pp"    = style[["prop_digits_round"]]
@@ -75,7 +75,7 @@ get_style_item_by_metric <- function(style_name, style_item, metric){
       }
 
       , "n_small" = {
-         switch_strict(
+         switch(
             metric
             , "prop"  = style[["prop_nsmall"]]
             , "pp"    = style[["prop_nsmall"]]
@@ -83,6 +83,29 @@ get_style_item_by_metric <- function(style_name, style_item, metric){
             , "rate"  = style[["rate_nsmall"]]
          )
       }
+
+      , "invert_all_neg_UI" = {
+         switch(
+            metric
+            , "prop"  = style[["prop_invert_all_neg_UI"]]
+            , "pp"    = style[["prop_invert_all_neg_UI"]]
+            , "count" = style[["count_invert_all_neg_UI"]]
+            , "rate"  = style[["rate_invert_all_neg_UI"]]
+         )
+      }
    )
+
+   if(is.null(item)){
+      stop(
+         sprintf(
+            "No style item found for style_name: '%s', style_item: '%s', metric: '%s'"
+            , style_name
+            , style_item
+            , metric
+         )
+      )
+   }
+
+   return(item)
 
 }

@@ -14,13 +14,15 @@
 #'
 #' @param triplets [matrix]  with rownames 'central', 'lower', 'upper'
 #' @param assert_clu_order [lgl: default TRUE] assert that central, lower, upper relationships are valid
+#' @param invert_all_neg_UI [lgl: default TRUE] invert and swap bounds for all-negative triplets (makes sense for proportions/percentages, may not apply to all metrics)
 #' @keywords internal
 #'
 #' @returns [num matrix] matrix with rows 'central', 'lower', 'upper' and columns for each triplet set
 #'
 process_clu_triplet_negatives <- function(
     triplets
-    , assert_clu_order = TRUE
+    , assert_clu_order   = TRUE
+    , invert_all_neg_UI = TRUE
 ){
 
   # lists with two shapes for assertions and processing
@@ -48,14 +50,15 @@ process_clu_triplet_negatives <- function(
   triplets <- apply(triplets, 2, function(triplet){
 
     all_neg     <- all(triplet <= 0)
-    central_neg <- (triplet["central"] < 0) & !all_neg
+    central_neg <- ((triplet["central"] < 0) & !all_neg) || (all_neg & !invert_all_neg_UI)
 
-    # If just the mean is negative, invert just the mean
-    # - style$neg_mark_mean handles the text prefixing
+    # style$neg_mark_mean handles the text prefixing
+    # - If just the central value is negative, invert just the central value
+    # - If all values are negative and invert_all_neg_UI is FALSE, invert just the central value
     if(central_neg) triplet["central"] <- triplet["central"] * -1
 
-    # If the triplet is all negative, invert and flip upper, lower values
-    if(all_neg) {
+    # If the triplet is all negative, optionally invert and flip upper, lower values
+    if(all_neg && invert_all_neg_UI) {
 
       triplet <- triplet * -1
       l_temp  <- triplet[["lower"]]

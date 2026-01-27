@@ -108,9 +108,9 @@ test_that("set_magnitude_count detects billions/millions/thousands", {
 })
 
 test_that("set_magnitude_count validates positive values", {
-   expect_error(
+   expect_warning(
       set_magnitude_count(c(-1e6)),
-      "Count values must be positive or 0"
+      "Counts < 0 not yet supported"
    )
 })
 

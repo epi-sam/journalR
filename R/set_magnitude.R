@@ -77,7 +77,7 @@ set_magnitude_count <- function(x, mag = NULL, count_label_thousands = FALSE, ve
    # Assert count values are greater than or equal to 0
    if (any(x < 0)) {
       .ex <- x[x < 0]
-      stop("Count values must be positive or 0. Found non-positive values, e.g.: ", .ex[1], call. = FALSE)
+      warning("Counts < 0 not yet supported. Found negative values, e.g.: ", .ex[1], call. = FALSE)
    }
 
    if (count_label_thousands && verbose) {
