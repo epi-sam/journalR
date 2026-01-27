@@ -8,16 +8,19 @@ new_style(
   style_name,
   prop_digits_round = 1,
   prop_nsmall = 1,
+  prop_invert_all_neg_UI = TRUE,
   count_method = "sigfig",
   count_digits_sigfig = 3,
   count_pad_sigfigs = TRUE,
   count_nsmall = 1,
   count_big.mark = ",",
   count_label_thousands = FALSE,
+  count_invert_all_neg_UI = FALSE,
   rate_method = "sigfig",
   rate_digits_sigfig = 3,
   rate_pad_sigfigs = TRUE,
   rate_nsmall = 1,
+  rate_invert_all_neg_UI = FALSE,
   decimal.mark = ".",
   neg_mark_mean = "-",
   neg_mark_UI = "-",
@@ -35,6 +38,8 @@ new_style(
 
 \item{prop_nsmall}{[int: default 1] minimum number of digits to the right of the decimal point - proportions}
 
+\item{prop_invert_all_neg_UI}{[lgl: default TRUE] if mean/lower/upper are all negative, invert signs in UI for proportions? e.g. -0.1 (-0.2 to -0.05) becomes - 0.1 (0.05 to 0.2)}
+
 \item{count_method}{[chr: c("sigfig", "decimal", "int")] choose how to report counts - prioritize sigfigs across mean/lower/upper, hard-set decimals, or leave numbers in integer space.}
 
 \item{count_digits_sigfig}{[int: default 3] number of significant figures for counts}
@@ -47,6 +52,8 @@ new_style(
 
 \item{count_label_thousands}{[lgl: default FALSE] whether format counts as e.g. 10,000 as '10 thousand'}
 
+\item{count_invert_all_neg_UI}{[lgl: default FALSE] if mean/lower/upper are all negative, invert signs in UI for counts? e.g. -10 (-20 to -5) becomes -10 (5 to 20)}
+
 \item{rate_method}{[chr: c("sigfig", "decimal", "int")] choose how to report rates - prioritize sigfigs across mean/lower/upper, hard-set decimals, or leave numbers in integer space.}
 
 \item{rate_digits_sigfig}{[int: default 3] number of significant figures for rates}
@@ -54,6 +61,8 @@ new_style(
 \item{rate_pad_sigfigs}{[lgl: default TRUE] signif(5.00, 3) is "5" - do you want to pad the trailing 0s back on for rates - usually TRUE?}
 
 \item{rate_nsmall}{[int: default 1] passed to `format()` if `rate_method` == 'decimal'}
+
+\item{rate_invert_all_neg_UI}{[lgl: default FALSE] if mean/lower/upper are all negative, invert signs in UI for rates? e.g. -10 (-20 to -5) per million becomes -10 (5 to 20) per million}
 
 \item{decimal.mark}{[chr: default "."] decimal mark e.g. "." or `mid_dot()` for Lancet.}
 

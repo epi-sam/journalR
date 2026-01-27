@@ -4,12 +4,18 @@
 \alias{process_clu_triplet_negatives}
 \title{Prepare central, lower, upper value triplets for journal presentation}
 \usage{
-process_clu_triplet_negatives(triplets, assert_clu_order = TRUE)
+process_clu_triplet_negatives(
+  triplets,
+  assert_clu_order = TRUE,
+  invert_all_neg_UI = TRUE
+)
 }
 \arguments{
 \item{triplets}{[matrix]  with rownames 'central', 'lower', 'upper'}
 
 \item{assert_clu_order}{[lgl: default TRUE] assert that central, lower, upper relationships are valid}
+
+\item{invert_all_neg_UI}{[lgl: default TRUE] invert and swap bounds for all-negative triplets (makes sense for proportions/percentages, may not apply to all metrics)}
 }
 \value{
 [num matrix] matrix with rows 'central', 'lower', 'upper' and columns for each triplet set
