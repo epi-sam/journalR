@@ -183,27 +183,30 @@ assert_style_schema <- function(style_entry){
 #' set_style(
 #'    style_name    = "my_style"
 #'    , style_entry = list(
-#'       style_name             = "my_style"
-#'       , prop_digits_round     = 1
-#'       , prop_nsmall           = 1
-#'       , count_method          = "sigfig"
-#'       , count_digits_sigfig   = 3
-#'       , count_pad_sigfigs     = TRUE
-#'       , count_nsmall          = 1
-#'       , count_big.mark        = ","
-#'       , count_label_thousands = FALSE
-#'       , rate_method           = "sigfig"
-#'       , rate_digits_sigfig    = 3
-#'       , rate_pad_sigfigs      = TRUE
-#'       , rate_nsmall           = 1
-#'       , decimal.mark          = "."
-#'       , neg_mark_mean         = "-"
-#'       , neg_mark_UI           = "-"
-#'       , UI_only               = FALSE
-#'       , UI_text               = ""
-#'       , assert_clu_order      = TRUE
-#'       , is_lancet             = FALSE
-#'       , round_5_up            = TRUE
+#'       style_name                = "my_style"
+#'       , prop_digits_round       = 1
+#'       , prop_nsmall             = 1
+#'       , prop_invert_all_neg_UI  = TRUE
+#'       , count_method            = "sigfig"
+#'       , count_digits_sigfig     = 3
+#'       , count_pad_sigfigs       = TRUE
+#'       , count_nsmall            = 1
+#'       , count_big.mark          = ","
+#'       , count_label_thousands   = FALSE
+#'       , count_invert_all_neg_UI = FALSE
+#'       , rate_method             = "sigfig"
+#'       , rate_digits_sigfig      = 3
+#'       , rate_pad_sigfigs        = TRUE
+#'       , rate_nsmall             = 1
+#'       , rate_invert_all_neg_UI  = FALSE
+#'       , decimal.mark            = "."
+#'       , neg_mark_mean           = "-"
+#'       , neg_mark_UI             = "-"
+#'       , UI_only                 = FALSE
+#'       , UI_text                 = ""
+#'       , assert_clu_order        = TRUE
+#'       , is_lancet               = FALSE
+#'       , round_5_up              = TRUE
 #'    )
 #' )
 set_style <- function(style_name, style_entry){
