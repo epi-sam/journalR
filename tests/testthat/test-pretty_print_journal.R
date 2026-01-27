@@ -105,6 +105,53 @@ test_that("format_lancet_clu works", {
    # format_journal_df(data.frame(mean = -0.1321684, lower = -0.235321, upper = -0.056549), metric = 'count')
 })
 
+test_that("invert_all_neg_UI flag works for prop metric", {
+   # Test prop with invert_all_neg_UI = TRUE (default - should invert and swap)
+   new_style("prop_invert_true", prop_invert_all_neg_UI = TRUE)
+   expect_equal(
+      format_journal_clu(
+         central = -0.15, lower = -0.25, upper = -0.05,
+         metric = "prop", style_name = "prop_invert_true"
+      ),
+      "-15.0% (5.0–25.0)"  # Inverted and swapped: positive values, bounds swapped
+   )
+
+   # Test prop with invert_all_neg_UI = FALSE (should keep negative, no swap)
+   new_style("prop_invert_false", prop_invert_all_neg_UI = FALSE)
+   expect_equal(
+      format_journal_clu(
+         central = -0.15, lower = -0.25, upper = -0.05,
+         metric = "prop", style_name = "prop_invert_false"
+      ),
+      "-15.0% (-25.0 to -5.0)"  # Not inverted, bounds stay in original order
+   )
+})
+
+test_that("invert_all_neg_UI flag works for count metric", {
+   # Test count with invert_all_neg_UI = TRUE (should invert and swap even though default is FALSE)
+   new_style("count_invert_true", count_invert_all_neg_UI = TRUE)
+   expect_equal(
+      format_journal_clu(
+         central = -1500, lower = -2000, upper = -1000,
+         metric = "count", style_name = "count_invert_true"
+      ),
+      "-1,500 (1,000–2,000)"  # Inverted and swapped: positive values, bounds swapped
+   )
+
+   # Test count with invert_all_neg_UI = FALSE (default - should keep negative)
+   new_style("count_invert_false", count_invert_all_neg_UI = FALSE)
+   expect_warning(
+      expect_equal(
+         format_journal_clu(
+            central = -1500, lower = -2000, upper = -1000,
+            metric = "count", style_name = "count_invert_false"
+         ),
+         "-1,500 (-2,000 to -1,000)"  # Not inverted, bounds stay in original order
+      )
+      , regexp = "Counts < 0 not yet supported"
+   )
+})
+
 test_that("format_nature_clu works", {
    expect_equal(
       format_nature_clu(central = 0.994, lower = 0.984, upper = 0.998, metric = "prop")
