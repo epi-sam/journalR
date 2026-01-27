@@ -1,3 +1,11 @@
+# journalR 0.7.0
+
+## Updates
+
+- <metric>_invert_all_neg_UI style settings allow user to control sign inversion of negative values in metric columns.
+  - e.g. {-2, -3, -1} becomes -2 (-3 to -1) if FALSE, or -2 (1-3) if TRUE.
+  - Default is TRUE for proportion metrics (indicating decreases), FALSE for counts/rates.
+
 # journalR 0.6.1
 
 CHANGES
