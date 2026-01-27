@@ -308,8 +308,8 @@ new_style <- function(
 #' @examples
 #' get_style("lancet")
 get_style <- function(style_name) {
-   get_dict_format(dict_name = style_name) |>
-      assert_style_schema()
+   style <- get_dict_format(dict_name = style_name)
+   assert_style_schema(style)
 }
 
 
