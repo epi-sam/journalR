@@ -7,10 +7,10 @@
 get_style(style_name)
 }
 \arguments{
-\item{style_name}{[chr] name of the style to retrieve}
+\item{style_name}{(chr) name of the style to retrieve}
 }
 \value{
-[list] the requested style as a named list
+(list) the requested style as a named list
 }
 \description{
 Accessor function to retrieve a style from the package's

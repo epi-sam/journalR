@@ -7,7 +7,7 @@
 get_dict_formats()
 }
 \value{
-[env] the package's dictionary environment
+(env) the package's dictionary environment
 }
 \description{
 For internal use.

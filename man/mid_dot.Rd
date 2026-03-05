@@ -7,7 +7,7 @@
 mid_dot()
 }
 \value{
-[chr] mid-dot character
+(chr) mid-dot character
 }
 \description{
 Lancet numeric decimal standard: "\eqn{\cdot}" ("\\U00B7")

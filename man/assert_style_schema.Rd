@@ -7,10 +7,10 @@
 assert_style_schema(style_entry)
 }
 \arguments{
-\item{style_entry}{[list] named list representing a style entry}
+\item{style_entry}{(list) named list representing a style entry}
 }
 \value{
-[list] invisible validated style_entry
+(list) invisible validated style_entry
 }
 \description{
 Validates that a style entry conforms to the expected schema defined in

@@ -10,10 +10,10 @@ require_args <- function(...) {
 
 #' Assert all elements of x are in y
 #'
-#' @param x [vector] some vector
-#' @param y [vector] some vector
+#' @param x (vector) some vector
+#' @param y (vector) some vector
 #'
-#' @return [none] stop if any elements of x are not in y
+#' @return (none) stop if any elements of x are not in y
 #' @family assertions
 #' @keywords internal
 #'
@@ -30,10 +30,10 @@ assert_x_in_y <- function(x, y){
 
 #' Assert no elements of x are in y
 #'
-#' @param x [vector] some vector
-#' @param y [vector] some vector
+#' @param x (vector) some vector
+#' @param y (vector) some vector
 #'
-#' @returns [none] stop if any elements of x are in y
+#' @returns (none) stop if any elements of x are in y
 #' @family assertions
 #' @keywords internal
 #'
@@ -50,10 +50,10 @@ assert_x_not_in_y <- function(x, y){
 
 #' Assert set choice
 #'
-#' @param x [scalar] some scalar value
-#' @param choices [vector] vector of allowed choices
+#' @param x (scalar) some scalar value
+#' @param choices (vector) vector of allowed choices
 #'
-#' @returns [scalar] invisible validated x
+#' @returns (scalar) invisible validated x
 #' @family assertions
 #' @keywords internal
 #'
@@ -80,9 +80,9 @@ assert_set_choice <- function(x, choices){
 #'
 #' Validates that a given metric is among the allowed types.
 #'
-#' @param metric [chr] metric type to validate
+#' @param metric (chr) metric type to validate
 #'
-#' @returns [chr] invisible validated metric
+#' @returns (chr) invisible validated metric
 #' @family assertions
 #' @keywords internal
 #'
@@ -95,10 +95,10 @@ assert_metric <- function(metric){
 
 #' Assert Greater Than or Equal To
 #'
-#' @param x [num]eric vector
-#' @param y [num]eric vector
+#' @param x (num)eric vector
+#' @param y (num)eric vector
 #'
-#' @returns [none] stop if any elements of x are greater than y
+#' @returns (none) stop if any elements of x are greater than y
 #' @family assertions
 #' @keywords internal
 #'
@@ -122,11 +122,11 @@ assert_x_gte_y <- function(x, y){
 #' - central >= lower
 #' - upper >= lower
 #'
-#' @param central [num] vector of central values
-#' @param lower [num] vector of lower bound values
-#' @param upper [num] vector of upper bound values
+#' @param central (num) vector of central values
+#' @param lower (num) vector of lower bound values
+#' @param upper (num) vector of upper bound values
 #'
-#' @returns [none] stop if any of the CLU relationships are violated
+#' @returns (none) stop if any of the CLU relationships are violated
 #' @family assertions
 #' @keywords internal
 #'
@@ -142,10 +142,10 @@ assert_clu_relationship <- function(central, lower, upper){
 #' Validates that when metric is "rate", rate_unit is provided and is a string.
 #' When metric is not "rate ", rate_unit is ignored.
 #'
-#' @param metric [chr] metric type
-#' @param rate_unit [chr or NULL] rate unit parameter
+#' @param metric (chr) metric type
+#' @param rate_unit (chr or NULL) rate unit parameter
 #'
-#' @returns [none] stop if metric is "rate" and rate_unit is missing/invalid
+#' @returns (none) stop if metric is "rate" and rate_unit is missing/invalid
 #' @family assertions
 #' @keywords internal
 assert_rate_unit <- function(metric, rate_unit) {

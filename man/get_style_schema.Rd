@@ -7,7 +7,7 @@
 get_style_schema()
 }
 \value{
-[list] named list of style elements and their expected types
+(list) named list of style elements and their expected types
 }
 \description{
 Centrally managed definition for all required journal format styles.

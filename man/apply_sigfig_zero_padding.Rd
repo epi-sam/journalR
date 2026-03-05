@@ -7,14 +7,14 @@
 apply_sigfig_zero_padding(x_chr, sigfig, decimal.mark)
 }
 \arguments{
-\item{x_chr}{[chr] formatted numeric string}
+\item{x_chr}{(chr) formatted numeric string}
 
-\item{sigfig}{[int] target number of significant figures}
+\item{sigfig}{(int) target number of significant figures}
 
-\item{decimal.mark}{[chr] decimal mark character}
+\item{decimal.mark}{(chr) decimal mark character}
 }
 \value{
-[chr] zero-padded string
+(chr) zero-padded string
 }
 \description{
 Ensures formatted numbers display the requested number of significant figures

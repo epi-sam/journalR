@@ -7,10 +7,10 @@
 get_metric_labels(metric)
 }
 \arguments{
-\item{metric}{[chr]}
+\item{metric}{(chr)}
 }
 \value{
-[list] named list of metric labels
+(list) named list of metric labels
 }
 \description{
 Centrally managed definition for all metric labels.

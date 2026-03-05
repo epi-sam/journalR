@@ -7,12 +7,12 @@
 drop_columns(x, varnames)
 }
 \arguments{
-\item{x}{[data.frame or data.table]}
+\item{x}{(data.frame or data.table)}
 
-\item{varnames}{[chr vector] column names to drop}
+\item{varnames}{(chr vector) column names to drop}
 }
 \value{
-[data.frame or data.table] input `x` with columns dropped
+(data.frame or data.table) input `x` with columns dropped
 }
 \description{
 Vectorized version of drop_column()

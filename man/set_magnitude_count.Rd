@@ -12,16 +12,16 @@ set_magnitude_count(
 )
 }
 \arguments{
-\item{x}{[num] numeric vector}
+\item{x}{(num) numeric vector}
 
-\item{mag}{[chr: default NULL] magnitude override: NULL (auto), "t", "m", "b"}
+\item{mag}{(chr: default NULL) magnitude override: NULL (auto), "t", "m", "b"}
 
-\item{count_label_thousands}{[lgl: default FALSE] allow "thousands" magnitude (not Lancet-valid)}
+\item{count_label_thousands}{(lgl: default FALSE) allow "thousands" magnitude (not Lancet-valid)}
 
-\item{verbose}{[lgl: default TRUE] verbose warnings}
+\item{verbose}{(lgl: default TRUE) verbose warnings}
 }
 \value{
-[data.frame] with columns: mag, mag_label, denom
+(data.frame) with columns: mag, mag_label, denom
 }
 \description{
 Counts are values >= 1 that are scaled down by dividing by large denominators.

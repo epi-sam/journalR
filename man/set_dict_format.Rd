@@ -7,12 +7,12 @@
 set_dict_format(dict_name, dict_entry)
 }
 \arguments{
-\item{dict_name}{[chr] name of the dictionary to set}
+\item{dict_name}{(chr) name of the dictionary to set}
 
-\item{dict_entry}{[any] value to assign to the dictionary}
+\item{dict_entry}{(any) value to assign to the dictionary}
 }
 \value{
-[chr] invisible vector of input objects, to allow easier un-locking
+(chr) invisible vector of input objects, to allow easier un-locking
 }
 \description{
 Mutator function to set a format dictionary in the package's

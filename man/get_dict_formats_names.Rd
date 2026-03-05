@@ -7,7 +7,7 @@
 get_dict_formats_names()
 }
 \value{
-[chr] names of all pre-assigned dictionaries in .dict_formats
+(chr) names of all pre-assigned dictionaries in .dict_formats
 }
 \description{
 Get all pre-assigned .dict_formats names

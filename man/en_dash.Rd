@@ -7,7 +7,7 @@
 en_dash()
 }
 \value{
-[chr] en-dash character
+(chr) en-dash character
 }
 \description{
 Standard for "x -- y" and Lancet negative: ("\\U2013")

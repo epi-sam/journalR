@@ -7,12 +7,12 @@
 format_oxford_comma(vec, sep = "and")
 }
 \arguments{
-\item{vec}{[any] vector of items to format}
+\item{vec}{(any) vector of items to format}
 
-\item{sep}{[chr: default "and"] separator before last item}
+\item{sep}{(chr: default "and") separator before last item}
 }
 \value{
-[chr] formatted string with Oxford comma
+(chr) formatted string with Oxford comma
 }
 \description{
 Format vector of items with Oxford comma

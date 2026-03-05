@@ -2,7 +2,7 @@
 #'
 #' Centrally managed definition for all allowed metrics.
 #'
-#' @returns [chr] vector of allowed metrics
+#' @returns (chr) vector of allowed metrics
 #' @export
 #' @family metrics
 #'
@@ -34,9 +34,9 @@ return_metric_labels <- function(){
 #'
 #' Centrally managed definition for all metric labels.
 #'
-#' @param metric [chr]
+#' @param metric (chr)
 #'
-#' @returns [list] named list of metric labels
+#' @returns (list) named list of metric labels
 #' @export
 #' @family metrics
 #'
@@ -49,12 +49,12 @@ get_metric_labels <- function(metric){
 
 #' Helper for `format_metric_cols()`, perhaps others
 #'
-#' @param style_name [chr] name of a style
-#' @param style_item [chr] a style list item name
-#' @param metric [chr] a valid metric type
+#' @param style_name (chr) name of a style
+#' @param style_item (chr) a style list item name
+#' @param metric (chr) a valid metric type
 #' @keywords internal
 #'
-#' @returns [scalar] some style item, type may vary
+#' @returns (scalar) some style item, type may vary
 get_style_item_by_metric <- function(style_name, style_item, metric){
 
    style  <- get_style(style_name)

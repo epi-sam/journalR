@@ -2,7 +2,7 @@
 #'
 #' Lancet numeric decimal standard: "\eqn{\cdot}" ("\\U00B7")
 #'
-#' @returns [chr] mid-dot character
+#' @returns (chr) mid-dot character
 #' @export
 #' @family marks
 #'
@@ -16,7 +16,7 @@ mid_dot <- function() {
 #'
 #' Standard for "x -- y" and Lancet negative: ("\\U2013")
 #'
-#' @returns [chr] en-dash character
+#' @returns (chr) en-dash character
 #' @export
 #' @family marks
 #'
@@ -33,7 +33,7 @@ en_dash <- function() {
 #' ",": ("\\U2009")
 #'
 #'
-#' @returns [chr] thin space character
+#' @returns (chr) thin space character
 #' @export
 #' @family marks
 #'

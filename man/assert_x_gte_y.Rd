@@ -7,12 +7,12 @@
 assert_x_gte_y(x, y)
 }
 \arguments{
-\item{x}{[num]eric vector}
+\item{x}{(num)eric vector}
 
-\item{y}{[num]eric vector}
+\item{y}{(num)eric vector}
 }
 \value{
-[none] stop if any elements of x are greater than y
+(none) stop if any elements of x are greater than y
 }
 \description{
 Assert Greater Than or Equal To

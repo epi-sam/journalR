@@ -12,12 +12,12 @@
 #'
 #' non-exported helper
 #'
-#' @param triplets [matrix]  with rownames 'central', 'lower', 'upper'
-#' @param assert_clu_order [lgl: default TRUE] assert that central, lower, upper relationships are valid
-#' @param invert_all_neg_UI [lgl: default TRUE] invert and swap bounds for all-negative triplets (makes sense for proportions/percentages, may not apply to all metrics)
+#' @param triplets (matrix)  with rownames 'central', 'lower', 'upper'
+#' @param assert_clu_order (lgl: default TRUE) assert that central, lower, upper relationships are valid
+#' @param invert_all_neg_UI (lgl: default TRUE) invert and swap bounds for all-negative triplets (makes sense for proportions/percentages, may not apply to all metrics)
 #' @keywords internal
 #'
-#' @returns [num matrix] matrix with rows 'central', 'lower', 'upper' and columns for each triplet set
+#' @returns (num matrix) matrix with rows 'central', 'lower', 'upper' and columns for each triplet set
 #'
 process_clu_triplet_negatives <- function(
     triplets
@@ -90,10 +90,10 @@ process_clu_triplet_negatives <- function(
 #'
 #' non-exported helper
 #'
-#' @param result [list] Return value from fround_props() or fround_count_rate()
-#' @param context [chr] Function name for error message (e.g., "fround_props")
+#' @param result (list) Return value from fround_props() or fround_count_rate()
+#' @param context (chr) Function name for error message (e.g., "fround_props")
 #'
-#' @return [NULL] invisibly (stops on validation failure)
+#' @return (NULL) invisibly (stops on validation failure)
 #' @family assertions
 #' @keywords internal
 assert_fround_return_schema <- function(
@@ -173,11 +173,11 @@ assert_fround_return_schema <- function(
 #'
 #' non-exported helper
 #'
-#' @param x_chr [chr] formatted numeric string
-#' @param sigfig [int] target number of significant figures
-#' @param decimal.mark [chr] decimal mark character
+#' @param x_chr (chr) formatted numeric string
+#' @param sigfig (int) target number of significant figures
+#' @param decimal.mark (chr) decimal mark character
 #'
-#' @returns [chr] zero-padded string
+#' @returns (chr) zero-padded string
 #' @keywords internal
 apply_sigfig_zero_padding <- function(x_chr, sigfig, decimal.mark) {
 
@@ -221,12 +221,12 @@ apply_sigfig_zero_padding <- function(x_chr, sigfig, decimal.mark) {
 #'
 #' non-exported helper
 #'
-#' @param x_sc [num] scaled numeric value
-#' @param nsmall [int] decimal places
-#' @param decimal.mark [chr] decimal mark
-#' @param big.mark [chr] thousands separator
+#' @param x_sc (num) scaled numeric value
+#' @param nsmall (int) decimal places
+#' @param decimal.mark (chr) decimal mark
+#' @param big.mark (chr) thousands separator
 #'
-#' @returns [chr] formatted string
+#' @returns (chr) formatted string
 #' @keywords internal
 format_decimal <- function(x_sc, nsmall, decimal.mark, big.mark) {
   x_fmt <- round(x_sc, digits = nsmall)
@@ -244,11 +244,11 @@ format_decimal <- function(x_sc, nsmall, decimal.mark, big.mark) {
 #'
 #' non-exported helper
 #'
-#' @param x_sc [num] scaled numeric value
-#' @param decimal.mark [chr] decimal mark
-#' @param big.mark [chr] thousands separator
+#' @param x_sc (num) scaled numeric value
+#' @param decimal.mark (chr) decimal mark
+#' @param big.mark (chr) thousands separator
 #'
-#' @returns [chr] formatted string
+#' @returns (chr) formatted string
 #' @keywords internal
 format_int <- function(x_sc, decimal.mark, big.mark) {
   x_fmt <- round(x_sc, digits = 0)
@@ -263,12 +263,12 @@ format_int <- function(x_sc, decimal.mark, big.mark) {
 
 #' Helper to assist round_5_up
 #'
-#' @param x [numeric] vector
-#' @param epsilon [numeric] some small value to help e.g. 1225 round up to 1230
+#' @param x (numeric) vector
+#' @param epsilon (numeric) some small value to help e.g. 1225 round up to 1230
 #' @family vector_formats
 #' @keywords internal
 #'
-#' @returns [numeric] x +/- epsilon (for pos/neg x)
+#' @returns (numeric) x +/- epsilon (for pos/neg x)
 add_epsilon <- function(x, epsilon = 1e-12){
   checkmate::assert_numeric(x)
   checkmate::assert_numeric(epsilon)
@@ -304,14 +304,14 @@ add_epsilon <- function(x, epsilon = 1e-12){
 #'
 #' "well that was easy, how hard could counts be?"
 #'
-#' @param clu [num] numeric triplet of proportions (central, lower, upper)
-#' @param style_name [chr] style name - controls rounding and formatting
-#' @param mag [chr: default NULL] magnitude override - see set_magnitude()
+#' @param clu (num) numeric triplet of proportions (central, lower, upper)
+#' @param style_name (chr) style name - controls rounding and formatting
+#' @param mag (chr: default NULL) magnitude override - see set_magnitude()
 #'   - For props/pp: "as-is" (no scaling, use values as provided)
 #'   - For counts: "t" (thousand), "m" (million), "b" (billion)
 #'   - For rates: "per10", "per100", "per1k", ..., "per10b"
 #'
-#' @returns [list] with elements:
+#' @returns (list) with elements:
 #'   - formatted: chr[3] - formatted central, lower, upper values
 #'   - df_mag_row: data.frame[1,] - magnitude info (mag, mag_label, denom)
 #' @family vector_formats
@@ -355,15 +355,15 @@ fround_props <- function(clu, style_name, mag = NULL) {
 #'
 #' non-exported helper
 #'
-#' @param clu [num] numeric triplet of counts/rates (central, lower, upper)
-#' @param style_name [chr] style name - controls rounding and formatting
-#' @param metric [chr]
+#' @param clu (num) numeric triplet of counts/rates (central, lower, upper)
+#' @param style_name (chr) style name - controls rounding and formatting
+#' @param metric (chr)
 #' @param mag mag [chr: default NULL] magnitude override - see set_magnitude()
 #'   - For props/pp: "as-is" (no scaling, use values as provided)
 #'   - For counts: "t" (thousand), "m" (million), "b" (billion)
 #'   - For rates: "per10", "per100", "per1k", ..., "per10b"
 #'
-#' @returns [list] with elements:
+#' @returns (list) with elements:
 #'   - formatted: chr[3] - formatted central, lower, upper values
 #'   - df_mag_row: data.frame[1,] - magnitude info (mag, mag_label, denom)
 #' @family vector_formats
@@ -520,16 +520,16 @@ fround_count_rate <- function(clu, style_name, metric, mag = NULL) {
 #' Format and round without unit labeling
 #' - Use `format_lancet_clu()` for unit labels
 #'
-#' @param clu [num] a numeric triplet of three values in central/lower/upper order
-#' @param metric [chr c('prop', 'pp', 'count', or 'rate')] metric type - proportion,
+#' @param clu (num) a numeric triplet of three values in central/lower/upper order
+#' @param metric (chr c('prop', 'pp', 'count', or 'rate')) metric type - proportion,
 #'   percentage point, count, or rate
-#' @param style_name [chr: default 'nature'] style name - controls rounding and formatting
-#' @param mag [chr: default NULL] magnitude override - see set_magnitude()
+#' @param style_name (chr: default 'nature') style name - controls rounding and formatting
+#' @param mag (chr: default NULL) magnitude override - see set_magnitude()
 #'   - For props/pp: "as-is" (no scaling, use values as provided)
 #'   - For counts: "t" (thousand), "m" (million), "b" (billion)
 #'   - For rates: "per10", "per100", "per1k", ..., "per10b"
 #'
-#' @return [list] with elements:
+#' @return (list) with elements:
 #'   - formatted: chr[3] - formatted central, lower, upper values
 #'   - df_mag_row: data.frame[1,] - magnitude info (mag, mag_label, denom)
 #' @family styled_formats
@@ -578,10 +578,10 @@ fround_clu_triplet <- function(
 
 #' Format vector of items with Oxford comma
 #'
-#' @param vec [any] vector of items to format
-#' @param sep [chr: default "and"] separator before last item
+#' @param vec (any) vector of items to format
+#' @param sep (chr: default "and") separator before last item
 #'
-#' @returns [chr] formatted string with Oxford comma
+#' @returns (chr) formatted string with Oxford comma
 #' @export
 #' @family vector_formats
 #'
@@ -619,12 +619,12 @@ format_oxford_comma <- function(
 #'
 #' Unaware of data-type or schema, just a hard-coded git-er-done function.
 #'
-#' @param x [num] numeric vector
-#' @param digits [integer] passed to `round()`
-#' @param nsmall [integer] passed to `format()`
-#' @param decimal.mark [chr] passed to `format()`
+#' @param x (num) numeric vector
+#' @param digits (integer) passed to `round()`
+#' @param nsmall (integer) passed to `format()`
+#' @param decimal.mark (chr) passed to `format()`
 #'
-#' @return [chr] formatted string
+#' @return (chr) formatted string
 #' @export
 #' @family vector_formats
 #'
@@ -650,13 +650,13 @@ fround <- function(
 #'
 #' Unaware of schema, just a hard-coded git-er-done function.
 #'
-#' @param x [num] numeric value
-#' @param metric [chr: default 'prop' c('prop', 'pp', 'count', 'rate')]
-#' @param digits [integer: default 1L] passed to `round()`
-#' @param nsmall [integer: default 1L] passed to `format()`
-#' @param decimal.mark [chr: default "."] decimal mark passed to `format()`
+#' @param x (num) numeric value
+#' @param metric (chr: default 'prop' c('prop', 'pp', 'count', 'rate'))
+#' @param digits (integer: default 1L) passed to `round()`
+#' @param nsmall (integer: default 1L) passed to `format()`
+#' @param decimal.mark (chr: default ".") decimal mark passed to `format()`
 #'
-#' @return [chr] formatted string
+#' @return (chr) formatted string
 #' @export
 #' @family vector_formats
 #'
@@ -698,22 +698,22 @@ fround_metric <- function(
 #'
 #' Caution - thousands magnitude is not Lancet compliant.
 #'
-#' @param x [num] numeric vector
-#' @param metric [chr `c("prop", "pp", "count", "rate")`]
-#' @param digits [int: default 1L] passed to `round()`
-#' @param nsmall [int: default 1L] passed to `format()`
-#' @param mag [chr: default NULL] magnitude override - see set_magnitude()
+#' @param x (num) numeric vector
+#' @param metric (chr `c("prop", "pp", "count", "rate")`)
+#' @param digits (int: default 1L) passed to `round()`
+#' @param nsmall (int: default 1L) passed to `format()`
+#' @param mag (chr: default NULL) magnitude override - see set_magnitude()
 #'   - For props/pp: "as-is" (no scaling, use values as provided)
 #'   - For counts: "t" (thousand), "m" (million), "b" (billion)
 #'   - For rates: "per10", "per100", "per1k", ..., "per10b"
-#' @param count_label_thousands [lgl: default FALSE] allow thousands magnitude?  Not
+#' @param count_label_thousands (lgl: default FALSE) allow thousands magnitude?  Not
 #'   Lancet-valid. Passed to `set_magnitude()`
-#' @param decimal.mark [chr: default "."] decimal mark passed to `format()`
-#' @param rate_unit [chr: default NULL] unit label for rates (e.g., "deaths", "cases").
+#' @param decimal.mark (chr: default ".") decimal mark passed to `format()`
+#' @param rate_unit (chr: default NULL) unit label for rates (e.g., "deaths", "cases").
 #'   Required when metric = "rate", ignored otherwise.
-#' @param big.mark [chr: default ","] thousands separator passed to `format()`
+#' @param big.mark (chr: default ",") thousands separator passed to `format()`
 #'
-#' @return [chr] formatted string
+#' @return (chr) formatted string
 #' @export
 #' @family vector_formats
 #' @family magnitudes
@@ -774,13 +774,13 @@ fmt_magnitude <- function(
 #' Lancet-specific wrapper for `fround_metric()`, using mid-dot as decimal mark.
 #' Retaining for legacy purposes (no Nature equivalent)
 #'
-#' @param x [num] numeric value
-#' @param metric [chr: default 'prop' c('prop', 'pp', 'count', rate)]
-#' @param digits [integer: default 1L] passed to `round()`
-#' @param nsmall [integer: default 1L] passed to `format()`
-#' @param decimal.mark [chr: default mid_dot()] decimal mark passed to `format()`
+#' @param x (num) numeric value
+#' @param metric (chr: default 'prop' c('prop', 'pp', 'count', rate))
+#' @param digits (integer: default 1L) passed to `round()`
+#' @param nsmall (integer: default 1L) passed to `format()`
+#' @param decimal.mark (chr: default mid_dot()) decimal mark passed to `format()`
 #'
-#' @return [chr] formatted string
+#' @return (chr) formatted string
 #' @export
 #' @family vector_formats
 #'

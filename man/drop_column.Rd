@@ -8,12 +8,12 @@ modifying in place if data.table.}
 drop_column(x, varname)
 }
 \arguments{
-\item{x}{[data.frame or data.table]}
+\item{x}{(data.frame or data.table)}
 
-\item{varname}{[chr] column name to drop}
+\item{varname}{(chr) column name to drop}
 }
 \value{
-[data.frame or data.table] input `x` with column dropped
+(data.frame or data.table) input `x` with column dropped
 }
 \description{
 Drop a column from a data.frame or data.table, preserving class and

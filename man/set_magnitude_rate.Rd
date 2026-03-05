@@ -7,16 +7,16 @@
 set_magnitude_rate(x, mag = NULL, verbose = TRUE)
 }
 \arguments{
-\item{x}{[num] numeric vector of rates (should be < 1)}
+\item{x}{(num) numeric vector of rates (should be < 1)}
 
-\item{mag}{[chr: default NULL] magnitude override: NULL (auto),
+\item{mag}{(chr: default NULL) magnitude override: NULL (auto),
 "per10", "per100", "per1k", "per10k", "per100k",
 "per1m", "per10m", "per100m", "per1b", "per10b"}
 
-\item{verbose}{[lgl: default TRUE] verbose warnings}
+\item{verbose}{(lgl: default TRUE) verbose warnings}
 }
 \value{
-[data.frame] with columns: mag, mag_label, denom
+(data.frame) with columns: mag, mag_label, denom
 }
 \description{
 Rates are values < 1 that are scaled up by dividing by small denominators (reciprocals).

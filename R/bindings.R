@@ -2,10 +2,10 @@
 #'
 #' Safely tries to lock the specified object bindings in the given environment.
 #'
-#' @param objs [chr] a vector of object names to lock
-#' @param env [environment] the environment to lock the bindings in
+#' @param objs (chr) a vector of object names to lock
+#' @param env (environment) the environment to lock the bindings in
 #'
-#' @returns [chr] invisible vector of input objects, to allow easier un-locking
+#' @returns (chr) invisible vector of input objects, to allow easier un-locking
 #' @keywords internal
 #'
 #' @family bindings

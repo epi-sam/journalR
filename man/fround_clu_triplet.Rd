@@ -7,20 +7,20 @@
 fround_clu_triplet(clu, metric, style_name = "nature", mag = NULL)
 }
 \arguments{
-\item{clu}{[num] a numeric triplet of three values in central/lower/upper order}
+\item{clu}{(num) a numeric triplet of three values in central/lower/upper order}
 
-\item{metric}{[chr c('prop', 'pp', 'count', or 'rate')] metric type - proportion,
+\item{metric}{(chr c('prop', 'pp', 'count', or 'rate')) metric type - proportion,
 percentage point, count, or rate}
 
-\item{style_name}{[chr: default 'nature'] style name - controls rounding and formatting}
+\item{style_name}{(chr: default 'nature') style name - controls rounding and formatting}
 
-\item{mag}{[chr: default NULL] magnitude override - see set_magnitude()
+\item{mag}{(chr: default NULL) magnitude override - see set_magnitude()
 - For props/pp: "as-is" (no scaling, use values as provided)
 - For counts: "t" (thousand), "m" (million), "b" (billion)
 - For rates: "per10", "per100", "per1k", ..., "per10b"}
 }
 \value{
-[list] with elements:
+(list) with elements:
   - formatted: chr[3] - formatted central, lower, upper values
   - df_mag_row: data.frame[1,] - magnitude info (mag, mag_label, denom)
 }

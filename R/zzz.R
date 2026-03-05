@@ -29,7 +29,7 @@
 #'
 #' For internal use.
 #'
-#' @returns [env] the package's dictionary environment
+#' @returns (env) the package's dictionary environment
 #'
 #' @keywords internal
 get_dict_formats <- function() {
@@ -39,7 +39,7 @@ get_dict_formats <- function() {
 
 #' Get all pre-assigned .dict_formats names
 #'
-#' @returns [chr] names of all pre-assigned dictionaries in .dict_formats
+#' @returns (chr) names of all pre-assigned dictionaries in .dict_formats
 #' @keywords internal
 #'
 get_dict_formats_names <- function(){
@@ -51,9 +51,9 @@ get_dict_formats_names <- function(){
 #' Accessor function to retrieve a format dictionary from the package's
 #' dictionary environment.
 #'
-#' @param dict_name [chr] name of the dictionary to retrieve
+#' @param dict_name (chr) name of the dictionary to retrieve
 #'
-#' @returns [any] the requested dictionary
+#' @returns (any) the requested dictionary
 #' @keywords internal
 #'
 get_dict_format <- function(dict_name) {
@@ -70,10 +70,10 @@ get_dict_format <- function(dict_name) {
 #'
 #' Dictionary entries should only be settable with the accessor functions.
 #'
-#' @param dict_name [chr] name of the dictionary to set
-#' @param dict_entry [any] value to assign to the dictionary
+#' @param dict_name (chr) name of the dictionary to set
+#' @param dict_entry (any) value to assign to the dictionary
 #'
-#' @returns [chr] invisible vector of input objects, to allow easier un-locking
+#' @returns (chr) invisible vector of input objects, to allow easier un-locking
 #' @keywords internal
 #'
 set_dict_format <- function(dict_name, dict_entry) {

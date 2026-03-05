@@ -7,16 +7,16 @@
 format_decimal(x_sc, nsmall, decimal.mark, big.mark)
 }
 \arguments{
-\item{x_sc}{[num] scaled numeric value}
+\item{x_sc}{(num) scaled numeric value}
 
-\item{nsmall}{[int] decimal places}
+\item{nsmall}{(int) decimal places}
 
-\item{decimal.mark}{[chr] decimal mark}
+\item{decimal.mark}{(chr) decimal mark}
 
-\item{big.mark}{[chr] thousands separator}
+\item{big.mark}{(chr) thousands separator}
 }
 \value{
-[chr] formatted string
+(chr) formatted string
 }
 \description{
 non-exported helper

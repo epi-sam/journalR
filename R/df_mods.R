@@ -8,12 +8,12 @@ NULL
 #' Add/overwrite a column in a data.frame or data.table, preserving class and
 #' modifying in place if data.table.
 #'
-#' @param x [data.frame or data.table]
-#' @param vec [any] vector of values to add as new column
-#' @param varname [chr] column name for new column
-#' @param overwrite [lgl: default FALSE] overwrite existing column if TRUE
+#' @param x (data.frame or data.table)
+#' @param vec (any) vector of values to add as new column
+#' @param varname (chr) column name for new column
+#' @param overwrite (lgl: default FALSE) overwrite existing column if TRUE
 #'
-#' @returns [data.frame or data.table] input `x` with new column added
+#' @returns (data.frame or data.table) input `x` with new column added
 #' @family column_mods
 #' @keywords internal
 #'
@@ -35,10 +35,10 @@ add_column <- function(x, varname, vec, overwrite = FALSE){
 #' Drop a column from a data.frame or data.table, preserving class and
 #' modifying in place if data.table.
 #'
-#' @param x [data.frame or data.table]
-#' @param varname [chr] column name to drop
+#' @param x (data.frame or data.table)
+#' @param varname (chr) column name to drop
 #'
-#' @returns [data.frame or data.table] input `x` with column dropped
+#' @returns (data.frame or data.table) input `x` with column dropped
 #' @family column_mods
 #' @keywords internal
 #'
@@ -57,10 +57,10 @@ drop_column <- function(x, varname){
 
 #' Vectorized version of drop_column()
 #'
-#' @param x [data.frame or data.table]
-#' @param varnames [chr vector] column names to drop
+#' @param x (data.frame or data.table)
+#' @param varnames (chr vector) column names to drop
 #'
-#' @returns [data.frame or data.table] input `x` with columns dropped
+#' @returns (data.frame or data.table) input `x` with columns dropped
 #' @family column_mods
 #' @keywords internal
 #'
@@ -79,10 +79,10 @@ drop_columns <- function(x, varnames){
 #'
 #' Forbids vector length 1 recycling
 #'
-#' @param ... [any] passed to `data.frame()`
+#' @param ... (any) passed to `data.frame()`
 #' @keywords internal
 #'
-#' @returns [data.frame]
+#' @returns (data.frame)
 df_strict <- function(...) {
    x <- list(...)
    lens <- lengths(x)

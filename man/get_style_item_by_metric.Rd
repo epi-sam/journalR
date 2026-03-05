@@ -7,14 +7,14 @@
 get_style_item_by_metric(style_name, style_item, metric)
 }
 \arguments{
-\item{style_name}{[chr] name of a style}
+\item{style_name}{(chr) name of a style}
 
-\item{style_item}{[chr] a style list item name}
+\item{style_item}{(chr) a style list item name}
 
-\item{metric}{[chr] a valid metric type}
+\item{metric}{(chr) a valid metric type}
 }
 \value{
-[scalar] some style item, type may vary
+(scalar) some style item, type may vary
 }
 \description{
 Helper for `format_metric_cols()`, perhaps others

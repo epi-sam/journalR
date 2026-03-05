@@ -2,7 +2,7 @@
 #'
 #' Centrally managed definition for all required journal format styles.
 #'
-#' @returns [list] named list of style elements and their expected types
+#' @returns (list) named list of style elements and their expected types
 #' @export
 #' @family styles
 #'
@@ -52,9 +52,9 @@ get_style_schema <- function(){
 #' Validates that a style entry conforms to the expected schema defined in
 #' `get_style_schema()`.
 #'
-#' @param style_entry [list] named list representing a style entry
+#' @param style_entry (list) named list representing a style entry
 #'
-#' @returns [list] invisible validated style_entry
+#' @returns (list) invisible validated style_entry
 #' @keywords internal
 #' @family assertions
 #' @family styles
@@ -172,10 +172,10 @@ assert_style_schema <- function(style_entry){
 
 #' Set a new style by list
 #'
-#' @param style_name [chr] name of the style to set
-#' @param style_entry [list] named list representing the style entry
+#' @param style_name (chr) name of the style to set
+#' @param style_entry (list) named list representing the style entry
 #'
-#' @returns [chr] invisible vector of input objects, to allow easier un-locking
+#' @returns (chr) invisible vector of input objects, to allow easier un-locking
 #' @export
 #' @family styles
 #'
@@ -220,32 +220,32 @@ set_style <- function(style_name, style_entry){
 #'
 #' Wrapper function to create and set a new style in one step.
 #'
-#' @param style_name [chr] name of the style to set
-#' @param prop_digits_round [int: default 1] number of digits to round proportions to
-#' @param prop_nsmall [int: default 1] minimum number of digits to the right of the decimal point - proportions
-#' @param prop_invert_all_neg_UI [lgl: default TRUE] if mean/lower/upper are all negative, invert signs in UI for proportions? e.g. -0.1 (-0.2 to -0.05) becomes - 0.1 (0.05 to 0.2)
-#' @param count_method [chr: c("sigfig", "decimal", "int")] choose how to report counts - prioritize sigfigs across mean/lower/upper, hard-set decimals, or leave numbers in integer space.
-#' @param count_digits_sigfig [int: default 3] number of significant figures for counts
-#' @param count_nsmall [int: default 1] passed to `format()` if `count_method` == 'decimal'
-#' @param count_pad_sigfigs [lgl: default TRUE] signif(5.00, 3) is "5" - do you want to pad the trailing 0s back on - usually TRUE?
-#' @param count_invert_all_neg_UI [lgl: default FALSE] if mean/lower/upper are all negative, invert signs in UI for counts? e.g. -10 (-20 to -5) becomes -10 (5 to 20)
-#' @param count_label_thousands [lgl: default FALSE] whether format counts as e.g. 10,000 as '10 thousand'
-#' @param count_big.mark [chr: default ","] character to use for counts thousand, million, billion separator e.g. ","
-#' @param rate_method [chr: c("sigfig", "decimal", "int")] choose how to report rates - prioritize sigfigs across mean/lower/upper, hard-set decimals, or leave numbers in integer space.
-#' @param rate_digits_sigfig [int: default 3] number of significant figures for rates
-#' @param rate_pad_sigfigs [lgl: default TRUE] signif(5.00, 3) is "5" - do you want to pad the trailing 0s back on for rates - usually TRUE?
-#' @param rate_nsmall [int: default 1] passed to `format()` if `rate_method` == 'decimal'
-#' @param rate_invert_all_neg_UI [lgl: default FALSE] if mean/lower/upper are all negative, invert signs in UI for rates? e.g. -10 (-20 to -5) per million becomes -10 (5 to 20) per million
-#' @param decimal.mark [chr: default "."] decimal mark e.g. "." or `mid_dot()` for Lancet.
-#' @param neg_mark_mean [chr: default "-"] string to describe central value negatives - e.g. "-1 (-2 to 4)" could become "Negtive 1 (-2 to 4)"
-#' @param neg_mark_UI [chr: default "-"] string to describe negative sign in UI brackets e.g. "1 (-2 to 4)" could become "1 (--2 to 4)" (en-dash)
-#' @param UI_only [lgl: default FALSE] Return only UI from `format_journal_df()` family functions?
-#' @param UI_text [chr: default ""] Text to appear inside UI brackets before numbers e.g. "2 (1 -- 4)" could become "2 (95\%UI 1 -- 4)"
-#' @param assert_clu_order [lgl: default TRUE] whether to assert CLU relationships (ensure lower < central < upper)
-#' @param is_lancet [lgl: default FALSE] TRUE to handle edge-case Lancet count formatting policies
-#' @param round_5_up [lgl: default TRUE] In R, `round(1245, 3)` is "1240".  Do you want to round to "1250" instead? Default TRUE to conform with common expectations.
+#' @param style_name (chr) name of the style to set
+#' @param prop_digits_round (int: default 1) number of digits to round proportions to
+#' @param prop_nsmall (int: default 1) minimum number of digits to the right of the decimal point - proportions
+#' @param prop_invert_all_neg_UI (lgl: default TRUE) if mean/lower/upper are all negative, invert signs in UI for proportions? e.g. -0.1 (-0.2 to -0.05) becomes - 0.1 (0.05 to 0.2)
+#' @param count_method (chr: c("sigfig", "decimal", "int")) choose how to report counts - prioritize sigfigs across mean/lower/upper, hard-set decimals, or leave numbers in integer space.
+#' @param count_digits_sigfig (int: default 3) number of significant figures for counts
+#' @param count_nsmall (int: default 1) passed to `format()` if `count_method` == 'decimal'
+#' @param count_pad_sigfigs (lgl: default TRUE) signif(5.00, 3) is "5" - do you want to pad the trailing 0s back on - usually TRUE?
+#' @param count_invert_all_neg_UI (lgl: default FALSE) if mean/lower/upper are all negative, invert signs in UI for counts? e.g. -10 (-20 to -5) becomes -10 (5 to 20)
+#' @param count_label_thousands (lgl: default FALSE) whether format counts as e.g. 10,000 as '10 thousand'
+#' @param count_big.mark (chr: default ",") character to use for counts thousand, million, billion separator e.g. ","
+#' @param rate_method (chr: c("sigfig", "decimal", "int")) choose how to report rates - prioritize sigfigs across mean/lower/upper, hard-set decimals, or leave numbers in integer space.
+#' @param rate_digits_sigfig (int: default 3) number of significant figures for rates
+#' @param rate_pad_sigfigs (lgl: default TRUE) signif(5.00, 3) is "5" - do you want to pad the trailing 0s back on for rates - usually TRUE?
+#' @param rate_nsmall (int: default 1) passed to `format()` if `rate_method` == 'decimal'
+#' @param rate_invert_all_neg_UI (lgl: default FALSE) if mean/lower/upper are all negative, invert signs in UI for rates? e.g. -10 (-20 to -5) per million becomes -10 (5 to 20) per million
+#' @param decimal.mark (chr: default ".") decimal mark e.g. "." or `mid_dot()` for Lancet.
+#' @param neg_mark_mean (chr: default "-") string to describe central value negatives - e.g. "-1 (-2 to 4)" could become "Negtive 1 (-2 to 4)"
+#' @param neg_mark_UI (chr: default "-") string to describe negative sign in UI brackets e.g. "1 (-2 to 4)" could become "1 (--2 to 4)" (en-dash)
+#' @param UI_only (lgl: default FALSE) Return only UI from `format_journal_df()` family functions?
+#' @param UI_text (chr: default "") Text to appear inside UI brackets before numbers e.g. "2 (1 -- 4)" could become "2 (95\%UI 1 -- 4)"
+#' @param assert_clu_order (lgl: default TRUE) whether to assert CLU relationships (ensure lower < central < upper)
+#' @param is_lancet (lgl: default FALSE) TRUE to handle edge-case Lancet count formatting policies
+#' @param round_5_up (lgl: default TRUE) In R, `round(1245, 3)` is "1240".  Do you want to round to "1250" instead? Default TRUE to conform with common expectations.
 #'
-#' @returns [chr] invisible vector of input objects
+#' @returns (chr) invisible vector of input objects
 #' @export
 #' @family styles
 #' @family styled_formats
@@ -314,9 +314,9 @@ new_style <- function(
 #' Accessor function to retrieve a style from the package's
 #' styles dictionary.
 #'
-#' @param style_name [chr] name of the style to retrieve
+#' @param style_name (chr) name of the style to retrieve
 #'
-#' @returns [list] the requested style as a named list
+#' @returns (list) the requested style as a named list
 #' @export
 #' @family styles
 #'
@@ -336,7 +336,7 @@ get_style <- function(style_name) {
 #'
 #' Pre-defined style schema for Nature journal formatting.
 #'
-#' @returns [list] named list representing the nature style
+#' @returns (list) named list representing the nature style
 #' @export
 #' @family styles
 #'
@@ -377,7 +377,7 @@ style_nature <- function(){
 #'
 #' Pre-defined style schema for Lancet journal formatting
 #'
-#' @returns [list] named list representing the lancet style
+#' @returns (list) named list representing the lancet style
 #' @export
 #' @family styles
 #'

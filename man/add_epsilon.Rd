@@ -7,12 +7,12 @@
 add_epsilon(x, epsilon = 1e-12)
 }
 \arguments{
-\item{x}{[numeric] vector}
+\item{x}{(numeric) vector}
 
-\item{epsilon}{[numeric] some small value to help e.g. 1225 round up to 1230}
+\item{epsilon}{(numeric) some small value to help e.g. 1225 round up to 1230}
 }
 \value{
-[numeric] x +/- epsilon (for pos/neg x)
+(numeric) x +/- epsilon (for pos/neg x)
 }
 \description{
 Helper to assist round_5_up

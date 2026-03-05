@@ -17,31 +17,31 @@ fmt_magnitude(
 )
 }
 \arguments{
-\item{x}{[num] numeric vector}
+\item{x}{(num) numeric vector}
 
-\item{metric}{[chr `c("prop", "pp", "count", "rate")`]}
+\item{metric}{(chr `c("prop", "pp", "count", "rate")`)}
 
-\item{rate_unit}{[chr: default NULL] unit label for rates (e.g., "deaths", "cases").
+\item{rate_unit}{(chr: default NULL) unit label for rates (e.g., "deaths", "cases").
 Required when metric = "rate", ignored otherwise.}
 
-\item{digits}{[int: default 1L] passed to `round()`}
+\item{digits}{(int: default 1L) passed to `round()`}
 
-\item{nsmall}{[int: default 1L] passed to `format()`}
+\item{nsmall}{(int: default 1L) passed to `format()`}
 
-\item{decimal.mark}{[chr: default "."] decimal mark passed to `format()`}
+\item{decimal.mark}{(chr: default ".") decimal mark passed to `format()`}
 
-\item{big.mark}{[chr: default ","] thousands separator passed to `format()`}
+\item{big.mark}{(chr: default ",") thousands separator passed to `format()`}
 
-\item{mag}{[chr: default NULL] magnitude override - see set_magnitude()
+\item{mag}{(chr: default NULL) magnitude override - see set_magnitude()
 - For props/pp: "as-is" (no scaling, use values as provided)
 - For counts: "t" (thousand), "m" (million), "b" (billion)
 - For rates: "per10", "per100", "per1k", ..., "per10b"}
 
-\item{count_label_thousands}{[lgl: default FALSE] allow thousands magnitude?  Not
+\item{count_label_thousands}{(lgl: default FALSE) allow thousands magnitude?  Not
 Lancet-valid. Passed to `set_magnitude()`}
 }
 \value{
-[chr] formatted string
+(chr) formatted string
 }
 \description{
 Format a numeric vector into a string with specified magnitude (billion,

@@ -20,21 +20,21 @@
 #' Accounts for negative values, and UIs that cross zero.  Checks if central,
 #' lower, upper values are in the correct order.
 #'
-#' @param central [num] central, point_estimate value vector
-#' @param lower [num] lower bound vector
-#' @param upper [num] upper bound vector
-#' @param metric [chr c(prop, pp, count, rate)] metric - proportion,
+#' @param central (num) central, point_estimate value vector
+#' @param lower (num) lower bound vector
+#' @param upper (num) upper bound vector
+#' @param metric (chr c(prop, pp, count, rate)) metric - proportion,
 #'   percentage point, count, or rate
-#' @param rate_unit [chr: default NULL] rate unit label (required when metric = 'rate')
-#' @param mag [chr: default NULL] magnitude override - see set_magnitude()
+#' @param rate_unit (chr: default NULL) rate unit label (required when metric = 'rate')
+#' @param mag (chr: default NULL) magnitude override - see set_magnitude()
 #'   - For props/pp: "as-is" (no scaling, use values as provided)
 #'   - For counts: "t" (thousand), "m" (million), "b" (billion)
 #'   - For rates: "per10", "per100", "per1k", ..., "per10b"
 #'   - Examples: "deaths", "cases", "events", "births"
-#' @param style_name [chr: default 'nature'] style name - controls rounding and
+#' @param style_name (chr: default 'nature') style name - controls rounding and
 #'   formatting.
 #'
-#' @return [chr] formatted string vector
+#' @return (chr) formatted string vector
 #' @export
 #' @family styled_formats
 #' @examples
@@ -231,25 +231,25 @@ format_journal_clu <- function(
 #' Assumes a single data-type (metric) for the whole table (e.g. 'prop', 'pp',
 #' 'count')
 #'
-#' @param df [data.frame, data.table]
-#' @param metric [chr c('prop', 'pp', 'count', 'rate')] a single metric
-#' @param rate_unit [chr: default NULL] rate unit label (required when metric = 'rate')
+#' @param df (data.frame, data.table)
+#' @param metric (chr c('prop', 'pp', 'count', 'rate')) a single metric
+#' @param rate_unit (chr: default NULL) rate unit label (required when metric = 'rate')
 #'   - Examples: "deaths", "cases", "events", "births"
-#' @param central_var [chr: default 'mean'] name of central tendency variable
-#' @param lower_var [chr: default 'lower'] name of lower bound variable
-#' @param upper_var [chr: default 'upper'] name of upper bound variable
-#' @param remove_clu_columns [lgl: default TRUE] remove central, lower, upper
+#' @param central_var (chr: default 'mean') name of central tendency variable
+#' @param lower_var (chr: default 'lower') name of lower bound variable
+#' @param upper_var (chr: default 'upper') name of upper bound variable
+#' @param remove_clu_columns (lgl: default TRUE) remove central, lower, upper
 #'   variables after formatting?
-#' @param style_name [chr: default 'nature'] style name - controls rounding and
+#' @param style_name (chr: default 'nature') style name - controls rounding and
 #'   formatting.
-#' @param new_var [chr: default 'clu_fmt'] name of new formatted column
-#' @param mag [chr: default NULL] magnitude override - see set_magnitude()
+#' @param new_var (chr: default 'clu_fmt') name of new formatted column
+#' @param mag (chr: default NULL) magnitude override - see set_magnitude()
 #'   - For props/pp: "as-is" (no scaling, use values as provided)
 #'   - For counts: "t" (thousand), "m" (million), "b" (billion)
 #'   - For rates: "per10", "per100", "per1k", ..., "per10b"
 #'   - Examples: "deaths", "cases", "events", "births"
 #'
-#' @returns [data.frame] data.frame, data.table with new 'clu_fmt' column
+#' @returns (data.frame) data.frame, data.table with new 'clu_fmt' column
 #' @export
 #' @family styled_formats
 #'
@@ -315,21 +315,21 @@ format_journal_df <- function(
 #'
 #' Format one or more 'mean_' columns by magnitude, metric, and style.
 #'
-#' @param df [data.table] input data.table with one or more 'mean_' columns
-#' @param metric [chr c('prop', 'pp', 'count', 'rate')] a single metric
-#' @param rate_unit [chr: default NULL] unit label for rates (e.g., "deaths", "cases").
+#' @param df (data.table) input data.table with one or more 'mean_' columns
+#' @param metric (chr c('prop', 'pp', 'count', 'rate')) a single metric
+#' @param rate_unit (chr: default NULL) unit label for rates (e.g., "deaths", "cases").
 #'   Required when metric = "rate", ignored otherwise.
-#' @param var_prefix [chr: default 'mean'] prefix of mean variable names to
+#' @param var_prefix (chr: default 'mean') prefix of mean variable names to
 #'   format.  Implemented as e.g. "^mean[_]+" to capture 'mean', 'mean_1990',
 #'   'mean_2000', etc.
-#' @param mag [chr: default NULL] magnitude override - see set_magnitude()
+#' @param mag (chr: default NULL) magnitude override - see set_magnitude()
 #'   - For props/pp: "as-is" (no scaling, use values as provided)
 #'   - For counts: "t" (thousand), "m" (million), "b" (billion)
 #'   - For rates: "per10", "per100", "per1k", ..., "per10b"
-#' @param style_name [chr: default 'nature'] style name - controls rounding and
+#' @param style_name (chr: default 'nature') style name - controls rounding and
 #'   formatting.
 #'
-#' @returns [data.table] copy of input data.table with formatted mean column(s)
+#' @returns (data.table) copy of input data.table with formatted mean column(s)
 #' @export
 #' @family styled_formats
 #'
@@ -421,19 +421,19 @@ format_metric_cols <- function(
 
 #' Format central, lower, upper value triplets for Lancet journal presentation
 #'
-#' @param central [num] central, point_estimate value vector
-#' @param lower [num] lower bound vector
-#' @param upper [num] upper bound vector
-#' @param metric [chr c(prop, pp, count, rate)] metric - proportion,
+#' @param central (num) central, point_estimate value vector
+#' @param lower (num) lower bound vector
+#' @param upper (num) upper bound vector
+#' @param metric (chr c(prop, pp, count, rate)) metric - proportion,
 #'   percentage point, count, or rate
-#' @param rate_unit [chr: default NULL] rate unit label (required when metric = 'rate')
-#' @param mag [chr: default NULL] magnitude override - see set_magnitude()
+#' @param rate_unit (chr: default NULL) rate unit label (required when metric = 'rate')
+#' @param mag (chr: default NULL) magnitude override - see set_magnitude()
 #'   - For props/pp: "as-is" (no scaling, use values as provided)
 #'   - For counts: "t" (thousand), "m" (million), "b" (billion)
 #'   - For rates: "per10", "per100", "per1k", ..., "per10b"
 #'   - Examples: "deaths", "cases", "events", "births"
 #'
-#' @returns [chr] formatted string vector
+#' @returns (chr) formatted string vector
 #' @export
 #' @family styled_formats
 #'
@@ -477,24 +477,24 @@ format_lancet_clu <- function(
 #' Assumes a single data-type (metric) for the whole table (e.g. 'prop', 'pp',
 #' 'count')
 #'
-#' @param df [data.table] with central, lower, upper columns
-#' @param metric [chr c('prop', 'pp', 'count', 'rate')] metric - proportion,
+#' @param df (data.table) with central, lower, upper columns
+#' @param metric (chr c('prop', 'pp', 'count', 'rate')) metric - proportion,
 #'   percentage point, count, or rate
-#' @param central_var [chr: default 'mean'] name of central tendency e.g.
+#' @param central_var (chr: default 'mean') name of central tendency e.g.
 #'   'point_estimate'
-#' @param lower_var [chr: default 'lower']
-#' @param upper_var [chr: default 'upper']
-#' @param new_var [chr: default 'clu_fmt'] name of new formatted column
-#' @param remove_clu_columns [lgl: default TRUE] remove central, lower, upper
+#' @param lower_var (chr: default 'lower')
+#' @param upper_var (chr: default 'upper')
+#' @param new_var (chr: default 'clu_fmt') name of new formatted column
+#' @param remove_clu_columns (lgl: default TRUE) remove central, lower, upper
 #'   columns after formatting?
-#' @param rate_unit [chr: default NULL] rate unit label (required when metric = 'rate')
-#' @param mag [chr: default NULL] magnitude override - see set_magnitude()
+#' @param rate_unit (chr: default NULL) rate unit label (required when metric = 'rate')
+#' @param mag (chr: default NULL) magnitude override - see set_magnitude()
 #'   - For props/pp: "as-is" (no scaling, use values as provided)
 #'   - For counts: "t" (thousand), "m" (million), "b" (billion)
 #'   - For rates: "per10", "per100", "per1k", ..., "per10b"
 #'   - Examples: "deaths", "cases", "events", "births"
 #'
-#' @returns [data.frame, data.table] with mean_95_UI_formatted column, and
+#' @returns (data.frame, data.table) with mean_95_UI_formatted column, and
 #'   central, lower, upper columns removed (if specified)
 #' @export
 #' @family styled_formats
@@ -540,19 +540,19 @@ format_lancet_df <- function(
 
 #' Format central, lower, upper value triplets for Nature journal presentation
 #'
-#' @param central [num] central, point_estimate value vector
-#' @param lower [num] lower bound vector
-#' @param upper [num] upper bound vector
-#' @param metric [chr c(prop, pp, count, rate)] metric - proportion,
+#' @param central (num) central, point_estimate value vector
+#' @param lower (num) lower bound vector
+#' @param upper (num) upper bound vector
+#' @param metric (chr c(prop, pp, count, rate)) metric - proportion,
 #'   percentage point, count, or rate
-#' @param rate_unit [chr: default NULL] rate unit label (required when metric = 'rate')
-#' @param mag [chr: default NULL] magnitude override - see set_magnitude()
+#' @param rate_unit (chr: default NULL) rate unit label (required when metric = 'rate')
+#' @param mag (chr: default NULL) magnitude override - see set_magnitude()
 #'   - For props/pp: "as-is" (no scaling, use values as provided)
 #'   - For counts: "t" (thousand), "m" (million), "b" (billion)
 #'   - For rates: "per10", "per100", "per1k", ..., "per10b"
 #'   - Examples: "deaths", "cases", "events", "births"
 #'
-#' @returns [chr] formatted string vector
+#' @returns (chr) formatted string vector
 #' @export
 #' @family styled_formats
 #'
@@ -593,22 +593,22 @@ format_nature_clu <- function(
 
 #' Return a table with formatted central, lower, upper for Nature journal
 #'
-#' @param df [data.table]
-#' @param metric [chr c('prop', 'pp', 'count', 'rate')] a single metric
-#' @param new_var [chr: default 'clu_fmt'] name of new formatted column
-#' @param central_var [chr: default 'mean'] name of central tendency variable
-#' @param lower_var [chr: default 'lower'] name of lower bound variable
-#' @param upper_var [chr: default 'upper'] name of upper bound variable
-#' @param remove_clu_columns [lgl: default TRUE] remove central, lower, upper
+#' @param df (data.table)
+#' @param metric (chr c('prop', 'pp', 'count', 'rate')) a single metric
+#' @param new_var (chr: default 'clu_fmt') name of new formatted column
+#' @param central_var (chr: default 'mean') name of central tendency variable
+#' @param lower_var (chr: default 'lower') name of lower bound variable
+#' @param upper_var (chr: default 'upper') name of upper bound variable
+#' @param remove_clu_columns (lgl: default TRUE) remove central, lower, upper
 #'   columns after formatting?
-#' @param mag [chr: default NULL] magnitude override - see set_magnitude()
+#' @param mag (chr: default NULL) magnitude override - see set_magnitude()
 #'   - For props/pp: "as-is" (no scaling, use values as provided)
 #'   - For counts: "t" (thousand), "m" (million), "b" (billion)
 #'   - For rates: "per10", "per100", "per1k", ..., "per10b"
 #'   - Examples: "deaths", "cases", "events", "births"
-#' @param rate_unit [chr: default NULL] rate unit label (required when metric = 'rate')
+#' @param rate_unit (chr: default NULL) rate unit label (required when metric = 'rate')
 #'
-#' @returns [data.table] copy of input data.table with new 'clu_fmt' column
+#' @returns (data.table) copy of input data.table with new 'clu_fmt' column
 #' @export
 #' @family styled_formats
 #'

@@ -7,16 +7,16 @@
 fround(x, digits = 1L, nsmall = 1L, decimal.mark = ".")
 }
 \arguments{
-\item{x}{[num] numeric vector}
+\item{x}{(num) numeric vector}
 
-\item{digits}{[integer] passed to `round()`}
+\item{digits}{(integer) passed to `round()`}
 
-\item{nsmall}{[integer] passed to `format()`}
+\item{nsmall}{(integer) passed to `format()`}
 
-\item{decimal.mark}{[chr] passed to `format()`}
+\item{decimal.mark}{(chr) passed to `format()`}
 }
 \value{
-[chr] formatted string
+(chr) formatted string
 }
 \description{
 Unaware of data-type or schema, just a hard-coded git-er-done function.

@@ -28,7 +28,7 @@ Suggests:
     devtools (>= 2.4.5),
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Acknowledgments:
 URL: https://github.com/epi-sam/journalR
 BugReports: https://github.com/epi-sam/journalR/issues

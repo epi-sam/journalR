@@ -7,7 +7,7 @@
 style_nature()
 }
 \value{
-[list] named list representing the nature style
+(list) named list representing the nature style
 }
 \description{
 The default style for the package.

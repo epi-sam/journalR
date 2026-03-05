@@ -11,14 +11,14 @@ process_clu_triplet_negatives(
 )
 }
 \arguments{
-\item{triplets}{[matrix]  with rownames 'central', 'lower', 'upper'}
+\item{triplets}{(matrix)  with rownames 'central', 'lower', 'upper'}
 
-\item{assert_clu_order}{[lgl: default TRUE] assert that central, lower, upper relationships are valid}
+\item{assert_clu_order}{(lgl: default TRUE) assert that central, lower, upper relationships are valid}
 
-\item{invert_all_neg_UI}{[lgl: default TRUE] invert and swap bounds for all-negative triplets (makes sense for proportions/percentages, may not apply to all metrics)}
+\item{invert_all_neg_UI}{(lgl: default TRUE) invert and swap bounds for all-negative triplets (makes sense for proportions/percentages, may not apply to all metrics)}
 }
 \value{
-[num matrix] matrix with rows 'central', 'lower', 'upper' and columns for each triplet set
+(num matrix) matrix with rows 'central', 'lower', 'upper' and columns for each triplet set
 }
 \description{
 Vectorized preparation of central, lower, upper values.
