@@ -5,11 +5,11 @@
 #' Proportions and percentage points don't use magnitude scaling.
 #' Always returns empty magnitude codes.
 #'
-#' @param x [num] numeric vector
-#' @param mag [chr: default NULL] magnitude override: NULL (auto: use percentage conversion), "raw" (no scaling, use as-is)
-#' @param verbose [lgl: default TRUE] verbose warnings
+#' @param x (num) numeric vector
+#' @param mag (chr: default NULL) magnitude override: NULL (auto: use percentage conversion), "raw" (no scaling, use as-is)
+#' @param verbose (lgl: default TRUE) verbose warnings
 #'
-#' @return [data.frame] with columns: mag, mag_label, denom
+#' @return (data.frame) with columns: mag, mag_label, denom
 #' @keywords internal
 #' @family magnitudes
 #'
@@ -58,12 +58,12 @@ set_magnitude_prop <- function(x, mag = NULL, verbose = TRUE) {
 #' Counts are values >= 1 that are scaled down by dividing by large denominators.
 #' E.g., 55,831,000 / 1e6 = 55.831 "million"
 #'
-#' @param x [num] numeric vector
-#' @param mag [chr: default NULL] magnitude override: NULL (auto), "t", "m", "b"
-#' @param count_label_thousands [lgl: default FALSE] allow "thousands" magnitude (not Lancet-valid)
-#' @param verbose [lgl: default TRUE] verbose warnings
+#' @param x (num) numeric vector
+#' @param mag (chr: default NULL) magnitude override: NULL (auto), "t", "m", "b"
+#' @param count_label_thousands (lgl: default FALSE) allow "thousands" magnitude (not Lancet-valid)
+#' @param verbose (lgl: default TRUE) verbose warnings
 #'
-#' @return [data.frame] with columns: mag, mag_label, denom
+#' @return (data.frame) with columns: mag, mag_label, denom
 #' @keywords internal
 #' @family magnitudes
 #'
@@ -137,13 +137,13 @@ set_magnitude_count <- function(x, mag = NULL, count_label_thousands = FALSE, ve
 #'
 #' Target: scaled value between 0.1 and 100
 #'
-#' @param x [num] numeric vector of rates (should be < 1)
-#' @param mag [chr: default NULL] magnitude override: NULL (auto),
+#' @param x (num) numeric vector of rates (should be < 1)
+#' @param mag (chr: default NULL) magnitude override: NULL (auto),
 #'   "per10", "per100", "per1k", "per10k", "per100k",
 #'   "per1m", "per10m", "per100m", "per1b", "per10b"
-#' @param verbose [lgl: default TRUE] verbose warnings
+#' @param verbose (lgl: default TRUE) verbose warnings
 #'
-#' @return [data.frame] with columns: mag, mag_label, denom
+#' @return (data.frame) with columns: mag, mag_label, denom
 #' @keywords internal
 #' @family magnitudes
 #'
@@ -258,17 +258,17 @@ set_magnitude_rate <- function(x, mag = NULL, verbose = TRUE) {
 #' Support function used on _central_ (e.g. mean) values for later formatting.
 #' Routes to appropriate helper based on metric.
 #'
-#' @param x [num] numeric vector
-#' @param metric [chr] metric: "prop", "pp", "count", "rate" (required)
-#' @param mag [chr: default NULL] magnitude override (NULL = auto-detect)
+#' @param x (num) numeric vector
+#' @param metric (chr) metric: "prop", "pp", "count", "rate" (required)
+#' @param mag (chr: default NULL) magnitude override (NULL = auto-detect)
 #'   - For counts: "t", "m", "b"
 #'   - For rates: "per10", "per100", "per1k", ..., "per10b"
 #'   - For props/pp: "as-is" (no scaling, use values as provided)
-#' @param count_label_thousands [lgl: default FALSE] allow "thousands" magnitude for counts?
+#' @param count_label_thousands (lgl: default FALSE) allow "thousands" magnitude for counts?
 #'   Not Lancet-valid.
-#' @param verbose [lgl: default TRUE] show warnings?
+#' @param verbose (lgl: default TRUE) show warnings?
 #'
-#' @return [data.frame] with columns: mag, mag_label, denom
+#' @return (data.frame) with columns: mag, mag_label, denom
 #' @export
 #' @family magnitudes
 #'
