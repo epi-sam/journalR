@@ -7,18 +7,18 @@
 fround_metric(x, metric = "prop", digits = 1L, nsmall = 1L, decimal.mark = ".")
 }
 \arguments{
-\item{x}{[num] numeric value}
+\item{x}{(num) numeric value}
 
-\item{metric}{[chr: default 'prop' c('prop', 'pp', 'count', 'rate')]}
+\item{metric}{(chr: default 'prop' c('prop', 'pp', 'count', 'rate'))}
 
-\item{digits}{[integer: default 1L] passed to `round()`}
+\item{digits}{(integer: default 1L) passed to `round()`}
 
-\item{nsmall}{[integer: default 1L] passed to `format()`}
+\item{nsmall}{(integer: default 1L) passed to `format()`}
 
-\item{decimal.mark}{[chr: default "."] decimal mark passed to `format()`}
+\item{decimal.mark}{(chr: default ".") decimal mark passed to `format()`}
 }
 \value{
-[chr] formatted string
+(chr) formatted string
 }
 \description{
 Unaware of schema, just a hard-coded git-er-done function.

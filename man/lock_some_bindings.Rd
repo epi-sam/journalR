@@ -7,12 +7,12 @@
 lock_some_bindings(objs, env)
 }
 \arguments{
-\item{objs}{[chr] a vector of object names to lock}
+\item{objs}{(chr) a vector of object names to lock}
 
-\item{env}{[environment] the environment to lock the bindings in}
+\item{env}{(environment) the environment to lock the bindings in}
 }
 \value{
-[chr] invisible vector of input objects, to allow easier un-locking
+(chr) invisible vector of input objects, to allow easier un-locking
 }
 \description{
 Safely tries to lock the specified object bindings in the given environment.

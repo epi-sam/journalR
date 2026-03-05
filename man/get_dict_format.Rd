@@ -7,10 +7,10 @@
 get_dict_format(dict_name)
 }
 \arguments{
-\item{dict_name}{[chr] name of the dictionary to retrieve}
+\item{dict_name}{(chr) name of the dictionary to retrieve}
 }
 \value{
-[any] the requested dictionary
+(any) the requested dictionary
 }
 \description{
 Accessor function to retrieve a format dictionary from the package's

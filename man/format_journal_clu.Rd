@@ -15,28 +15,28 @@ format_journal_clu(
 )
 }
 \arguments{
-\item{central}{[num] central, point_estimate value vector}
+\item{central}{(num) central, point_estimate value vector}
 
-\item{lower}{[num] lower bound vector}
+\item{lower}{(num) lower bound vector}
 
-\item{upper}{[num] upper bound vector}
+\item{upper}{(num) upper bound vector}
 
-\item{metric}{[chr c(prop, pp, count, rate)] metric - proportion,
+\item{metric}{(chr c(prop, pp, count, rate)) metric - proportion,
 percentage point, count, or rate}
 
-\item{rate_unit}{[chr: default NULL] rate unit label (required when metric = 'rate')}
+\item{rate_unit}{(chr: default NULL) rate unit label (required when metric = 'rate')}
 
-\item{mag}{[chr: default NULL] magnitude override - see set_magnitude()
+\item{mag}{(chr: default NULL) magnitude override - see set_magnitude()
 - For props/pp: "as-is" (no scaling, use values as provided)
 - For counts: "t" (thousand), "m" (million), "b" (billion)
 - For rates: "per10", "per100", "per1k", ..., "per10b"
 - Examples: "deaths", "cases", "events", "births"}
 
-\item{style_name}{[chr: default 'nature'] style name - controls rounding and
+\item{style_name}{(chr: default 'nature') style name - controls rounding and
 formatting.}
 }
 \value{
-[chr] formatted string vector
+(chr) formatted string vector
 }
 \description{
 Defaults are generic.  This function allows special formtting marks to be

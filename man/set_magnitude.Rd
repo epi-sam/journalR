@@ -13,22 +13,22 @@ set_magnitude(
 )
 }
 \arguments{
-\item{x}{[num] numeric vector}
+\item{x}{(num) numeric vector}
 
-\item{metric}{[chr] metric: "prop", "pp", "count", "rate" (required)}
+\item{metric}{(chr) metric: "prop", "pp", "count", "rate" (required)}
 
-\item{mag}{[chr: default NULL] magnitude override (NULL = auto-detect)
+\item{mag}{(chr: default NULL) magnitude override (NULL = auto-detect)
 - For counts: "t", "m", "b"
 - For rates: "per10", "per100", "per1k", ..., "per10b"
 - For props/pp: "as-is" (no scaling, use values as provided)}
 
-\item{count_label_thousands}{[lgl: default FALSE] allow "thousands" magnitude for counts?
+\item{count_label_thousands}{(lgl: default FALSE) allow "thousands" magnitude for counts?
 Not Lancet-valid.}
 
-\item{verbose}{[lgl: default TRUE] show warnings?}
+\item{verbose}{(lgl: default TRUE) show warnings?}
 }
 \value{
-[data.frame] with columns: mag, mag_label, denom
+(data.frame) with columns: mag, mag_label, denom
 }
 \description{
 Support function used on _central_ (e.g. mean) values for later formatting.

@@ -7,7 +7,7 @@
 get_metrics()
 }
 \value{
-[chr] vector of allowed metrics
+(chr) vector of allowed metrics
 }
 \description{
 Centrally managed definition for all allowed metrics.

@@ -7,7 +7,7 @@
 style_lancet()
 }
 \value{
-[list] named list representing the lancet style
+(list) named list representing the lancet style
 }
 \description{
 Pre-defined style schema for Lancet journal formatting

@@ -7,14 +7,14 @@
 set_magnitude_prop(x, mag = NULL, verbose = TRUE)
 }
 \arguments{
-\item{x}{[num] numeric vector}
+\item{x}{(num) numeric vector}
 
-\item{mag}{[chr: default NULL] magnitude override: NULL (auto: use percentage conversion), "raw" (no scaling, use as-is)}
+\item{mag}{(chr: default NULL) magnitude override: NULL (auto: use percentage conversion), "raw" (no scaling, use as-is)}
 
-\item{verbose}{[lgl: default TRUE] verbose warnings}
+\item{verbose}{(lgl: default TRUE) verbose warnings}
 }
 \value{
-[data.frame] with columns: mag, mag_label, denom
+(data.frame) with columns: mag, mag_label, denom
 }
 \description{
 Proportions and percentage points don't use magnitude scaling.

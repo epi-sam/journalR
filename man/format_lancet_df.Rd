@@ -17,33 +17,33 @@ format_lancet_df(
 )
 }
 \arguments{
-\item{df}{[data.table] with central, lower, upper columns}
+\item{df}{(data.table) with central, lower, upper columns}
 
-\item{metric}{[chr c('prop', 'pp', 'count', 'rate')] metric - proportion,
+\item{metric}{(chr c('prop', 'pp', 'count', 'rate')) metric - proportion,
 percentage point, count, or rate}
 
-\item{new_var}{[chr: default 'clu_fmt'] name of new formatted column}
+\item{new_var}{(chr: default 'clu_fmt') name of new formatted column}
 
-\item{central_var}{[chr: default 'mean'] name of central tendency e.g.
+\item{central_var}{(chr: default 'mean') name of central tendency e.g.
 'point_estimate'}
 
-\item{lower_var}{[chr: default 'lower']}
+\item{lower_var}{(chr: default 'lower')}
 
-\item{upper_var}{[chr: default 'upper']}
+\item{upper_var}{(chr: default 'upper')}
 
-\item{remove_clu_columns}{[lgl: default TRUE] remove central, lower, upper
+\item{remove_clu_columns}{(lgl: default TRUE) remove central, lower, upper
 columns after formatting?}
 
-\item{rate_unit}{[chr: default NULL] rate unit label (required when metric = 'rate')}
+\item{rate_unit}{(chr: default NULL) rate unit label (required when metric = 'rate')}
 
-\item{mag}{[chr: default NULL] magnitude override - see set_magnitude()
+\item{mag}{(chr: default NULL) magnitude override - see set_magnitude()
 - For props/pp: "as-is" (no scaling, use values as provided)
 - For counts: "t" (thousand), "m" (million), "b" (billion)
 - For rates: "per10", "per100", "per1k", ..., "per10b"
 - Examples: "deaths", "cases", "events", "births"}
 }
 \value{
-[data.frame, data.table] with mean_95_UI_formatted column, and
+(data.frame, data.table) with mean_95_UI_formatted column, and
   central, lower, upper columns removed (if specified)
 }
 \description{

@@ -7,12 +7,12 @@
 set_style(style_name, style_entry)
 }
 \arguments{
-\item{style_name}{[chr] name of the style to set}
+\item{style_name}{(chr) name of the style to set}
 
-\item{style_entry}{[list] named list representing the style entry}
+\item{style_entry}{(list) named list representing the style entry}
 }
 \value{
-[chr] invisible vector of input objects, to allow easier un-locking
+(chr) invisible vector of input objects, to allow easier un-locking
 }
 \description{
 Set a new style by list

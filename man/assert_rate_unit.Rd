@@ -7,12 +7,12 @@
 assert_rate_unit(metric, rate_unit)
 }
 \arguments{
-\item{metric}{[chr] metric type}
+\item{metric}{(chr) metric type}
 
-\item{rate_unit}{[chr or NULL] rate unit parameter}
+\item{rate_unit}{(chr or NULL) rate unit parameter}
 }
 \value{
-[none] stop if metric is "rate" and rate_unit is missing/invalid
+(none) stop if metric is "rate" and rate_unit is missing/invalid
 }
 \description{
 Validates that when metric is "rate", rate_unit is provided and is a string.

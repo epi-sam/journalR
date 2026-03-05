@@ -7,7 +7,7 @@
 thin_space()
 }
 \value{
-[chr] thin space character
+(chr) thin space character
 }
 \description{
 Lancet thin space separator for counts 10,000 -- 999,9999 instead of comma

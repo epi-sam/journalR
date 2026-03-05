@@ -14,27 +14,27 @@ format_metric_cols(
 )
 }
 \arguments{
-\item{df}{[data.table] input data.table with one or more 'mean_' columns}
+\item{df}{(data.table) input data.table with one or more 'mean_' columns}
 
-\item{metric}{[chr c('prop', 'pp', 'count', 'rate')] a single metric}
+\item{metric}{(chr c('prop', 'pp', 'count', 'rate')) a single metric}
 
-\item{var_prefix}{[chr: default 'mean'] prefix of mean variable names to
+\item{var_prefix}{(chr: default 'mean') prefix of mean variable names to
 format.  Implemented as e.g. "^mean[_]+" to capture 'mean', 'mean_1990',
 'mean_2000', etc.}
 
-\item{rate_unit}{[chr: default NULL] unit label for rates (e.g., "deaths", "cases").
+\item{rate_unit}{(chr: default NULL) unit label for rates (e.g., "deaths", "cases").
 Required when metric = "rate", ignored otherwise.}
 
-\item{mag}{[chr: default NULL] magnitude override - see set_magnitude()
+\item{mag}{(chr: default NULL) magnitude override - see set_magnitude()
 - For props/pp: "as-is" (no scaling, use values as provided)
 - For counts: "t" (thousand), "m" (million), "b" (billion)
 - For rates: "per10", "per100", "per1k", ..., "per10b"}
 
-\item{style_name}{[chr: default 'nature'] style name - controls rounding and
+\item{style_name}{(chr: default 'nature') style name - controls rounding and
 formatting.}
 }
 \value{
-[data.table] copy of input data.table with formatted mean column(s)
+(data.table) copy of input data.table with formatted mean column(s)
 }
 \description{
 Format one or more 'mean_' columns by magnitude, metric, and style.

@@ -7,14 +7,14 @@
 assert_clu_relationship(central, lower, upper)
 }
 \arguments{
-\item{central}{[num] vector of central values}
+\item{central}{(num) vector of central values}
 
-\item{lower}{[num] vector of lower bound values}
+\item{lower}{(num) vector of lower bound values}
 
-\item{upper}{[num] vector of upper bound values}
+\item{upper}{(num) vector of upper bound values}
 }
 \value{
-[none] stop if any of the CLU relationships are violated
+(none) stop if any of the CLU relationships are violated
 }
 \description{
 Validates that the relationships between central, lower, and upper values

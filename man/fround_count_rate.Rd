@@ -7,11 +7,11 @@
 fround_count_rate(clu, style_name, metric, mag = NULL)
 }
 \arguments{
-\item{clu}{[num] numeric triplet of counts/rates (central, lower, upper)}
+\item{clu}{(num) numeric triplet of counts/rates (central, lower, upper)}
 
-\item{style_name}{[chr] style name - controls rounding and formatting}
+\item{style_name}{(chr) style name - controls rounding and formatting}
 
-\item{metric}{[chr]}
+\item{metric}{(chr)}
 
 \item{mag}{mag [chr: default NULL] magnitude override - see set_magnitude()
 - For props/pp: "as-is" (no scaling, use values as provided)
@@ -19,7 +19,7 @@ fround_count_rate(clu, style_name, metric, mag = NULL)
 - For rates: "per10", "per100", "per1k", ..., "per10b"}
 }
 \value{
-[list] with elements:
+(list) with elements:
   - formatted: chr[3] - formatted central, lower, upper values
   - df_mag_row: data.frame[1,] - magnitude info (mag, mag_label, denom)
 }

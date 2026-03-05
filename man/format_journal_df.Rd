@@ -18,35 +18,35 @@ format_journal_df(
 )
 }
 \arguments{
-\item{df}{[data.frame, data.table]}
+\item{df}{(data.frame, data.table)}
 
-\item{metric}{[chr c('prop', 'pp', 'count', 'rate')] a single metric}
+\item{metric}{(chr c('prop', 'pp', 'count', 'rate')) a single metric}
 
-\item{new_var}{[chr: default 'clu_fmt'] name of new formatted column}
+\item{new_var}{(chr: default 'clu_fmt') name of new formatted column}
 
-\item{style_name}{[chr: default 'nature'] style name - controls rounding and
+\item{style_name}{(chr: default 'nature') style name - controls rounding and
 formatting.}
 
-\item{central_var}{[chr: default 'mean'] name of central tendency variable}
+\item{central_var}{(chr: default 'mean') name of central tendency variable}
 
-\item{lower_var}{[chr: default 'lower'] name of lower bound variable}
+\item{lower_var}{(chr: default 'lower') name of lower bound variable}
 
-\item{upper_var}{[chr: default 'upper'] name of upper bound variable}
+\item{upper_var}{(chr: default 'upper') name of upper bound variable}
 
-\item{remove_clu_columns}{[lgl: default TRUE] remove central, lower, upper
+\item{remove_clu_columns}{(lgl: default TRUE) remove central, lower, upper
 variables after formatting?}
 
-\item{rate_unit}{[chr: default NULL] rate unit label (required when metric = 'rate')
+\item{rate_unit}{(chr: default NULL) rate unit label (required when metric = 'rate')
 - Examples: "deaths", "cases", "events", "births"}
 
-\item{mag}{[chr: default NULL] magnitude override - see set_magnitude()
+\item{mag}{(chr: default NULL) magnitude override - see set_magnitude()
 - For props/pp: "as-is" (no scaling, use values as provided)
 - For counts: "t" (thousand), "m" (million), "b" (billion)
 - For rates: "per10", "per100", "per1k", ..., "per10b"
 - Examples: "deaths", "cases", "events", "births"}
 }
 \value{
-[data.frame] data.frame, data.table with new 'clu_fmt' column
+(data.frame) data.frame, data.table with new 'clu_fmt' column
 }
 \description{
 Assumes a single data-type (metric) for the whole table (e.g. 'prop', 'pp',

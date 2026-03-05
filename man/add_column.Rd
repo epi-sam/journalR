@@ -8,16 +8,16 @@ modifying in place if data.table.}
 add_column(x, varname, vec, overwrite = FALSE)
 }
 \arguments{
-\item{x}{[data.frame or data.table]}
+\item{x}{(data.frame or data.table)}
 
-\item{varname}{[chr] column name for new column}
+\item{varname}{(chr) column name for new column}
 
-\item{vec}{[any] vector of values to add as new column}
+\item{vec}{(any) vector of values to add as new column}
 
-\item{overwrite}{[lgl: default FALSE] overwrite existing column if TRUE}
+\item{overwrite}{(lgl: default FALSE) overwrite existing column if TRUE}
 }
 \value{
-[data.frame or data.table] input `x` with new column added
+(data.frame or data.table) input `x` with new column added
 }
 \description{
 Add/overwrite a column in a data.frame or data.table, preserving class and

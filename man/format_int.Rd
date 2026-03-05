@@ -7,14 +7,14 @@
 format_int(x_sc, decimal.mark, big.mark)
 }
 \arguments{
-\item{x_sc}{[num] scaled numeric value}
+\item{x_sc}{(num) scaled numeric value}
 
-\item{decimal.mark}{[chr] decimal mark}
+\item{decimal.mark}{(chr) decimal mark}
 
-\item{big.mark}{[chr] thousands separator}
+\item{big.mark}{(chr) thousands separator}
 }
 \value{
-[chr] formatted string
+(chr) formatted string
 }
 \description{
 non-exported helper

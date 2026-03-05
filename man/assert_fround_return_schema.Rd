@@ -7,12 +7,12 @@
 assert_fround_return_schema(result, context = "fround helper")
 }
 \arguments{
-\item{result}{[list] Return value from fround_props() or fround_count_rate()}
+\item{result}{(list) Return value from fround_props() or fround_count_rate()}
 
-\item{context}{[chr] Function name for error message (e.g., "fround_props")}
+\item{context}{(chr) Function name for error message (e.g., "fround_props")}
 }
 \value{
-[NULL] invisibly (stops on validation failure)
+(NULL) invisibly (stops on validation failure)
 }
 \description{
 Ensures fround_props() and fround_count_rate() return the expected structure:

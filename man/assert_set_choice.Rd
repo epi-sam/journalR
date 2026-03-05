@@ -7,12 +7,12 @@
 assert_set_choice(x, choices)
 }
 \arguments{
-\item{x}{[scalar] some scalar value}
+\item{x}{(scalar) some scalar value}
 
-\item{choices}{[vector] vector of allowed choices}
+\item{choices}{(vector) vector of allowed choices}
 }
 \value{
-[scalar] invisible validated x
+(scalar) invisible validated x
 }
 \description{
 Assert set choice

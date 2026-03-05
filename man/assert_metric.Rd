@@ -7,10 +7,10 @@
 assert_metric(metric)
 }
 \arguments{
-\item{metric}{[chr] metric type to validate}
+\item{metric}{(chr) metric type to validate}
 }
 \value{
-[chr] invisible validated metric
+(chr) invisible validated metric
 }
 \description{
 Validates that a given metric is among the allowed types.
