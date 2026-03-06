@@ -4,12 +4,14 @@
 \alias{fround_props}
 \title{Format and round proportion-ish number}
 \usage{
-fround_props(clu, style_name, mag = NULL)
+fround_props(clu, style_name, metric, mag = NULL)
 }
 \arguments{
 \item{clu}{(num) numeric triplet of proportions (central, lower, upper)}
 
 \item{style_name}{(chr) style name - controls rounding and formatting}
+
+\item{metric}{(chr) "prop" or "pp" - determines which style parameters to use}
 
 \item{mag}{(chr: default NULL) magnitude override - see set_magnitude()
 - For props/pp: "as-is" (no scaling, use values as provided)

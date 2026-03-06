@@ -2,13 +2,15 @@
 % Please edit documentation in R/set_magnitude.R
 \name{set_magnitude}
 \alias{set_magnitude}
-\title{Define magnitude, magnitude label and denominator for a vector of numeric values}
+\title{Define magnitude, magnitude label and denominator for a vector of numeric
+values}
 \usage{
 set_magnitude(
   x,
   metric,
   mag = NULL,
   count_label_thousands = FALSE,
+  assert_prop_range = TRUE,
   verbose = TRUE
 )
 }
@@ -22,8 +24,11 @@ set_magnitude(
 - For rates: "per10", "per100", "per1k", ..., "per10b"
 - For props/pp: "as-is" (no scaling, use values as provided)}
 
-\item{count_label_thousands}{(lgl: default FALSE) allow "thousands" magnitude for counts?
-Not Lancet-valid.}
+\item{count_label_thousands}{(lgl: default FALSE) allow "thousands" magnitude
+for counts? Not Lancet-valid.}
+
+\item{assert_prop_range}{(lgl: default TRUE) for proportions, assert that
+values are between -1 and +1 (or -100 and +100 if mag="as-is")?}
 
 \item{verbose}{(lgl: default TRUE) show warnings?}
 }

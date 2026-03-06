@@ -372,8 +372,8 @@ format_metric_cols <- function(
       ret_list <- lapply(df[[varname]], function(x_i) {
          result <- switch(
             metric
-            , "prop"  = fround_props(clu = x_i, style_name = style_name, mag = mag)
-            , "pp"    = fround_props(clu = x_i, style_name = style_name, mag = mag)
+            , "prop"  = fround_props(clu = x_i, style_name = style_name, metric = "prop", mag = mag)
+            , "pp"    = fround_props(clu = x_i, style_name = style_name, metric = "pp",   mag = mag)
             , "count" = fround_count_rate(clu = x_i, style_name = style_name, metric = "count", mag = mag)
             , "rate"  = fround_count_rate(clu = x_i, style_name = style_name, metric = "rate", mag = mag)
          )

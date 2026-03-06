@@ -40,9 +40,12 @@ get_style_schema <- function(){
       , neg_mark_UI           = "character"
       , UI_text               = "character"
       , UI_only               = "logical"
-      , assert_clu_order      = "logical"
       , is_lancet             = "logical"
       , round_5_up            = "logical"
+
+      # Assertions
+      , assert_clu_order      = "logical"
+      , assert_prop_range     = "logical"
    )
 }
 
@@ -204,9 +207,10 @@ assert_style_schema <- function(style_entry){
 #'       , neg_mark_UI             = "-"
 #'       , UI_only                 = FALSE
 #'       , UI_text                 = ""
-#'       , assert_clu_order        = TRUE
 #'       , is_lancet               = FALSE
 #'       , round_5_up              = TRUE
+#'       , assert_clu_order        = TRUE
+#'       , assert_prop_range       = TRUE
 #'    )
 #' )
 set_style <- function(style_name, style_entry){
@@ -241,9 +245,10 @@ set_style <- function(style_name, style_entry){
 #' @param neg_mark_UI (chr: default "-") string to describe negative sign in UI brackets e.g. "1 (-2 to 4)" could become "1 (--2 to 4)" (en-dash)
 #' @param UI_only (lgl: default FALSE) Return only UI from `format_journal_df()` family functions?
 #' @param UI_text (chr: default "") Text to appear inside UI brackets before numbers e.g. "2 (1 -- 4)" could become "2 (95\%UI 1 -- 4)"
-#' @param assert_clu_order (lgl: default TRUE) whether to assert CLU relationships (ensure lower < central < upper)
 #' @param is_lancet (lgl: default FALSE) TRUE to handle edge-case Lancet count formatting policies
 #' @param round_5_up (lgl: default TRUE) In R, `round(1245, 3)` is "1240".  Do you want to round to "1250" instead? Default TRUE to conform with common expectations.
+#' @param assert_clu_order (lgl: default TRUE) whether to assert CLU relationships (ensure lower < central < upper)
+#' @param assert_prop_range (lgl: default TRUE) whether to assert that proportion values are between -1 and +1
 #'
 #' @returns (chr) invisible vector of input objects
 #' @export
@@ -274,9 +279,10 @@ new_style <- function(
       , neg_mark_UI             = "-"
       , UI_only                 = FALSE
       , UI_text                 = ""
-      , assert_clu_order        = TRUE
       , is_lancet               = FALSE
       , round_5_up              = TRUE
+      , assert_clu_order        = TRUE
+      , assert_prop_range       = TRUE
 ){
    set_style(
       style_name    = style_name
@@ -302,9 +308,10 @@ new_style <- function(
          , neg_mark_UI             = neg_mark_UI
          , UI_only                 = UI_only
          , UI_text                 = UI_text
-         , assert_clu_order        = assert_clu_order
          , is_lancet               = is_lancet
          , round_5_up              = round_5_up
+         , assert_clu_order        = assert_clu_order
+         , assert_prop_range       = assert_prop_range
       )
    )
 }
@@ -366,9 +373,10 @@ style_nature <- function(){
          , neg_mark_UI             = "-"
          , UI_text                 = ""
          , UI_only                 = FALSE
-         , assert_clu_order        = TRUE
          , is_lancet               = FALSE
          , round_5_up              = TRUE
+         , assert_clu_order        = TRUE
+         , assert_prop_range       = TRUE
       )
    )
 }
@@ -407,9 +415,10 @@ style_lancet <- function(){
          , neg_mark_UI             = en_dash()
          , UI_text                 = ""
          , UI_only                 = FALSE
-         , assert_clu_order        = TRUE
          , is_lancet               = TRUE
          , round_5_up              = TRUE
+         , assert_clu_order        = TRUE
+         , assert_prop_range       = TRUE
       )
    )
 }

@@ -42,9 +42,10 @@ set_style(
       , neg_mark_UI             = "-"
       , UI_only                 = FALSE
       , UI_text                 = ""
-      , assert_clu_order        = TRUE
       , is_lancet               = FALSE
       , round_5_up              = TRUE
+      , assert_clu_order        = TRUE
+      , assert_prop_range       = TRUE
    )
 )
 }

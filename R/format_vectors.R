@@ -306,6 +306,7 @@ add_epsilon <- function(x, epsilon = 1e-12){
 #'
 #' @param clu (num) numeric triplet of proportions (central, lower, upper)
 #' @param style_name (chr) style name - controls rounding and formatting
+#' @param metric (chr) "prop" or "pp" - determines which style parameters to use
 #' @param mag (chr: default NULL) magnitude override - see set_magnitude()
 #'   - For props/pp: "as-is" (no scaling, use values as provided)
 #'   - For counts: "t" (thousand), "m" (million), "b" (billion)
@@ -317,13 +318,20 @@ add_epsilon <- function(x, epsilon = 1e-12){
 #' @family vector_formats
 #' @keywords internal
 #'
-fround_props <- function(clu, style_name, mag = NULL) {
+fround_props <- function(clu, style_name, metric, mag = NULL) {
 
-  # Compute magnitude from central value
-  df_mag <- set_magnitude(x = clu[1], metric = "prop", mag = mag)
-  checkmate::assert_data_frame(df_mag, nrows = 1)
+  assert_x_in_y(metric, c("prop", "pp"))
 
   style <- get_style(style_name)
+
+  # Compute magnitude from central value
+  df_mag <- set_magnitude(
+    x                   = clu[1]
+    , metric            = "prop"
+    , mag               = mag
+    , assert_prop_range = style$assert_prop_range
+  )
+  checkmate::assert_data_frame(df_mag, nrows = 1)
 
   if (style$round_5_up) clu <- add_epsilon(clu)
 
@@ -357,7 +365,7 @@ fround_props <- function(clu, style_name, mag = NULL) {
 #'
 #' @param clu (num) numeric triplet of counts/rates (central, lower, upper)
 #' @param style_name (chr) style name - controls rounding and formatting
-#' @param metric (chr)
+#' @param metric (chr) "count" or "rate" - determines which style parameters to use and validation rules
 #' @param mag mag [chr: default NULL] magnitude override - see set_magnitude()
 #'   - For props/pp: "as-is" (no scaling, use values as provided)
 #'   - For counts: "t" (thousand), "m" (million), "b" (billion)
@@ -371,13 +379,15 @@ fround_props <- function(clu, style_name, mag = NULL) {
 #'
 fround_count_rate <- function(clu, style_name, metric, mag = NULL) {
 
+  assert_x_in_y(metric, c("count", "rate"))
+
   # === Input Validation ===
   if (metric == "count" && any(clu < 0)) {
     warning("Counts < 0 not yet supported: ", toString(clu))
   }
 
-  if (metric == "rate" && any(clu <= 0)) {
-    stop("Rates <= 0 not supported: ", toString(clu), call. = FALSE)
+  if (metric == "rate" && any(clu < 0)) {
+    stop("Rates < 0 not supported: ", toString(clu), call. = FALSE)
   }
 
   # === Extract style parameters ===
@@ -559,8 +569,8 @@ fround_clu_triplet <- function(
   # Call appropriate formatting helper
   result <- switch_strict(
     metric
-    , "prop"  = fround_props(clu = clu, style_name = style_name, mag = mag)
-    , "pp"    = fround_props(clu = clu, style_name = style_name, mag = mag)
+    , "prop"  = fround_props(clu = clu, style_name = style_name, metric = "prop", mag = mag)
+    , "pp"    = fround_props(clu = clu, style_name = style_name, metric = "pp",   mag = mag)
     , "count" = fround_count_rate(clu = clu, style_name = style_name, metric = "count", mag = mag)
     , "rate"  = fround_count_rate(clu = clu, style_name = style_name, metric = "rate", mag = mag)
   )
@@ -706,12 +716,14 @@ fround_metric <- function(
 #'   - For props/pp: "as-is" (no scaling, use values as provided)
 #'   - For counts: "t" (thousand), "m" (million), "b" (billion)
 #'   - For rates: "per10", "per100", "per1k", ..., "per10b"
-#' @param count_label_thousands (lgl: default FALSE) allow thousands magnitude?  Not
-#'   Lancet-valid. Passed to `set_magnitude()`
+#' @param count_label_thousands (lgl: default FALSE) allow thousands magnitude?
+#'   Not Lancet-valid. Passed to `set_magnitude()`
 #' @param decimal.mark (chr: default ".") decimal mark passed to `format()`
-#' @param rate_unit (chr: default NULL) unit label for rates (e.g., "deaths", "cases").
-#'   Required when metric = "rate", ignored otherwise.
+#' @param rate_unit (chr: default NULL) unit label for rates (e.g., "deaths",
+#'   "cases"). Required when metric = "rate", ignored otherwise.
 #' @param big.mark (chr: default ",") thousands separator passed to `format()`
+#' @param assert_prop_range (lgl: default TRUE) assert that proportion values
+#'   are between -1 and +1 (or -100 and +100 if mag="as-is")
 #'
 #' @return (chr) formatted string
 #' @export
@@ -731,6 +743,7 @@ fmt_magnitude <- function(
     , big.mark              = ","
     , mag                   = NULL
     , count_label_thousands = FALSE
+    , assert_prop_range     = TRUE
 ){
 
   assert_rate_unit(metric, rate_unit)
@@ -748,6 +761,7 @@ fmt_magnitude <- function(
     , metric                = metric
     , mag                   = mag
     , count_label_thousands = count_label_thousands
+    , assert_prop_range     = assert_prop_range
     , verbose               = FALSE
   )
 
