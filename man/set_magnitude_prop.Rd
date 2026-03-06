@@ -4,12 +4,16 @@
 \alias{set_magnitude_prop}
 \title{Set magnitude for proportion-family metrics}
 \usage{
-set_magnitude_prop(x, mag = NULL, verbose = TRUE)
+set_magnitude_prop(x, mag = NULL, assert_prop_range = TRUE, verbose = TRUE)
 }
 \arguments{
 \item{x}{(num) numeric vector}
 
-\item{mag}{(chr: default NULL) magnitude override: NULL (auto: use percentage conversion), "raw" (no scaling, use as-is)}
+\item{mag}{(chr: default NULL) magnitude override: NULL (auto: use percentage
+conversion), "raw" (no scaling, use as-is)}
+
+\item{assert_prop_range}{(lgl: default TRUE) assert that proportion values
+are between -1 and +1 (or -100 and +100 if mag="as-is")}
 
 \item{verbose}{(lgl: default TRUE) verbose warnings}
 }
@@ -17,8 +21,8 @@ set_magnitude_prop(x, mag = NULL, verbose = TRUE)
 (data.frame) with columns: mag, mag_label, denom
 }
 \description{
-Proportions and percentage points don't use magnitude scaling.
-Always returns empty magnitude codes.
+Proportions and percentage points don't use magnitude scaling. Always returns
+empty magnitude codes.
 }
 \seealso{
 Other magnitudes: 

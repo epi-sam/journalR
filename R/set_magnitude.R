@@ -2,27 +2,33 @@
 
 #' Set magnitude for proportion-family metrics
 #'
-#' Proportions and percentage points don't use magnitude scaling.
-#' Always returns empty magnitude codes.
+#' Proportions and percentage points don't use magnitude scaling. Always returns
+#' empty magnitude codes.
 #'
 #' @param x (num) numeric vector
-#' @param mag (chr: default NULL) magnitude override: NULL (auto: use percentage conversion), "raw" (no scaling, use as-is)
+#' @param mag (chr: default NULL) magnitude override: NULL (auto: use percentage
+#'   conversion), "raw" (no scaling, use as-is)
 #' @param verbose (lgl: default TRUE) verbose warnings
+#' @param assert_prop_range (lgl: default TRUE) assert that proportion values
+#'   are between -1 and +1 (or -100 and +100 if mag="as-is")
 #'
 #' @return (data.frame) with columns: mag, mag_label, denom
 #' @keywords internal
 #' @family magnitudes
 #'
-set_magnitude_prop <- function(x, mag = NULL, verbose = TRUE) {
+set_magnitude_prop <- function(
+      x
+      , mag = NULL
+      , assert_prop_range = TRUE
+      , verbose = TRUE
+) {
    checkmate::assert_numeric(x)
    checkmate::assert_vector(x)
    checkmate::assert_logical(verbose, len = 1)
 
-
-
    # Handle magnitude override
    if (is.null(mag)) {
-      if (any(abs(x) > 1)) {
+      if (any(abs(x) > 1) & isTRUE(assert_prop_range)) {
          .ex <- x[abs(x) > 1]
          stop("Proportion values must be between -1 and +1. Found values outside range, e.g.: ", .ex[1], call. = FALSE)
       }
@@ -31,7 +37,7 @@ set_magnitude_prop <- function(x, mag = NULL, verbose = TRUE) {
    } else {
       mag <- tolower(mag)
       if (mag == "as-is") {
-         if (any(abs(x) > 100)) {
+         if (any(abs(x) > 100) & isTRUE(assert_prop_range)) {
             .ex <- x[abs(x) > 100]
             stop("Proportion values must be between -100 and +100. Found values outside range, e.g.: ", .ex[1], call. = FALSE)
          }
@@ -253,7 +259,8 @@ set_magnitude_rate <- function(x, mag = NULL, verbose = TRUE) {
 
 # ---- Main Function (Public) -------------------------------------------------
 
-#' Define magnitude, magnitude label and denominator for a vector of numeric values
+#' Define magnitude, magnitude label and denominator for a vector of numeric
+#' values
 #'
 #' Support function used on _central_ (e.g. mean) values for later formatting.
 #' Routes to appropriate helper based on metric.
@@ -264,9 +271,11 @@ set_magnitude_rate <- function(x, mag = NULL, verbose = TRUE) {
 #'   - For counts: "t", "m", "b"
 #'   - For rates: "per10", "per100", "per1k", ..., "per10b"
 #'   - For props/pp: "as-is" (no scaling, use values as provided)
-#' @param count_label_thousands (lgl: default FALSE) allow "thousands" magnitude for counts?
-#'   Not Lancet-valid.
+#' @param count_label_thousands (lgl: default FALSE) allow "thousands" magnitude
+#'   for counts? Not Lancet-valid.
 #' @param verbose (lgl: default TRUE) show warnings?
+#' @param assert_prop_range (lgl: default TRUE) for proportions, assert that
+#'   values are between -1 and +1 (or -100 and +100 if mag="as-is")?
 #'
 #' @return (data.frame) with columns: mag, mag_label, denom
 #' @export
@@ -282,11 +291,12 @@ set_magnitude_rate <- function(x, mag = NULL, verbose = TRUE) {
 #' # Rates
 #' set_magnitude(c(0.0000123, 0.0000456), metric = "rate")
 set_magnitude <- function(
-      x,
-      metric,
-      mag                   = NULL,
-      count_label_thousands = FALSE,
-      verbose               = TRUE
+      x
+      , metric
+      , mag                   = NULL
+      , count_label_thousands = FALSE
+      , assert_prop_range     = TRUE
+      , verbose               = TRUE
 ) {
    checkmate::assert_vector(x)
    checkmate::assert_numeric(x, min.len = 1, any.missing = FALSE)
@@ -302,14 +312,16 @@ set_magnitude <- function(
    df_mag <- switch_strict(
       metric
       , "prop" = set_magnitude_prop(
-         x         = x
-         , mag     = mag
-         , verbose = verbose
+         x                   = x
+         , mag               = mag
+         , assert_prop_range = assert_prop_range
+         , verbose           = verbose
       )
       , "pp" = set_magnitude_prop(
-         x         = x
-         , mag     = mag
-         , verbose = verbose
+         x                   = x
+         , mag               = mag
+         , assert_prop_range = assert_prop_range
+         , verbose           = verbose
       )
       , "rate" = set_magnitude_rate(
          x         = x

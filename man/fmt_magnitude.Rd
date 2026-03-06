@@ -13,7 +13,8 @@ fmt_magnitude(
   decimal.mark = ".",
   big.mark = ",",
   mag = NULL,
-  count_label_thousands = FALSE
+  count_label_thousands = FALSE,
+  assert_prop_range = TRUE
 )
 }
 \arguments{
@@ -21,8 +22,8 @@ fmt_magnitude(
 
 \item{metric}{(chr `c("prop", "pp", "count", "rate")`)}
 
-\item{rate_unit}{(chr: default NULL) unit label for rates (e.g., "deaths", "cases").
-Required when metric = "rate", ignored otherwise.}
+\item{rate_unit}{(chr: default NULL) unit label for rates (e.g., "deaths",
+"cases"). Required when metric = "rate", ignored otherwise.}
 
 \item{digits}{(int: default 1L) passed to `round()`}
 
@@ -37,8 +38,11 @@ Required when metric = "rate", ignored otherwise.}
 - For counts: "t" (thousand), "m" (million), "b" (billion)
 - For rates: "per10", "per100", "per1k", ..., "per10b"}
 
-\item{count_label_thousands}{(lgl: default FALSE) allow thousands magnitude?  Not
-Lancet-valid. Passed to `set_magnitude()`}
+\item{count_label_thousands}{(lgl: default FALSE) allow thousands magnitude?
+Not Lancet-valid. Passed to `set_magnitude()`}
+
+\item{assert_prop_range}{(lgl: default TRUE) assert that proportion values
+are between -1 and +1 (or -100 and +100 if mag="as-is")}
 }
 \value{
 (chr) formatted string

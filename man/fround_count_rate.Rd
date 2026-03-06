@@ -11,7 +11,7 @@ fround_count_rate(clu, style_name, metric, mag = NULL)
 
 \item{style_name}{(chr) style name - controls rounding and formatting}
 
-\item{metric}{(chr)}
+\item{metric}{(chr) "count" or "rate" - determines which style parameters to use and validation rules}
 
 \item{mag}{mag [chr: default NULL] magnitude override - see set_magnitude()
 - For props/pp: "as-is" (no scaling, use values as provided)

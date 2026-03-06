@@ -26,9 +26,10 @@ new_style(
   neg_mark_UI = "-",
   UI_only = FALSE,
   UI_text = "",
-  assert_clu_order = TRUE,
   is_lancet = FALSE,
-  round_5_up = TRUE
+  round_5_up = TRUE,
+  assert_clu_order = TRUE,
+  assert_prop_range = TRUE
 )
 }
 \arguments{
@@ -74,11 +75,13 @@ new_style(
 
 \item{UI_text}{(chr: default "") Text to appear inside UI brackets before numbers e.g. "2 (1 -- 4)" could become "2 (95\%UI 1 -- 4)"}
 
-\item{assert_clu_order}{(lgl: default TRUE) whether to assert CLU relationships (ensure lower < central < upper)}
-
 \item{is_lancet}{(lgl: default FALSE) TRUE to handle edge-case Lancet count formatting policies}
 
 \item{round_5_up}{(lgl: default TRUE) In R, `round(1245, 3)` is "1240".  Do you want to round to "1250" instead? Default TRUE to conform with common expectations.}
+
+\item{assert_clu_order}{(lgl: default TRUE) whether to assert CLU relationships (ensure lower < central < upper)}
+
+\item{assert_prop_range}{(lgl: default TRUE) whether to assert that proportion values are between -1 and +1}
 }
 \value{
 (chr) invisible vector of input objects
